@@ -1,0 +1,4 @@
+DebugGL.o: DebugGL.cpp DebugGL.h /usr/local/include/GL/glew.h \
+  /usr/local/include/GL/glu.h /usr/local/include/GL/gl.h
+Shader.o: Shader.cpp Shader.h /usr/local/include/GL/glew.h \
+  /usr/local/include/GL/glu.h /usr/local/include/GL/gl.h
