@@ -27,31 +27,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 
 // Classe Shader
-
-class Shader
+namespace GraphicEngine
 {
-    public:
 
-    Shader();
-    Shader(Shader const &shaderACopier);
-    Shader(std::string vertexSource, std::string fragmentSource);
-    ~Shader();
+	class Shader
+	{
+    	public:
 
-    Shader& operator=(Shader const &shaderACopier);
+    	Shader();
+    	Shader(Shader const &shaderACopier);
+    	Shader(std::string vertexSource, std::string fragmentSource);
+    	~Shader();
 
-    bool charger();
-    bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
-    GLuint getProgramID() const;
+    	Shader& operator=(Shader const &shaderACopier);
+
+    	bool charger();
+    	bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
+    	GLuint getProgramID() const;
 
 
-    private:
+    	private:
 
-    GLuint m_vertexID;
-    GLuint m_fragmentID;
-    GLuint m_programID;
+    	GLuint m_vertexID;
+    	GLuint m_fragmentID;
+    	GLuint m_programID;
 
-    std::string m_vertexSource;
-    std::string m_fragmentSource;
-};
-
+    	std::string m_vertexSource;
+    	std::string m_fragmentSource;
+	};
+}
 #endif

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "Shader.h"
 
 // Constructeurs et Destructeur
-
+using namespace GraphicEngine;
 Shader::Shader() : m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexSource(), m_fragmentSource()
 {
 }
