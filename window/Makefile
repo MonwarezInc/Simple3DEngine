@@ -1,7 +1,7 @@
-OBJ=tools.obj
+OBJ=window.obj
 all:	$(OBJ)
 
-$(OBJ) :	DebugGL.o Shader.o
+$(OBJ) :	Graphics.o Window.o
 	ld -o $@ -Ur $^
 %.o: %.cpp
 	$(CXX) -c $^ $(CFLAGS)

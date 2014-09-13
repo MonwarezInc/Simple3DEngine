@@ -3,7 +3,7 @@ export CFLAGS= -I/usr/local/include -Wall -ansi -pedantic -Os
 export LDFLAGS= -L/usr/local/lib -lGL -lSDL2 -lSDL2_image -lGLEW
 EXEC=test-engine
 OUT=graphic-engine.o 
-OBJ= tools/tools.o
+OBJ= tools/tools.obj window/window.obj
 
 all: $(EXEC) 
 
@@ -12,8 +12,11 @@ $(EXEC): main.o $(OUT)
 $(OUT): $(OBJ)
 	ld -o $@ -Ur $^
 #subdirectories build
-tools/tools.o:
+tools/tools.obj:
 	gmake -C tools
+window/window.obj:
+	gmake -C window
+
 #directory build
 %.o:	%.cpp
 	$(CXX) -o $@ -c $< $(CFLAGS)
@@ -22,7 +25,9 @@ tools/tools.o:
 clean:
 	rm -rf main.o
 	gmake clean -C tools
+	gmake clean -C window
 mrpropre: clean
 	rm -f $(EXEC) $(OUT)
 depend:
 	gmake depend -C tools
+	gmake depend -C window

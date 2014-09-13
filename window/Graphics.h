@@ -14,46 +14,35 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef DEF_SHADER
-#define DEF_SHADER
-
+#ifndef GRAPHICS_H_INCLUDED
+#define GRAPHICS_H_INCLUDED
+#include "Window.h"
 // GLEW for all platform
 #include <GL/glew.h>
 
-
 #include <iostream>
-#include <string>
-#include <fstream>
-
+#include "../tools/DebugGL.h"
+#include <stdlib.h>
 
 namespace GraphicEngine
 {
 
-	// Classe Shader
-	class Shader
+	class CGraphics
 	{
     	public:
+        	CGraphics(GLuint width=320, GLuint height=240, bool fullscreen=false, const std::string &title="default",
+                  GLuint bpp=32, GLuint aa=2, GLuint major=4, GLuint minor=4 );
 
-    	Shader();
-    	Shader(Shader const &shaderACopier);
-    	Shader(std::string vertexSource, std::string fragmentSource);
-    	~Shader();
+        	virtual         ~CGraphics();
+        	virtual void    SwapWindow();
 
-    	Shader& operator=(Shader const &shaderACopier);
-
-    	bool charger();
-    	bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
-    	GLuint getProgramID() const;
-
-
-    	private:
-
-    	GLuint m_vertexID;
-    	GLuint m_fragmentID;
-    	GLuint m_programID;
-
-    	std::string m_vertexSource;
-    	std::string m_fragmentSource;
+    	protected:
+        	Window*         m_pWindow;
+        	SDL_GLContext   m_glContext;
+        	// paramètre opengl
+        	GLuint          m_bpp;
+        	GLuint          m_aa;
+	
 	};
 }
-#endif
+#endif // GRAPHICS_H_INCLUDED

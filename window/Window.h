@@ -14,46 +14,35 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef DEF_SHADER
-#define DEF_SHADER
+#ifndef WINDOW_H_INCLUED
+#define WINDOW_H_INCLUED
 
-// GLEW for all platform
-#include <GL/glew.h>
-
-
-#include <iostream>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_main.h>
 #include <string>
-#include <fstream>
-
+#include <vector>
 
 namespace GraphicEngine
 {
 
-	// Classe Shader
-	class Shader
+	struct SingleWindow
 	{
-    	public:
+		std::string		    title;
+		SDL_Window		    *pWindow;
+		unsigned	int	    width;
+		unsigned	int 	height;
+	};
 
-    	Shader();
-    	Shader(Shader const &shaderACopier);
-    	Shader(std::string vertexSource, std::string fragmentSource);
-    	~Shader();
+	class Window
+	{
+		public:
+			Window(const std::string &title, unsigned int width, unsigned int height, bool fullscreen);
+			virtual SDL_GLContext   CreateContext(unsigned int numWindow);
+			virtual void            SwapWindow(unsigned int numWindow);
+			virtual ~Window();
 
-    	Shader& operator=(Shader const &shaderACopier);
-
-    	bool charger();
-    	bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
-    	GLuint getProgramID() const;
-
-
-    	private:
-
-    	GLuint m_vertexID;
-    	GLuint m_fragmentID;
-    	GLuint m_programID;
-
-    	std::string m_vertexSource;
-    	std::string m_fragmentSource;
+		protected:
+			std::vector < SingleWindow >	m_vsWindow;
 	};
 }
 #endif
