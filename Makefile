@@ -1,6 +1,6 @@
 export CXX=c++
 export CFLAGS= -I/usr/local/include -Wall -ansi -pedantic -Os
-export LDFLAGS= -L/usr/local/lib -lGL -lSDL2 -lSDL2_image -lGLEW
+export LDFLAGS= -L/usr/local/lib -lGL -lSDL2 -lSDL2_image -lGLEW -lassimp
 EXEC=test-engine
 OUT=graphic-engine.o 
 OBJ= tools/tools.obj window/window.obj
