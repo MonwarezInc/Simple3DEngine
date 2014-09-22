@@ -16,11 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include "Object.h"
 using namespace GraphicEngine;
-CObject::CObject()
+IObject::IObject()
 {
 	
 }
-CObject::~CObject()
+IObject::~IObject()
 {
 	
 }

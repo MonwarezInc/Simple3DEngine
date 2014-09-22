@@ -32,7 +32,7 @@ namespace GraphicEngine
 			virtual void	DeleteWindow(GLuint indice);
 			virtual	void	SetActive(GLuint indice);
 
-			virtual void	AddObject(CObject * object, GLuint & id);
+			virtual void	AddObject(IObject * object, GLuint & id);
 			virtual	void	DeleteObject(const GLuint id);
 			
 			virtual void 	SetCameraLocation(const glm::vec3 & pos, const glm::vec3 & center, const glm::vec3 & vert);
@@ -40,7 +40,7 @@ namespace GraphicEngine
 
 		protected:
 			GraphicEngine::CGraphics*				m_pGraphics;
-			//std::list< CObject* >	m_lObject;	
+			//std::list< IObject* >	m_lObject;	
 	};
 }
 

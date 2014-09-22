@@ -38,7 +38,7 @@ void	CEngine::SetActive(GLuint indice)
 {
 	// not implemented yet
 }
-void	CEngine::AddObject(CObject* object,GLuint & id)
+void	CEngine::AddObject(IObject* object,GLuint & id)
 {
 	// not implemented yet
 }
