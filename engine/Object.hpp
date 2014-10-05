@@ -14,13 +14,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include "Object.h"
-using namespace GraphicEngine;
-IObject::IObject()
+/*	Object.h 
+	is an interface for general object
+*/
+
+#ifndef GLM_FORCE_RADIANS
+#define GLM_FORCE_RADIANS
+#endif
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+namespace GraphicEngine
 {
-	
-}
-IObject::~IObject()
-{
-	
+	class IObject
+	{
+		public:
+			IObject(){}
+			virtual	~IObject()=0;
+			virtual void	Draw(unsigned int elapsed_time, int start, int end)=0;
+			virtual	void	SetPosition(glm::vec3 pos, glm::vec3 orientation)=0;
+	};
 }

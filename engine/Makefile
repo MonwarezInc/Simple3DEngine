@@ -1,7 +1,7 @@
 OBJ=engine.obj
 all:	$(OBJ)
 
-$(OBJ) :	Engine-main.o Object.o
+$(OBJ) :	Engine-main.o
 	ld -o $@ -Ur $^
 %.o: %.cpp
 	$(CXX) -c $^ $(CFLAGS)
