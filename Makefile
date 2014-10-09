@@ -1,5 +1,5 @@
 export CXX=c++
-export CFLAGS= -I/usr/local/include -Wall -ansi -pedantic -Os
+export CFLAGS= -I/usr/local/include -Wall -std=c++11 -Os
 export LDFLAGS= -L/usr/local/lib -lGL -lSDL2 -lSDL2_image -lGLEW -lassimp
 EXEC=test-engine
 OUT=graphic-engine.o 

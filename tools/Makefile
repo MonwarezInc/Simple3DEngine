@@ -1,7 +1,7 @@
 OBJ=tools.obj
 all:	$(OBJ)
 
-$(OBJ) :	DebugGL.o Shader.o Texture.o
+$(OBJ) :	DebugGL.o Shader.o Texture.o RcManager.o
 	ld -o $@ -Ur $^
 %.o: %.cpp
 	$(CXX) -c $^ $(CFLAGS)

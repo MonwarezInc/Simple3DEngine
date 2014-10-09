@@ -14,33 +14,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-/*	Object.h 
-	is an interface for general object
-*/
+#ifndef RC_MANAGER_H
+#define RC_MANAGER_H
+#include "../engine/Object.hpp"
 
-#ifndef GLM_FORCE_RADIANS
-#define GLM_FORCE_RADIANS
-#endif
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <string>
+/*
+	I dont really want use singleton pattern (maybe in future)
+	So RcManager will not be a singleton
+	but I will have only one RcManager (for graphical stuff)
+*/
 
 namespace GraphicEngine
 {
-	/**
-	
-	Interface IObject
-	with an object we can do 2 things:
-	load the model , and draw it
-	the position/orientation only depend on the scene graph
-	**/
-	class IObject
+	class RcManager
 	{
 		public:
-			IObject(){}
-			virtual	~IObject()=0;
-			virtual	void	LoadFromFile(std::string const & filename)=0;
-			virtual void	Draw(unsigned int elapsed_time, int start, int end)=0;
+
+			RcManager();
 	};
 }
+	
+
+#endif
