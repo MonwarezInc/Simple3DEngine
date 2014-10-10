@@ -35,6 +35,8 @@ namespace GraphicEngine
 
         	virtual         ~CGraphics();
         	virtual void    SwapWindow();
+			virtual void	ClearColor(float r, float g, float b, float a);
+			virtual	void	Clear(); // next step is to encapsulate glClear flag
 
     	protected:
         	Window*         m_pWindow;

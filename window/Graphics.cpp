@@ -55,12 +55,19 @@ CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::str
         std::cerr << error << std::endl;
         exit(-1);
     }
-    std::cout << "OpenGL Vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 }
 void        CGraphics::SwapWindow()
 {
     m_pWindow->SwapWindow(0);
+}
+void		CGraphics::ClearColor(float r, float g, float b, float a)
+{
+	glClearColor(r,g,b,a);
+}
+void 		CGraphics::Clear()
+{
+	// more later we will add flags option
+	glClear(GL_COLOR_BUFFER_BIT);
 }
 CGraphics::~CGraphics()
 {

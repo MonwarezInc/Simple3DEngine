@@ -37,6 +37,11 @@ namespace GraphicEngine
 			
 			virtual void 	SetCameraLocation(const glm::vec3 & pos, const glm::vec3 & center, const glm::vec3 & vert);
 			virtual	void	SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
+			
+			virtual void	ClearColor(float r, float g, float b, float a);
+			virtual	void	Clear(); // next step is to have flags
+
+			virtual	void	Draw();
 
 		protected:
 			GraphicEngine::CGraphics*				m_pGraphics;
