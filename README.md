@@ -4,7 +4,7 @@ GraphicEngine
 This is a graphics engine for a future project,
 I will probably reuse a part of my personal project
 
-Copyright (C) 2014 Payet thibault
+Copyright (C) 2014 Payet Thibault
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
