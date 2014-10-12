@@ -45,6 +45,8 @@ namespace GraphicEngine
 
 		protected:
 			GraphicEngine::CGraphics*				m_pGraphics;
+			glm::mat4								m_modelview;
+			glm::mat4								m_projection;
 			//std::list< IObject* >	m_lObject;	
 	};
 }

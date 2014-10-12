@@ -35,7 +35,7 @@ Texture::Texture(const Texture &toCopy)
     if (m_textureVide && glIsTexture(toCopy.m_id) == GL_TRUE)
         this->LoadEmptyTexture();
     else if (GL_TRUE == glIsTexture(toCopy.m_id) )
-        this->load();
+        this->Load();
 }
 Texture::Texture(int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide):m_id(0),m_filename(""),
                                                     m_largeur(largeur), m_hauteur(hauteur),m_format(format),m_formatInterne(formatInterne),
@@ -55,7 +55,7 @@ Texture& Texture::operator=(const Texture &toCopy)
     if (m_textureVide && glIsTexture(toCopy.m_id) == GL_TRUE)
         this->LoadEmptyTexture();
     else if (GL_TRUE == glIsTexture(toCopy.m_id) )
-        this->load();
+        this->Load();
 
     return *this;
 }
@@ -80,7 +80,7 @@ void Texture::LoadEmptyTexture()
     glBindTexture(GL_TEXTURE_2D, 0);
 
 }
-bool Texture::load()
+bool Texture::Load()
 {
     SDL_Surface     *imgSDL =   IMG_Load(m_filename.c_str());
     if (0 == imgSDL)
@@ -143,11 +143,11 @@ bool Texture::load()
     SDL_FreeSurface(imgSDL);
     return true;
 }
-void Texture::setFilename(const string &filename)
+void Texture::SetFilename(const string &filename)
 {
     m_filename =  filename;
 }
-GLuint Texture::getID() const
+GLuint Texture::GetID() const
 {
     return m_id;
 }

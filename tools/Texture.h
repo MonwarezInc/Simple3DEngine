@@ -36,11 +36,11 @@ namespace GraphicEngine
         	Texture(int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide);
         	Texture(const Texture &toCopy);
         	Texture& operator=(const Texture &toCopy);
-        	bool load();
+        	bool Load();
         	void LoadEmptyTexture();
 
-        	GLuint getID () const;
-        	void    setFilename(const std::string &filename);
+        	GLuint GetID () const;
+        	void    SetFilename(const std::string &filename);
         	virtual ~Texture();
     	protected:
         	GLuint                  m_id;

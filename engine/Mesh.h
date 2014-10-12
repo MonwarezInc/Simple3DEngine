@@ -31,7 +31,7 @@ namespace GraphicEngine
 		
 		Vertex() {}
 		
-		Vertex(glm::vec3 const & pos, glm::vec2 const & tex, glm::vec3 normal)
+		Vertex(glm::vec3 const & pos, glm::vec2 const & tex, glm::vec3 const & normal)
 		{
 			m_pos	=	pos;
 			m_tex	=	tex;

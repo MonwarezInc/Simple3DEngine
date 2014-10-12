@@ -19,11 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 using namespace GraphicEngine;
 Mesh::Mesh()
 {
-	// not implemented yet
 }
 Mesh::~Mesh()
 {
-	// not implemented yet
+	this->Clear();
 }
 void	Mesh::LoadFromFile(std::string const & filename)
 {
@@ -58,11 +57,46 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 }		
 void	Mesh::Draw(unsigned int elapsed_time, int start , int end)
 {
-	// not implemented yet
+	// animation not implemented yet
+	(void)elapsed_time;
+	(void)start;
+	(void)end;
+	/* So
+		0 is for vertex position
+		2 is for texture coordinate
+		3 is for normal
+	*/
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+
+	for (unsigned int i=0; i < m_Entries.size(); ++i)
+	{
+		// for OpenGL 3.2 compatibility we have to setup VAO
+		glBindBuffer(GL_ARRAY_BUFFER, m_Entries[i].VB);
+			glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), 0);
+			glVertexAttribPointer(2,2,GL_FLOAT, GL_FALSE,sizeof(Vertex), (const GLvoid*)12);
+			glVertexAttribPointer(3,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), (const GLvoid*)20);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
+			const unsigned int materialIndex	=	m_Entries[i].MaterialIndex;
+			
+			if (materialIndex < m_Textures.size() && m_Textures[materialIndex] )
+			{
+				glBindTexture(GL_TEXTURE_2D, m_Textures[materialIndex]->GetID());
+			}
+			glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
+			
+	} 
+	glDisableVertexAttribArray(3);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(0); 
 }
 void	Mesh::Clear()
 {
-	// not implemented yet
+	for (unsigned int i = 0; i < m_Textures.size() ; ++i)
+	{
+		delete 	m_Textures[i];
+	}
 }	
 void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
 {
@@ -99,18 +133,78 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
 		
 bool	Mesh::InitMaterials(const aiScene* pScene, std::string const & filename)
 {
-	// not implemented yet
-	return false;
+	// extract the directory part from the filename
+	std::string::size_type	slashIndex	=	filename.find_last_of("/");
+	std::string				dir;
+	if (slashIndex	==	std::string::npos)
+		dir = 	".";
+	else if (slashIndex	==	0)
+		dir	=	"/";
+	else
+		dir	=	filename.substr(0,slashIndex);
+	
+	bool ret	=	true;
+	
+	// initialize the materials
+	for (unsigned int i = 0; i < pScene->mNumMaterials; ++i)
+	{
+		const	aiMaterial*	pMaterial	=	pScene->mMaterials[i];
+		
+		m_Textures[i]	=	NULL;
+		
+		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		{
+			aiString	path;
+			if (pMaterial->GetTexture(aiTextureType_DIFFUSE,0,&path,NULL,NULL,NULL,NULL,NULL) == AI_SUCCESS)
+			{
+				std::string		fullPath = dir +"/"+path.data;
+				
+				m_Textures[i]	=	new Texture(fullPath);
+				
+				if (!m_Textures[i]->Load())
+				{
+					// maybe use except mechanism ?
+					std::cerr << "Error loading texture " << fullPath << std::endl;
+					delete	m_Textures[i];
+					m_Textures[i]	=	NULL;
+					ret				=	false;
+				}
+			}
+		}
+		
+		// load a white texture in case the model didn't have it's own texture
+		if (!m_Textures[i])
+		{
+			m_Textures[i]	=	new	Texture("./white.png");
+			ret				=	m_Textures[i]->Load();
+		}
+	}	
+		
+	return ret;
 }
 Mesh::MeshEntry::~MeshEntry()
 {
-	// not implemented yet
+	if (0 != VB)
+		glDeleteBuffers(1,&VB);
+	if (0 != IB)
+		glDeleteBuffers(1,&IB);
 }
 Mesh::MeshEntry::MeshEntry()
 {
-	// not implemented yet
+	VB				=	0;
+	IB				=	0;
+	NumIndices		=	0;
+	MaterialIndex	=	INVALID_MATERIAL;
 }
 void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices)
 {
-	// not implemented yet
+	NumIndices		=	indices.size();
+	glGenBuffers(1,&VB);
+	glBindBuffer(GL_ARRAY_BUFFER, VB);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+	
+	glGenBuffers(1,&IB);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &indices[0], GL_STATIC_DRAW);
+
 }
