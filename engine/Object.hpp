@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 /*	Object.h 
 	is an interface for general object
 */
-
+#ifndef IOBJECT_INTERFACE_INCLUED
+#define IOBJECT_INTERFACE_INCLUED
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
@@ -43,3 +44,4 @@ namespace GraphicEngine
 			virtual void	Draw(unsigned int elapsed_time, int start, int end)=0;
 	};
 }
+#endif

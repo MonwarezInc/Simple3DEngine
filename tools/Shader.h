@@ -41,9 +41,9 @@ namespace GraphicEngine
 
     	Shader& operator=(Shader const &shaderACopier);
 
-    	bool charger();
-    	bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
-    	GLuint getProgramID() const;
+    	bool Load();
+    	bool BuildShader(GLuint &shader, GLenum type, std::string const &fichierSource);
+    	GLuint GetProgramID() const;
 
 
     	private:

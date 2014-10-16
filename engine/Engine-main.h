@@ -16,7 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include "../window/Graphics.h"
 #include "Object.hpp"
-#include <list>
+#include "../tools/Shader.h"
+#include <vector>
 
 namespace GraphicEngine
 {
@@ -41,13 +42,14 @@ namespace GraphicEngine
 			virtual void	ClearColor(float r, float g, float b, float a);
 			virtual	void	Clear(); // next step is to have flags
 
-			virtual	void	Draw();
+			virtual	void	Draw(unsigned int elapsed);
 
 		protected:
 			GraphicEngine::CGraphics*				m_pGraphics;
 			glm::mat4								m_modelview;
 			glm::mat4								m_projection;
-			//std::list< IObject* >	m_lObject;	
+			std::vector< IObject* >					m_vObject;	
+			Shader*									m_pShader;
 	};
 }
 

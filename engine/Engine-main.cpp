@@ -19,11 +19,13 @@ using namespace GraphicEngine;
 CEngine::CEngine()
 {
 	m_pGraphics	=	NULL;
+	m_pShader	=	NULL;
 }
 CEngine::~CEngine()
 {
 	delete m_pGraphics;
-	// for the list, we didn't manage the object memorie , so just delete the list , and not the content
+	// for the list of object, we didn't manage the object memorie , so just delete the list , and not the content
+	delete m_pShader;
 }
 void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const std::string & title,
 								GLuint bpp, GLuint aa, GLuint major, GLuint minor)
@@ -31,6 +33,8 @@ void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const s
 	// to begin , we just manage 1 window
 	m_pGraphics		=	(NULL == m_pGraphics) ?  new CGraphics(width, height, fullscreen, title, bpp, aa , major, minor):
 						m_pGraphics ;
+	// load shader
+	m_pShader	=	new	Shader("./Shader-130/texture.vert","./Shader-130/texture.vert");
 }
 void	CEngine::DeleteWindow(GLuint indice)
 {
@@ -64,10 +68,19 @@ void	CEngine::Clear()
 {
 	m_pGraphics->Clear();
 }
-void	CEngine::Draw()
+void	CEngine::Draw(unsigned int elapsed)
 {
 	// do drawing stuff
 	// ...
 	// then SwapWindow
+	glUseProgram(m_pShader->GetProgramID());
+	for (unsigned int i=0; i < m_vObject.size(); ++i)
+	{
+		// do transformation stuff
+		// ...
+		// then draw it
+		m_vObject[i]->Draw(elapsed,0,49);
+	}
+	glUseProgram(0);
 	m_pGraphics->SwapWindow();
 }

@@ -33,7 +33,7 @@ Shader::Shader(Shader const &shaderACopier)
 
     // Chargement du nouveau shader
 
-    charger();
+    this->Load();
 }
 
 
@@ -65,7 +65,7 @@ Shader& Shader::operator=(Shader const &shaderACopier)
 
     // Chargement du nouveau shader
 
-    charger();
+    this->Load();
 
 
     // Retour du pointeur this
@@ -74,7 +74,7 @@ Shader& Shader::operator=(Shader const &shaderACopier)
 }
 
 
-bool Shader::charger()
+bool Shader::Load()
 {
     // Destruction d'un éventuel ancien Shader
 
@@ -90,10 +90,10 @@ bool Shader::charger()
 
     // Compilation des shaders
 
-    if(!compilerShader(m_vertexID, GL_VERTEX_SHADER, m_vertexSource))
+    if(!BuildShader(m_vertexID, GL_VERTEX_SHADER, m_vertexSource))
         return false;
 
-    if(!compilerShader(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource))
+    if(!BuildShader(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource))
         return false;
 
 
@@ -170,7 +170,7 @@ bool Shader::charger()
 }
 
 
-bool Shader::compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource)
+bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &fichierSource)
 {
     // Création du shader
 
@@ -284,7 +284,7 @@ bool Shader::compilerShader(GLuint &shader, GLenum type, std::string const &fich
 
 // Getter
 
-GLuint Shader::getProgramID() const
+GLuint Shader::GetProgramID() const
 {
     return m_programID;
 }
