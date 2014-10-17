@@ -35,6 +35,7 @@ void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const s
 						m_pGraphics ;
 	// load shader
 	m_pShader	=	new	Shader("./Shader-130/texture.vert","./Shader-130/texture.vert");
+	m_pShader->charger();
 }
 void	CEngine::DeleteWindow(GLuint indice)
 {
@@ -46,7 +47,8 @@ void	CEngine::SetActive(GLuint indice)
 }
 void	CEngine::AddObject(IObject* object,GLuint & id)
 {
-	// not implemented yet
+	m_vObject.push_back(object);
+	id	=	m_vObject.size() - 1;
 }
 void	CEngine::DeleteObject(GLuint id)
 {
@@ -55,32 +57,40 @@ void	CEngine::DeleteObject(GLuint id)
 void 	CEngine::SetCameraLocation(glm::vec3 const & pos, glm::vec3 const & center, glm::vec3 const & vert)
 {
 	// not implemented yet
+	m_modelview	=	glm::lookAt(pos,center,vert);
 }
 void	CEngine::SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far)
 {
-	// not implemented yet
+	m_projection	=	glm::perspective(fov, ratio, near, far);
 }
 void	CEngine::ClearColor(float r, float g, float b, float a)
 {
 	m_pGraphics->ClearColor(r,g,b,a);
 }
 void	CEngine::Clear()
-{
+{	
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE);
 	m_pGraphics->Clear();
 }
 void	CEngine::Draw(unsigned int elapsed)
 {
-	// do drawing stuff
-	// ...
-	// then SwapWindow
-	glUseProgram(m_pShader->GetProgramID());
-	for (unsigned int i=0; i < m_vObject.size(); ++i)
-	{
-		// do transformation stuff
-		// ...
-		// then draw it
-		m_vObject[i]->Draw(elapsed,0,49);
-	}
+	GLuint	 		shaderID	=	m_pShader->getProgramID();
+	glm::mat4		mvp			=	m_modelview;	// load camera pos
+	glUseProgram(shaderID);
+		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
+		glViewport(0,0,800,600);
+		GLuint		mvpLocation	=	glGetUniformLocation(shaderID,"MVP");
+		for (unsigned int i=0; i < m_vObject.size(); ++i)
+		{
+			// do transformation stuff
+			// ...
+			mvp	=	m_projection * mvp;
+			// send to OpenGL
+			glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
+			// then draw it
+			m_vObject[i]->Draw(elapsed,0,49);
+		}
 	glUseProgram(0);
 	m_pGraphics->SwapWindow();
 }

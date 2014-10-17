@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "Shader.h"
 
 // Constructeurs et Destructeur
-using namespace GraphicEngine;
+
 Shader::Shader() : m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexSource(), m_fragmentSource()
 {
 }
@@ -33,7 +33,7 @@ Shader::Shader(Shader const &shaderACopier)
 
     // Chargement du nouveau shader
 
-    this->Load();
+    charger();
 }
 
 
@@ -65,7 +65,7 @@ Shader& Shader::operator=(Shader const &shaderACopier)
 
     // Chargement du nouveau shader
 
-    this->Load();
+    charger();
 
 
     // Retour du pointeur this
@@ -74,7 +74,7 @@ Shader& Shader::operator=(Shader const &shaderACopier)
 }
 
 
-bool Shader::Load()
+bool Shader::charger()
 {
     // Destruction d'un éventuel ancien Shader
 
@@ -90,10 +90,10 @@ bool Shader::Load()
 
     // Compilation des shaders
 
-    if(!BuildShader(m_vertexID, GL_VERTEX_SHADER, m_vertexSource))
+    if(!compilerShader(m_vertexID, GL_VERTEX_SHADER, m_vertexSource))
         return false;
 
-    if(!BuildShader(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource))
+    if(!compilerShader(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource))
         return false;
 
 
@@ -170,7 +170,7 @@ bool Shader::Load()
 }
 
 
-bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &fichierSource)
+bool Shader::compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource)
 {
     // Création du shader
 
@@ -284,7 +284,7 @@ bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &fichier
 
 // Getter
 
-GLuint Shader::GetProgramID() const
+GLuint Shader::getProgramID() const
 {
     return m_programID;
 }

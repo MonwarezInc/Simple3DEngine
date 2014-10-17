@@ -13,3 +13,4 @@ void main()
 {
 	out_Color	=	texture2D(text,coordTexture.xy);
 }
+

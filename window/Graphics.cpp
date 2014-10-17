@@ -36,7 +36,7 @@ CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::str
 
     m_glContext     =   m_pWindow->CreateContext(0); // on a qu'une seule fenêtre
     GL_CHECK;
-
+	
     if (m_glContext == 0)
         throw std::string(SDL_GetError());
     try
@@ -55,6 +55,8 @@ CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::str
         std::cerr << error << std::endl;
         exit(-1);
     }
+	std::cout << "OpenGL Vendor: " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 }
 void        CGraphics::SwapWindow()
 {
@@ -67,7 +69,7 @@ void		CGraphics::ClearColor(float r, float g, float b, float a)
 void 		CGraphics::Clear()
 {
 	// more later we will add flags option
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 CGraphics::~CGraphics()
 {

@@ -14,44 +14,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef DEF_SHADER
-#define DEF_SHADER
-
-// GLEW for all platform
+#ifndef	MISCOBJECT_INCLUED
+#define	MISCOBJECT_INCLUED
+#include "Object.hpp"
 #include <GL/glew.h>
 
+// This files will contain some traditionnal object (geometry)
 
-#include <iostream>
-#include <string>
-#include <fstream>
-
-
-// Classe Shader
-
-class Shader
+namespace	GraphicEngine
 {
-    public:
-
-    Shader();
-    Shader(Shader const &shaderACopier);
-    Shader(std::string vertexSource, std::string fragmentSource);
-    ~Shader();
-
-    Shader& operator=(Shader const &shaderACopier);
-
-    bool charger();
-    bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
-    GLuint getProgramID() const;
-
-
-    private:
-
-    GLuint m_vertexID;
-    GLuint m_fragmentID;
-    GLuint m_programID;
-
-    std::string m_vertexSource;
-    std::string m_fragmentSource;
-};
-
+	class	QuadObject	:	public	IObject
+	{
+		public:
+			QuadObject();
+			~QuadObject();
+			
+			void	SetTextureID(GLuint id);
+			void	Draw(unsigned int elapsed_time, int start=0, int end=0);
+		
+		private:
+			GLuint		m_vao;
+			GLuint		m_vbo;
+			GLsizei		m_verticesSizeBytes;
+			GLsizei		m_coordSizeBytes;
+			GLuint		m_textureID;
+	};
+}	
 #endif

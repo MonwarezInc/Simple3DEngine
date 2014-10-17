@@ -32,15 +32,14 @@ namespace GraphicEngine
 	/**
 	
 	Interface IObject
-	with an object we can do 2 things:
-	load the model , and draw it
+	with an object we can do 1 things:
+	draw the object
 	the position/orientation only depend on the scene graph
 	**/
 	class IObject
 	{
 		public:
 			IObject(){}
-			virtual	void	LoadFromFile(std::string const & filename)=0;
 			virtual void	Draw(unsigned int elapsed_time, int start, int end)=0;
 	};
 }
