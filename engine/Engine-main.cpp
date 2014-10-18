@@ -34,7 +34,7 @@ void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const s
 	m_pGraphics		=	(NULL == m_pGraphics) ?  new CGraphics(width, height, fullscreen, title, bpp, aa , major, minor):
 						m_pGraphics ;
 	// load shader
-	m_pShader	=	new	Shader("./Shader-130/texture.vert","./Shader-130/texture.vert");
+	m_pShader	=	new	Shader("./Shader-130/texture.vert","./Shader-130/texture.frag");
 	m_pShader->charger();
 }
 void	CEngine::DeleteWindow(GLuint indice)
@@ -77,6 +77,8 @@ void	CEngine::Draw(unsigned int elapsed)
 {
 	GLuint	 		shaderID	=	m_pShader->getProgramID();
 	glm::mat4		mvp			=	m_modelview;	// load camera pos
+	glEnable(GL_DEPTH_TEST);
+	
 	glUseProgram(shaderID);
 		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
 		glViewport(0,0,800,600);
