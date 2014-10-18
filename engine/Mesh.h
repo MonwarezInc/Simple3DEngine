@@ -59,7 +59,7 @@ namespace GraphicEngine
 				~MeshEntry();
 
 				void	Init(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices);
-				
+				GLuint			VAO;
 				GLuint			VB;
 				GLuint			IB;
 				unsigned int	NumIndices;

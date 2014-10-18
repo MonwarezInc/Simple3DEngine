@@ -34,13 +34,16 @@ namespace GraphicEngine
 			virtual	void	SetActive(GLuint indice);
 
 			virtual void	AddObject(IObject * object, GLuint & id);
-			virtual	void	DeleteObject(const GLuint id);
+			virtual	void	DeleteObject(GLuint id);
 			
-			virtual void 	SetCameraLocation(const glm::vec3 & pos, const glm::vec3 & center, const glm::vec3 & vert);
+			virtual	void	SetObjectPosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch);
+			virtual	void	SetObjectScale(GLuint id, float scale);
+
+			virtual void 	SetCameraLocation(glm::vec3 const & pos,glm::vec3 const & center,glm::vec3 const & vert);
 			virtual	void	SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
 			
 			virtual void	ClearColor(float r, float g, float b, float a);
-			virtual	void	Clear(); // next step is to have flags
+			virtual	void	Init(); // next step is to have flags
 
 			virtual	void	Draw(unsigned int elapsed);
 
@@ -48,7 +51,18 @@ namespace GraphicEngine
 			GraphicEngine::CGraphics*				m_pGraphics;
 			glm::mat4								m_modelview;
 			glm::mat4								m_projection;
-			std::vector< IObject* >					m_vObject;	
+			// struct ObjectList
+			// Maybe next time we will do SceneGraph
+			struct	ObjectNode
+			{
+				IObject*	object;
+				glm::vec3	position;
+				float		pitch[3];
+				float		scale;
+				void	DoTransformation(glm::mat4 & modelview);
+			};
+
+			std::vector< ObjectNode>				m_vObjectNode;	
 			Shader*									m_pShader;
 	};
 }

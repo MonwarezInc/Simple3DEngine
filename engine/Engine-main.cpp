@@ -47,16 +47,38 @@ void	CEngine::SetActive(GLuint indice)
 }
 void	CEngine::AddObject(IObject* object,GLuint & id)
 {
-	m_vObject.push_back(object);
-	id	=	m_vObject.size() - 1;
+	ObjectNode	objectNode;
+	objectNode.object	=	object;
+	objectNode.position	=	glm::vec3(0.0,0.0,0.0);
+	objectNode.scale	=	1.0;
+	for (unsigned int i=0; i < 3; ++i)
+		objectNode.pitch[i]	=	0.0;
+
+	m_vObjectNode.push_back(objectNode);
+	id	=	m_vObjectNode.size() - 1;
 }
 void	CEngine::DeleteObject(GLuint id)
 {
 	//not implemented yet
 }
+void	CEngine::SetObjectPosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch)
+{
+	if (id < m_vObjectNode.size())
+	{
+		m_vObjectNode[id].position	=	pos;
+		for (unsigned int i=0; i < 3; ++i)
+			m_vObjectNode[id].pitch[i]	=	(float)pitch[i];
+	}
+	// else we do nothing improve performance xD
+}
+void	CEngine::SetObjectScale(GLuint id, float scale)
+{
+	if (id < m_vObjectNode.size())
+		m_vObjectNode[id].scale	=	scale;
+	// same things like SetObjectPosRot
+}
 void 	CEngine::SetCameraLocation(glm::vec3 const & pos, glm::vec3 const & center, glm::vec3 const & vert)
 {
-	// not implemented yet
 	m_modelview	=	glm::lookAt(pos,center,vert);
 }
 void	CEngine::SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far)
@@ -67,32 +89,41 @@ void	CEngine::ClearColor(float r, float g, float b, float a)
 {
 	m_pGraphics->ClearColor(r,g,b,a);
 }
-void	CEngine::Clear()
+void	CEngine::Init()
 {	
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE);
-	m_pGraphics->Clear();
 }
 void	CEngine::Draw(unsigned int elapsed)
 {
 	GLuint	 		shaderID	=	m_pShader->getProgramID();
-	glm::mat4		mvp			=	m_modelview;	// load camera pos
-	glEnable(GL_DEPTH_TEST);
 	
 	glUseProgram(shaderID);
 		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
-		glViewport(0,0,800,600);
 		GLuint		mvpLocation	=	glGetUniformLocation(shaderID,"MVP");
-		for (unsigned int i=0; i < m_vObject.size(); ++i)
+		for (unsigned int i=0; i < m_vObjectNode.size(); ++i)
 		{
 			// do transformation stuff
 			// ...
+			glm::mat4		mvp			=	m_modelview;	// load camera pos
+			m_vObjectNode[i].DoTransformation(mvp);
 			mvp	=	m_projection * mvp;
 			// send to OpenGL
 			glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
 			// then draw it
-			m_vObject[i]->Draw(elapsed,0,49);
+			m_vObjectNode[i].object->Draw(elapsed,0,49);
 		}
 	glUseProgram(0);
 	m_pGraphics->SwapWindow();
+}
+void	CEngine::ObjectNode::DoTransformation(glm::mat4 & mdv)
+{
+	// Translate to position
+	mdv	=	glm::translate(mdv, position);
+	// axe  X Y Z orientation
+	mdv	=	glm::rotate(mdv, pitch[0], glm::vec3(1,0,0));
+	mdv	=	glm::rotate(mdv, pitch[1], glm::vec3(0,1,0));
+	mdv	=	glm::rotate(mdv, pitch[2], glm::vec3(0,0,1));
+	// resize
+	mdv	=	glm::scale(mdv, glm::vec3(scale,scale,scale));
 }
