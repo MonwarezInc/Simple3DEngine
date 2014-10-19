@@ -1,7 +1,7 @@
 OBJ=engine.obj
 all:	$(OBJ)
 
-$(OBJ) :	Engine-main.o Mesh.o MiscObject.o
+$(OBJ) :	Engine-main.o Mesh.o MiscObject.o SceneGraph.o
 	ld -o $@ -Ur $^
 %.o: %.cpp
 	$(CXX) -c $^ $(CFLAGS)
