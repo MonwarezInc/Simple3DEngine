@@ -3,6 +3,8 @@
 #include "engine/Mesh.h"
 #include "engine/MiscObject.h"
 
+#include <stdio.h>
+
 using namespace std;
 int main (int argc, char **argv)
 {
@@ -14,30 +16,54 @@ int main (int argc, char **argv)
 	GraphicEngine::CEngine	engine;
 	engine.CreateWindow(800,600,false,"Test Engine", 32, 2, 2,1);
 	engine.ClearColor(0.0,0.0,0.0,1.0);
-	GraphicEngine::Mesh			*obj1	=	new GraphicEngine::Mesh();
-	GraphicEngine::Mesh			*obj2	=	new	GraphicEngine::Mesh();
-	GraphicEngine::Mesh			*obj3	=	new	GraphicEngine::Mesh();
 
+	// quick loader system
+	// not optimal and safe 
+	FILE*	file= nullptr;
+	file	=	fopen("./data/obj.dat","r");
+	std::vector<GraphicEngine::Mesh*>	vMesh;
+	std::vector<unsigned int>		vIDMesh;
 	try
 	{
-		engine.SetCameraSettings(70.0, 800/600.0, 0.01, 10000);
-		engine.SetCameraLocation(glm::vec3(250,0,20), glm::vec3(0,0,0), glm::vec3(0,0,1));
-		obj1->LoadFromFile("../data/cobra.md2");
-		obj2->LoadFromFile("../data/palm/Palm N161213.3DS");
-		obj3->LoadFromFile("../data/girl/Girl walking N090814.3DS");
+		if (nullptr	!= file)
+		{
+			
+			// first line nb of models
+			// then just modelPath position(x,y,z) rotate(a,b,c) scale(f)
+			int	nbModel;
+			if (fscanf(file,"models %d\n", &nbModel))
+			{
+				nbModel	=	max(0,nbModel);
 
-		unsigned	int	obj1ID	=	0;
-		unsigned	int	obj2ID	=	0;
-		unsigned	int	obj3ID	=	0;
-
-		engine.AddObject(obj1,obj1ID);
-		engine.AddObject(obj2,obj2ID);
-		engine.AddObject(obj3,obj3ID);
-
-		engine.SetObjectPosRot(obj1ID, glm::vec3(-10,0,0), glm::vec3(M_PI/2.0, 0.0, 0));
-		engine.SetObjectPosRot(obj2ID, glm::vec3(10,20,0), glm::vec3(0.0,0.0,0.0));
-		engine.SetObjectScale(obj2ID, 0.5);
-		engine.SetObjectPosRot(obj3ID, glm::vec3(0,-30,0), glm::vec3(0.0,0.0,0.0));
+				vMesh.resize(nbModel);
+				for (unsigned int i =0; i < (unsigned int)nbModel; ++i)
+					vMesh[i]	=	new	GraphicEngine::Mesh();
+				
+				vIDMesh.resize(nbModel);
+	
+				engine.SetCameraSettings(70.0, 800/600.0, 0.01, 10000);
+				engine.SetCameraLocation(glm::vec3(250,0,20), glm::vec3(0,0,0), glm::vec3(0,0,1));
+				
+				for (unsigned int i=0; i < nbModel; ++i)
+				{
+					char	filePath[256];
+					float	x,y,z,a,b,c,f;
+					if (fscanf(file,"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)\n", filePath,&x,&y,&z,&a,&b,&c,&f) == 8)
+					{
+						unsigned int 	id	=	0;
+						vMesh[i]->LoadFromFile(filePath);
+						engine.AddObject(vMesh[i], id);
+						vIDMesh[i]			=	id;
+						
+						engine.SetObjectPosRot(vIDMesh[i], glm::vec3(x,y,z), glm::vec3(a*M_PI/180.0, b*M_PI/180.0, c*M_PI/180.0));
+						engine.SetObjectScale(vIDMesh[i], f);
+					}
+					else
+						throw std::string ("error data map");	
+				}
+			}
+			fclose(file);
+		}
 
 		// maybe we should encapsulate timer 
 		//unsigned int start	=	SDL_GetTicks();
@@ -67,9 +93,11 @@ int main (int argc, char **argv)
 	{
 		std::cerr << "unexpected error " << std::endl;
 	}
-	delete	obj1;
-	delete 	obj2;
-	delete	obj3;
+	// free stage
+	for (unsigned int i=0; i < vMesh.size(); ++i)
+	{
+		delete	vMesh[i];
+	}
 	return EXIT_SUCCESS;
 }
 

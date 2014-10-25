@@ -1,0 +1,4 @@
+models 2
+../data/cobra.md2 position(-10,0,0) rotate(90,0,0) scale(1)
+../data/girl/girl.3ds position(10,20,0) rotate(0,0,90) scale(1)
+
