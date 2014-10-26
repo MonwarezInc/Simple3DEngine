@@ -9,7 +9,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/monwarez/texture-lemog.fr/mur-crepi/revmur021.jpg
+map_Kd ../texture/512x512/revmur021.jpg
 
 newmtl sol.001
 Ns 96.078431
@@ -19,7 +19,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/monwarez/texture-lemog.fr/carrelage/311_antigua.jpg
+map_Kd ../texture/512x512/311_antigua.jpg
 
 newmtl store-mechanic.001
 Ns 96.078431
@@ -29,4 +29,4 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/monwarez/texture-lemog.fr/metal-divers/048metal.jpg
+map_Kd ../texture/512x512/048metal.jpg

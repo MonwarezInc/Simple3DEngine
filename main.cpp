@@ -14,7 +14,7 @@ int main (int argc, char **argv)
 	cout << "Test engine " << endl;
 	
 	GraphicEngine::CEngine	engine;
-	engine.CreateWindow(800,600,false,"Test Engine", 32, 2, 2,1);
+	engine.CreateWindow(1024,768,false,"Test Engine", 32, 2, 2,1);
 	engine.ClearColor(0.0,0.0,0.0,1.0);
 
 	// quick loader system
