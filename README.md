@@ -1,6 +1,8 @@
 GraphicEngine
 =============
 
+Current branch -> Try to use cmake instead of manual Makefile
+
 This is a graphics engine for a future project,
 I will probably reuse a part of my personal project
 
