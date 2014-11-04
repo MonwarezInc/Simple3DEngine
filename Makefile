@@ -1,6 +1,11 @@
 export CXX=c++
-export CFLAGS= -I/usr/local/include -Wall -std=c++11 -Os
-export LDFLAGS= -L/usr/local/lib -lGL -lSDL2 -lSDL2_image -lGLEW -lassimp
+export PREFIX=/usr/local/
+export COTHERFLAGS= # in case of multiple Include directory
+export LOTHERFLAGS=	# in case of multiple Lib directory
+export CFLAGS= -I$(PREFIX)include $(COTHERFLAGS) -Wall -std=c++11 -Os
+export LDFLAGS= -L$(PREFIX)lib $(COTHERFLAGS)-lGL -lSDL2 -lSDL2_image -lGLEW -lassimp
+export MAKE=gmake
+
 EXEC=test-engine
 OUT=graphic-engine.o 
 OBJ= tools/tools.obj window/window.obj engine/engine.obj
@@ -13,11 +18,11 @@ $(OUT): $(OBJ)
 	ld -o $@ -Ur $^
 #subdirectories build
 tools/tools.obj:
-	gmake -C tools
+	$(MAKE) -C tools
 window/window.obj:
-	gmake -C window
+	$(MAKE) -C window
 engine/engine.obj:
-	gmake -C engine
+	$(MAKE) -C engine
 #directory build
 %.o:	%.cpp
 	$(CXX) -o $@ -c $< $(CFLAGS)
@@ -25,12 +30,12 @@ engine/engine.obj:
 
 clean:
 	rm -rf main.o
-	gmake clean -C tools
-	gmake clean -C window
-	gmake clean -C engine
+	$(MAKE) clean -C tools
+	$(MAKE) clean -C window
+	$(MAKE) clean -C engine
 mrpropre: clean
 	rm -f $(EXEC) $(OUT)
 depend:
-	gmake depend -C tools
-	gmake depend -C window
-	gmake depend -C engine
+	$(MAKE) depend -C tools
+	$(MAKE) depend -C window
+	$(MAKE) depend -C engine
