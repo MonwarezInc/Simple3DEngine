@@ -1,10 +1,12 @@
 GraphicEngine
 =============
 
-Current branch -> Try to use cmake instead of manual Makefile
+
 
 This is a graphics engine for a future project,
 I will probably reuse a part of my personal project
+You can build it with cmake commands
+and set lib_include to include path and lib_lib to lib path
 
 Copyright (C) 2014 Payet Thibault
 
