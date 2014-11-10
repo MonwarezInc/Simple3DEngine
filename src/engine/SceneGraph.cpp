@@ -50,3 +50,30 @@ IObject*		SceneGraph::ChainTransformation(unsigned int id, glm::mat4 & transf)
 	(void)transf;
 	return NULL;
 }
+// Tree algorithm
+SceneGraph::Tree::Tree()
+{
+	// ok we create the root node
+	m_root.nodeInfo.id	=	0;
+	m_root.nodeInfo.obj	=	nullptr;
+	// it is root id = 0 so don't care about more initialisation
+	m_root.previous		=	nullptr;
+	m_root.next.push_back(nullptr);
+}
+SceneGraph::Tree::~Tree()
+{
+	// not implemented yet
+}
+unsigned	int	SceneGraph::Tree::AddNodeInfo(NodeInfo const & nodeInfo, unsigned int parent)
+{
+	// not implemented yet
+}
+SceneGraph::Node*	SceneGraph::Tree::Detach(unsigned int id)
+{
+	// not implemented yet
+}
+bool	SceneGraph::Tree::Attach(Node const * node, unsigned int id)
+{
+	// not implemented yet
+}
+

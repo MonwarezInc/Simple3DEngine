@@ -16,9 +16,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include "Object.hpp"
 #include <vector>
+#ifndef GLM_FORCE_RADIANS
+	#define GLM_FORCE_RADIANS
+#endif
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 namespace	GraphicEngine
 {
+	struct	Transformation
+	{
+		glm::vec3	translate;
+		glm::vec3	scale;
+		glm::quat	rotate;
+	};
+
 	class	SceneGraph
 	{
 		public:
@@ -30,15 +44,30 @@ namespace	GraphicEngine
 			bool			DeleteObject(unsigned int id);
 			IObject*		ChainTransformation(unsigned int id, glm::mat4 & transf);
 		protected:
-			struct Node
+			struct NodeInfo
 			{
 				IObject*		obj;
 				bool			hide;
 				bool			transparent;
-				glm::mat4		transformation;
+				Transformation	transformation;
 				unsigned int 	id;
 			};
-			// now we have to set list and tree structure
-			// or use the stl list
+			struct	Node
+			{
+				NodeInfo			nodeInfo;
+				Node*				previous;
+				std::vector<Node*>	next;
+			};
+			class	Tree
+			{
+				public:
+					Tree();
+					virtual	~Tree();
+					virtual	unsigned	int		AddNodeInfo(NodeInfo const & nodeInfo, unsigned int parent);
+				protected:
+					virtual	Node*				Detach(unsigned int id);
+					virtual	bool				Attach(Node const * node, unsigned int parent);
+					Node						m_root;
+			};
 	};	
 }
