@@ -4,12 +4,12 @@ GraphicEngine
 
 
 This is a graphics engine for a future project,
-I will probably reuse a part of my personal project.</p>
-You can build it with cmake commands</p>
-If u have a different location of libraries</p>
-You can add to CMakeCache.txt (created by the first invoke of cmake) these lines: </p>
-lib_include:FILEPATH=/path/to/include/directory </p>
-lib_lib:FILEPATH=/path/to/lib/directory </p>
+I will probably reuse a part of my personal project.<br/>
+You can build it with cmake commands<br/>
+If u have a different location of libraries<br/>
+You can add to CMakeCache.txt (created by the first invoke of cmake) these lines: <br/>
+lib_include:FILEPATH=/path/to/include/directory <br/>
+lib_lib:FILEPATH=/path/to/lib/directory <br/>
 Copyright (C) 2014 Payet Thibault
 
 This program is free software: you can redistribute it and/or modify
