@@ -16,6 +16,10 @@ file(
 	source_file
 	src/*
 )
+set(GLib GL)
+if (win)
+	set(GLib opengl32)
+endif (win)
 
 #Declaration of executable
 add_executable(
@@ -26,7 +30,7 @@ add_executable(
 #Configuration of link resolution
 target_link_libraries(
 	test-engine
-	GL
+	${GLib}
 	SDL2
 	SDL2_image
 	GLEW
