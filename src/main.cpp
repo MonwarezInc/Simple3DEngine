@@ -4,6 +4,7 @@
 #include "engine/MiscObject.h"
 
 #include <stdio.h>
+#include <cmath>
 
 using namespace std;
 int main (int argc, char **argv)
@@ -22,7 +23,10 @@ int main (int argc, char **argv)
 	FILE*	file= nullptr;
 	file	=	fopen("./data/obj.dat","r");
 	std::vector<GraphicEngine::Mesh*>	vMesh;
-	std::vector<unsigned int>		vIDMesh;
+	std::vector<unsigned int>			vIDMesh;
+	glm::vec3							cPosition(250,0,20);
+	glm::vec3							cTarget(2,5,0);
+	glm::vec3							cVert(0,0,1);
 	try
 	{
 		if (nullptr	!= file)
@@ -42,7 +46,7 @@ int main (int argc, char **argv)
 				vIDMesh.resize(nbModel);
 	
 				engine.SetCameraSettings(70.0, 800/600.0, 0.01, 10000);
-				engine.SetCameraLocation(glm::vec3(250,0,20), glm::vec3(0,0,0), glm::vec3(0,0,1));
+				engine.SetCameraLocation(cPosition, cTarget, cVert);
 				
 				for (unsigned int i=0; i < nbModel; ++i)
 				{
@@ -59,7 +63,11 @@ int main (int argc, char **argv)
 						engine.SetObjectScale(vIDMesh[i], f);
 					}
 					else
+					{	
+						fclose(file);
+						file	=	nullptr;	
 						throw std::string ("error data map");	
+					}
 				}
 			}
 			fclose(file);
@@ -67,13 +75,20 @@ int main (int argc, char **argv)
 
 		// maybe we should encapsulate timer 
 		//unsigned int start	=	SDL_GetTicks();
-		unsigned int frametime	=	16;
-		unsigned int elapsed	=	0;
+		unsigned int 	frametime	=	16;
+		unsigned int	elapsed		=	0;
+		double			angle		=	0;			
 		while (SDL_GetTicks() < 5000)
 		{
 			unsigned int begin = SDL_GetTicks();
 			// do graphical stuff
-			//engine.Clear();
+			// do animation like moving camera
+			double	cosAngle	=	cos(angle);
+			double	sinAngle	=	sin(angle);
+			glm::vec3	position= 	glm::vec3(cPosition[0] * cosAngle + cPosition[1] * sinAngle, 
+												cPosition[1] * cosAngle - cPosition[0] * sinAngle,
+												cPosition[2]);
+			engine.SetCameraLocation(position,cTarget,cVert);
 			engine.Init();
 			engine.Draw(elapsed);
 			elapsed = SDL_GetTicks() - begin;
@@ -82,7 +97,7 @@ int main (int argc, char **argv)
 					SDL_Delay(frametime - elapsed);
 					elapsed	=	SDL_GetTicks() - begin;
 				}
-			
+			angle	+= (elapsed*0.001)*(M_PI/2);
 		}
 	}
 	catch(string a)
