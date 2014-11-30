@@ -30,12 +30,14 @@ void	Mesh::LoadFromFile(std::string const & filename)
 	this->Clear();
 	
 	Assimp::Importer importer;
-	const aiScene*	pScene	=	importer.ReadFile(filename.c_str(), aiProcess_Triangulate |
+	m_pScene	=	m_Importer.ReadFile(filename.c_str(), aiProcess_Triangulate |
 									aiProcess_GenSmoothNormals	|	aiProcess_FlipUVs);
-	if (pScene)
+	if (m_pScene)
 	{
+		m_GlobalInverseTransform	=	m_pScene->mRootNode->mTransformation;
+		m_GlobalInverseTransform.Inverse();
 		// can launch an except
-		if(!this->InitFromScene(pScene,filename))
+		if(!this->InitFromScene(m_pScene,filename))
 			throw std::string("error init from scene");
 	}
 	else

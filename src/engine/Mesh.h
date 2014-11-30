@@ -49,6 +49,7 @@ namespace GraphicEngine
 			virtual	void	LoadFromFile(std::string const & filename);
 			virtual	void	Draw(unsigned int elapsed_time, int start , int end);
 		private:
+			#define NUM_BONES_PER_VERTEX 4
 			void	Clear();
 			bool	InitFromScene(const aiScene* pScene, std::string const & filename);
 			void	InitMesh(unsigned int index, const aiMesh* paiMesh);
@@ -67,9 +68,16 @@ namespace GraphicEngine
 				unsigned int	NumIndices;
 				unsigned int	MaterialIndex;
 			};
-			
+			struct 	VertexBoneData
+			{
+				uint			IDs[NUM_BONES_PER_VERTEX];
+				float			Weights[NUM_BONES_PER_VERTEX];
+			};
 			std::vector<MeshEntry>	m_Entries;
 			std::vector<Texture*>	m_Textures;
+			const aiScene*			m_pScene;
+			Assimp::Importer		m_Importer;
+			aiMatrix4x4				m_GlobalInverseTransform;
 	};
 }
 #endif
