@@ -14,6 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
+#ifndef MESH_INCLUED
+#define MESH_INCLUED
 #include "Object.hpp"
 #include "../tools/Texture.h"
 #include <assimp/Importer.hpp>
@@ -70,3 +72,4 @@ namespace GraphicEngine
 			std::vector<Texture*>	m_Textures;
 	};
 }
+#endif
