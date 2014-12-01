@@ -15,18 +15,54 @@ int main (int argc, char **argv)
 	cout << "Test engine " << endl;
 	
 	GraphicEngine::CEngine	engine;
-	engine.CreateWindow(1024,768,false,"Test Engine", 32, 2, 2,1);
+	engine.CreateWindow(1600,900,true,"Test Engine", 32, 2, 2,1);
 	engine.ClearColor(0.0,0.0,0.0,1.0);
 
 	// quick loader system
 	// not optimal and safe 
 	FILE*	file= nullptr;
+	file	=	fopen("./data/command.dat","r"); // camera settings and time of life
+	glm::vec3	cPosition;
+	glm::vec3	cTarget;
+	glm::vec3	cVert;
+	int			lifetime	=	2000;
+	float		dangle		=	0;
+
+	if (nullptr != file)
+	{
+		// typical command file are just
+		// camera position(x,y,z) target(x,y,z) up(x,y,z)
+		// lifetime t
+		// rotate a
+		float 	x1,y1,z1,x2,y2,z2,x3,y3,z3,a;
+		int		t;
+		if (fscanf(file,"camera position(%f,%f,%f) target(%f,%f,%f) up(%f,%f,%f)\nlifetime %d\nrotate %f",
+								&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3,&t,&a) != 11)
+		{
+			x1	=	350;	y1	=	200;	z1	=	300;
+			x2	=	2;		y2	=	5;		z2	=	0;
+			x3	=	0;		y3	=	0;		z3	=	1;
+			t	=	5000;
+			a	=	45.0;
+		}
+		fclose(file);
+		file	=	nullptr;
+
+		cPosition	=	glm::vec3(x1,y1,z1);
+		cTarget		=	glm::vec3(x2,y2,z2);
+		cVert		=	glm::vec3(x3,y3,z3);
+
+		lifetime	=	t;
+		dangle		=	a;
+
+	}
+	else
+	{
+		std::cerr << "error when loading command.dat" << std::endl;
+	}		
 	file	=	fopen("./data/obj.dat","r");
 	std::vector<GraphicEngine::Mesh*>	vMesh;
 	std::vector<unsigned int>			vIDMesh;
-	glm::vec3							cPosition(250,0,20);
-	glm::vec3							cTarget(2,5,0);
-	glm::vec3							cVert(0,0,1);
 	try
 	{
 		if (nullptr	!= file)
@@ -45,7 +81,7 @@ int main (int argc, char **argv)
 				
 				vIDMesh.resize(nbModel);
 	
-				engine.SetCameraSettings(70.0, 800/600.0, 0.01, 10000);
+				engine.SetCameraSettings(70.0, 16/9.0, 0.01, 10000);
 				engine.SetCameraLocation(cPosition, cTarget, cVert);
 				
 				for (unsigned int i=0; i < nbModel; ++i)
@@ -74,17 +110,17 @@ int main (int argc, char **argv)
 		}
 
 		// maybe we should encapsulate timer 
-		//unsigned int start	=	SDL_GetTicks();
+		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
 		unsigned int	elapsed		=	0;
-		double			angle		=	0;			
-		while (SDL_GetTicks() < 5000)
+		float			angle		=	0;			
+		while (start < lifetime)
 		{
 			unsigned int begin = SDL_GetTicks();
 			// do graphical stuff
 			// do animation like moving camera
-			double	cosAngle	=	cos(angle);
-			double	sinAngle	=	sin(angle);
+			float	cosAngle	=	cos(angle);
+			float	sinAngle	=	sin(angle);
 			glm::vec3	position= 	glm::vec3(cPosition[0] * cosAngle + cPosition[1] * sinAngle, 
 												cPosition[1] * cosAngle - cPosition[0] * sinAngle,
 												cPosition[2]);
@@ -97,7 +133,8 @@ int main (int argc, char **argv)
 					SDL_Delay(frametime - elapsed);
 					elapsed	=	SDL_GetTicks() - begin;
 				}
-			angle	+= (elapsed*0.001)*(M_PI/2);
+			angle	+= (elapsed*0.001)*(dangle)*(M_PI/180);
+			start	=	SDL_GetTicks();
 		}
 	}
 	catch(string a)
