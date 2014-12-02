@@ -1,4 +1,4 @@
-camera position(10,10,300) target(400,400,0) up(0,0,1)
+camera position(-100,-100,60) target(0,0,0) up(0,0,1)
 lifetime 12000
 rotate 45
 
