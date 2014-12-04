@@ -114,7 +114,8 @@ bool Shader::charger()
     glBindAttribLocation(m_programID, 1, "in_Color");
     glBindAttribLocation(m_programID, 2, "in_TexCoord0");
 	glBindAttribLocation(m_programID, 3, "in_Normal");
-
+	glBindAttribLocation(m_programID, 4, "in_BoneID");
+	glBindAttribLocation(m_programID, 5, "in_BoneW");
 
     // Linkage du programme
 

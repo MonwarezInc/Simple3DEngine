@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <assimp/mesh.h>
 #include <assimp/postprocess.h>
 #include <vector>
+#include <map>
+
 namespace GraphicEngine
 {
 	struct	Vertex
@@ -50,34 +52,63 @@ namespace GraphicEngine
 			virtual	void	Draw(unsigned int elapsed_time, int start , int end);
 		private:
 			#define NUM_BONES_PER_VERTEX 4
-			void	Clear();
-			bool	InitFromScene(const aiScene* pScene, std::string const & filename);
-			void	InitMesh(unsigned int index, const aiMesh* paiMesh);
-			bool	InitMaterials(const aiScene* pScene, std::string const & filename);
-
 			#define INVALID_MATERIAL	0xFFFFFFFF
-			struct	MeshEntry
-			{
-				MeshEntry();
-				~MeshEntry();
 
-				void	Init(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices);
-				GLuint			VAO;
-				GLuint			VB;
-				GLuint			IB;
-				unsigned int	NumIndices;
-				unsigned int	MaterialIndex;
+			struct 	BoneInfo
+			{
+				aiMatrix4x4		BoneOffset;
+				aiMatrix4x4		FinalTransformation;
+
+				BoneInfo()
+				{
+					BoneOffset			=	aiMatrix4x4();
+					FinalTransformation	=	aiMatrix4x4();
+				}
 			};
 			struct 	VertexBoneData
 			{
 				uint			IDs[NUM_BONES_PER_VERTEX];
 				float			Weights[NUM_BONES_PER_VERTEX];
+				
+				VertexBoneData()
+				{
+					for (unsigned int i=0; i < NUM_BONES_PER_VERTEX; ++i)
+					{
+						IDs[i]		=	0;
+						Weights[i]	=	0;
+					}
+				}
+				void			AddBoneData(unsigned int boneID, float weight);
 			};
-			std::vector<MeshEntry>	m_Entries;
-			std::vector<Texture*>	m_Textures;
-			const aiScene*			m_pScene;
-			Assimp::Importer		m_Importer;
-			aiMatrix4x4				m_GlobalInverseTransform;
+			void	Clear();
+			bool	InitFromScene(const aiScene* pScene, std::string const & filename);
+			void	InitMesh(unsigned int index, const aiMesh* paiMesh);
+			bool	InitMaterials(const aiScene* pScene, std::string const & filename);
+			void	LoadBones(unsigned int index, const aiMesh* , std::vector<VertexBoneData> & bones);			
+			struct	MeshEntry
+			{
+				MeshEntry();
+				~MeshEntry();
+
+				void	Init(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, 
+								std::vector<VertexBoneData> const & bones);
+				GLuint			VAO;
+				GLuint			VB;
+				GLuint			IB;
+				GLuint			BONES;
+				unsigned int	NumIndices;
+				unsigned int	MaterialIndex;
+				unsigned int	BaseVertex;
+				unsigned int	BaseIndex;
+			};
+			std::vector<MeshEntry>				m_Entries;
+			std::vector<Texture*>				m_Textures;
+			const aiScene*						m_pScene;
+			Assimp::Importer					m_Importer;
+			aiMatrix4x4							m_GlobalInverseTransform;
+			std::map<std::string, unsigned int>	m_BoneMapping;
+			unsigned int						m_NumBones;
+			std::vector<BoneInfo>				m_BoneInfo;
 	};
 }
 #endif

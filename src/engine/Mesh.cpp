@@ -42,6 +42,7 @@ void	Mesh::LoadFromFile(std::string const & filename)
 	}
 	else
 		throw std::string("Error parsing" + filename + " : " + importer.GetErrorString() );
+
 }
 bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 {
@@ -94,9 +95,20 @@ void	Mesh::Clear()
 void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
 {
 	m_Entries[index].MaterialIndex	=	paiMesh->mMaterialIndex;
-	std::vector<Vertex>			vertices;
-	std::vector<unsigned int>	indices;
-	
+	std::vector<Vertex>				vertices;
+	std::vector<unsigned int>		indices;
+	std::vector<VertexBoneData>		bones;
+
+
+	unsigned	int				NumVertices	=	0;
+	unsigned	int				NumIndices	=	0;
+
+	NumVertices								=	paiMesh->mNumVertices;
+	NumIndices								=	3*paiMesh->mNumFaces;
+
+	vertices.reserve(NumVertices);
+	bones.reserve(NumVertices);
+	indices.resize(NumIndices);
 	aiVector3D	const			zero3D(0.0f,0.0f,0.0f);
 	
 	for (unsigned int i = 0; i < paiMesh->mNumVertices; ++i)
@@ -120,8 +132,8 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
 		indices.push_back(face.mIndices[1]);
 		indices.push_back(face.mIndices[2]);
 	}
-
-	m_Entries[index].Init(vertices,indices);
+	this->LoadBones(index, paiMesh, bones);
+	m_Entries[index].Init(vertices,indices,bones);
 }
 		
 bool	Mesh::InitMaterials(const aiScene* pScene, std::string const & filename)
@@ -183,21 +195,27 @@ Mesh::MeshEntry::~MeshEntry()
 		glDeleteBuffers(1,&IB);
 	if (0 != VAO)
 		glDeleteVertexArrays(1,&VAO);
+	if (0 != BONES)
+		glDeleteVertexArrays(1,&BONES);
 }
 Mesh::MeshEntry::MeshEntry()
 {
 	VB				=	0;
 	IB				=	0;
 	VAO				=	0;
+	BONES			=	0;
 	NumIndices		=	0;
 	MaterialIndex	=	INVALID_MATERIAL;
 }
-void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices)
+void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, 
+								std::vector<VertexBoneData> const & bones)
 {
 	NumIndices		=	indices.size();
 	glGenBuffers(1,&VB);
 	glGenBuffers(1,&IB);
+	glGenBuffers(1,&BONES);
 	glGenVertexArrays(1,&VAO);
+	
 	
 	// Vertex Array Object to OpenGL 3.2 core profile
 	glBindVertexArray(VAO);
@@ -215,5 +233,57 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &indices[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, BONES);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
+			
+			glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+			glVertexAttribPointer(5, 4 , GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+
+			glEnableVertexAttribArray(4);
+			glEnableVertexAttribArray(5);
 	glBindVertexArray(0);
+}
+void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<VertexBoneData> & bones)
+{
+	for (unsigned int i=0; i < pMesh->mNumBones; ++i)
+	{
+		unsigned int 	BoneIndex	=	0;
+		std::string		BoneName(pMesh->mBones[i]->mName.data);
+		
+		if (m_BoneMapping.find(BoneName)	==	m_BoneMapping.end())
+		{
+			BoneIndex	=	m_NumBones;
+			++m_NumBones;
+			BoneInfo	bi;
+			m_BoneInfo.push_back(bi);
+		}
+		else
+		{
+			BoneIndex	=	m_BoneMapping[BoneName];
+		}
+		m_BoneMapping[BoneName]	=	BoneIndex;
+		m_BoneInfo[BoneIndex].BoneOffset	=	pMesh->mBones[i]->mOffsetMatrix;
+		
+		for (unsigned int j=0; j < pMesh->mBones[i]->mNumWeights; ++j)
+		{
+			unsigned int 	VertexID	=	m_Entries[index].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+			float			Weight		=	pMesh->mBones[i]->mWeights[j].mWeight;
+			bones[VertexID].AddBoneData(BoneIndex, Weight);
+		}
+	}	
+}
+void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
+{
+	for (unsigned int i=0; i < NUM_BONES_PER_VERTEX; ++i)
+	{
+		if (Weights[i]	==	0.0)
+		{
+			IDs[i]		=	BoneID;
+			Weights[i]	=	Weight;
+
+			return;
+		}
+	}
+	// if we have more than NUM_BONES_PER_VERTEX
+	assert(0);
 }

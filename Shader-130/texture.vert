@@ -5,6 +5,8 @@
 in 		vec3	in_Vertex;
 in		vec2	in_TexCoord0;
 in		vec3	in_Normal;
+in		ivec4	in_Bone_ID;
+in		vec4	in_BoneW;
 
 // uniform
 uniform	mat4	MVP;
