@@ -58,12 +58,9 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 
 	return	InitMaterials(pScene, filename);
 }		
-void	Mesh::Draw(unsigned int elapsed_time, int start , int end)
+void	Mesh::Draw(unsigned int elapsed_time, std::string const & animation)
 {
 	// animation not implemented yet
-	(void)elapsed_time;
-	(void)start;
-	(void)end;
 	/* So
 		0 is for vertex position
 		2 is for texture coordinate

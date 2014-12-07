@@ -41,6 +41,7 @@ namespace GraphicEngine
 			
 			virtual	void	SetObjectPosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch);
 			virtual	void	SetObjectScale(GLuint id, float scale);
+			virtual	void	SetObjectAnimation(GLuint id, std::string const & animation);
 
 			virtual void 	SetCameraLocation(glm::vec3 const & pos,glm::vec3 const & center,glm::vec3 const & vert);
 			virtual	void	SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
@@ -63,6 +64,7 @@ namespace GraphicEngine
 				float		pitch[3];
 				float		scale;
 				void	DoTransformation(glm::mat4 & modelview);
+				std::string	animation;
 			};
 
 			std::vector< ObjectNode>				m_vObjectNode;	

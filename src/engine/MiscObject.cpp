@@ -61,11 +61,8 @@ void	QuadObject::SetTextureID(GLuint id)
 {
 	m_textureID	=	id;
 }
-void	QuadObject::Draw(unsigned int elapsed_time, int start , int end)
+void	QuadObject::Draw(unsigned int elapsed_time, std::string const & animation)
 {
-	(void) 	elapsed_time;
-	(void)	start;
-	(void)	end;
 
 	glBindVertexArray(m_vao);
 		glBindTexture(GL_TEXTURE_2D, m_textureID);

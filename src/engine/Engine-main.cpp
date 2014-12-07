@@ -53,7 +53,7 @@ void	CEngine::AddObject(IObject* object,GLuint & id)
 	objectNode.scale	=	1.0;
 	for (unsigned int i=0; i < 3; ++i)
 		objectNode.pitch[i]	=	0.0;
-
+	objectNode.animation	=	"idle"; // idle by default
 	m_vObjectNode.push_back(objectNode);
 	id	=	m_vObjectNode.size() - 1;
 }
@@ -76,6 +76,11 @@ void	CEngine::SetObjectScale(GLuint id, float scale)
 	if (id < m_vObjectNode.size())
 		m_vObjectNode[id].scale	=	scale;
 	// same things like SetObjectPosRot
+}
+void	CEngine::SetObjectAnimation(GLuint id, std::string const & animation)
+{
+	if (id < m_vObjectNode.size())
+		m_vObjectNode[id].animation	=	animation;
 }
 void 	CEngine::SetCameraLocation(glm::vec3 const & pos, glm::vec3 const & center, glm::vec3 const & vert)
 {
@@ -111,7 +116,7 @@ void	CEngine::Draw(unsigned int elapsed)
 			// send to OpenGL
 			glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
 			// then draw it
-			m_vObjectNode[i].object->Draw(elapsed,0,49);
+			m_vObjectNode[i].object->Draw(elapsed, m_vObjectNode[i].animation);
 		}
 	glUseProgram(0);
 	m_pGraphics->SwapWindow();
@@ -127,3 +132,4 @@ void	CEngine::ObjectNode::DoTransformation(glm::mat4 & mdv)
 	// resize
 	mdv	=	glm::scale(mdv, glm::vec3(scale,scale,scale));
 }
+

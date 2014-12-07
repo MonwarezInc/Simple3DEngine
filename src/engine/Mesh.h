@@ -49,7 +49,7 @@ namespace GraphicEngine
 			Mesh();
 			virtual	~Mesh();
 			virtual	void	LoadFromFile(std::string const & filename);
-			virtual	void	Draw(unsigned int elapsed_time, int start , int end);
+			virtual	void	Draw(unsigned int elapsed_time, std::string const & animation);
 		private:
 			#define NUM_BONES_PER_VERTEX 4
 			#define INVALID_MATERIAL	0xFFFFFFFF

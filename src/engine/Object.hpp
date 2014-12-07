@@ -40,7 +40,8 @@ namespace GraphicEngine
 	{
 		public:
 			IObject(){}
-			virtual void	Draw(unsigned int elapsed_time, int start, int end)=0;
+			//	In general, most object will use idle animation by default
+			virtual void	Draw(unsigned int elapsed_time, std::string const & animation="idle")=0;
 	};
 }
 #endif

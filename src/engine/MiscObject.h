@@ -30,7 +30,7 @@ namespace	GraphicEngine
 			~QuadObject();
 			
 			void	SetTextureID(GLuint id);
-			void	Draw(unsigned int elapsed_time, int start=0, int end=0);
+			void	Draw(unsigned int elapsed_time, std::string const & animation="idle");
 		
 		private:
 			GLuint		m_vao;
