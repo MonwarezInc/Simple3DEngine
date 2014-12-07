@@ -80,11 +80,25 @@ namespace GraphicEngine
 				}
 				void			AddBoneData(unsigned int boneID, float weight);
 			};
-			void	Clear();
-			bool	InitFromScene(const aiScene* pScene, std::string const & filename);
-			void	InitMesh(unsigned int index, const aiMesh* paiMesh);
-			bool	InitMaterials(const aiScene* pScene, std::string const & filename);
-			void	LoadBones(unsigned int index, const aiMesh* , std::vector<VertexBoneData> & bones);			
+			void		Clear();
+			bool		InitFromScene(const aiScene* pScene, std::string const & filename);
+			void		InitMesh(unsigned int index, const aiMesh* paiMesh);
+			bool		InitMaterials(const aiScene* pScene, std::string const & filename);
+			void		LoadBones(unsigned int index, const aiMesh* , std::vector<VertexBoneData> & bones);			
+			void		BoneTransform(float TimeInSec, std::vector<aiMatrix4x4>& Transforms, unsigned int idAnimation);
+			void		ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, aiMatrix4x4 const & ParentTransform, unsigned int idAnimation);
+
+			void		CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+			void		CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+			void		CalcInterpolatedPosition(aiVector3D & Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+			const aiNodeAnim*	FindNodeAnim(const aiAnimation* pAnimation, std::string const & NodeName);
+			unsigned int		FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
+			unsigned int		FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
+			unsigned int		FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+			unsigned int		GetAnimationIndex(std::string const & animation);
+
 			struct	MeshEntry
 			{
 				MeshEntry();

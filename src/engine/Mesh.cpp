@@ -66,7 +66,7 @@ void	Mesh::Draw(unsigned int elapsed_time, std::string const & animation)
 		2 is for texture coordinate
 		3 is for normal
 	*/
-
+	
 	for (unsigned int i=0; i < m_Entries.size(); ++i)
 	{
 		glBindVertexArray(m_Entries[i].VAO);
@@ -283,4 +283,189 @@ void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 	}
 	// if we have more than NUM_BONES_PER_VERTEX
 	assert(0);
+}
+void	Mesh::BoneTransform(float TimeInSec, std::vector<aiMatrix4x4> & Transforms, unsigned int idAnimation)
+{
+	aiMatrix4x4	Identity		=	aiMatrix4x4();
+	
+	float		TicksPerSec		=	(m_pScene->mAnimations[idAnimation] != 0 )? 
+									m_pScene->mAnimations[idAnimation]->mTicksPerSecond : 25.0f;
+	float		TimeInTicks		=	TimeInSec * TicksPerSec;
+	float		AnimationTime	=	fmod(TimeInTicks, m_pScene->mAnimations[idAnimation]->mDuration);
+
+	this->ReadNodeHiearchy(AnimationTime, m_pScene->mRootNode, Identity, idAnimation);
+
+	Transforms.resize(m_NumBones);
+	for (unsigned int i=0; i < m_NumBones; ++i)
+	{
+		Transforms[i]	=	m_BoneInfo[i].FinalTransformation;
+	}
+}
+void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, aiMatrix4x4 const & ParentTransform, unsigned int idAnimation)
+{
+	std::string 		NodeName(pNode->mName.data);
+	
+	const aiAnimation*	pAnimation			=	m_pScene->mAnimations[idAnimation];
+	aiMatrix4x4			NodeTransformation(pNode->mTransformation);
+	const aiNodeAnim*	pNodeAnim			=	this->FindNodeAnim(pAnimation, NodeName);
+	
+	if (pNodeAnim)
+	{
+		// Interpolate Scaling
+		aiVector3D		scaling;
+		this->CalcInterpolatedScaling(scaling, AnimationTime, pNodeAnim);
+		aiMatrix4x4		scalingM;
+		scalingM		=	aiMatrix4x4::Scaling(scaling,scalingM);
+		// Interpolate rotation
+		aiQuaternion	rotationQ;
+		this->CalcInterpolatedRotation(rotationQ, AnimationTime, pNodeAnim);
+		aiMatrix4x4		rotationM(rotationQ.GetMatrix());
+		// Interpolate translation
+		aiVector3D		translation;
+		this->CalcInterpolatedPosition(translation, AnimationTime, pNodeAnim);
+		aiMatrix4x4		translationM;
+		translationM	=	aiMatrix4x4::Translation(translation,translationM);
+		
+		// Combine above transformation
+		NodeTransformation	=	translationM * rotationM * scalingM;	
+	}
+	aiMatrix4x4	GlobalTransformation	=	ParentTransform * NodeTransformation;
+	
+	if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
+	{
+		unsigned int	BoneIndex	=	m_BoneMapping[NodeName];
+		m_BoneInfo[BoneIndex].FinalTransformation	=	m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[BoneIndex].BoneOffset;
+	}
+
+	for (unsigned int i= 0; i < pNode->mNumChildren; ++i)
+	{
+		this->ReadNodeHiearchy(AnimationTime, pNode->mChildren[i], GlobalTransformation, idAnimation);
+	}
+}	
+
+unsigned int 		Mesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	assert(pNodeAnim->mNumScalingKeys > 0);
+	for (unsigned int i = 0; i < pNodeAnim->mNumScalingKeys -1 ; ++i)
+	{
+		if (AnimationTime < (float) pNodeAnim->mScalingKeys[i+1].mTime)
+		{
+			return i;
+		}
+	}
+	
+	assert(0);
+
+	return 0;
+}
+unsigned int	Mesh::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	assert(pNodeAnim->mNumRotationKeys > 0);
+	for (unsigned int i = 0; i < pNodeAnim->mNumRotationKeys - 1; ++i)
+	{
+		if (AnimationTime < (float) pNodeAnim->mRotationKeys[i+1].mTime)
+			return i;
+	}
+	
+	assert(0);
+	return 0;
+}
+unsigned int	Mesh::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	assert(pNodeAnim->mNumPositionKeys > 0);
+	for (unsigned int i=0; i < pNodeAnim->mNumPositionKeys -1; ++i)
+	{
+		if (AnimationTime < (float) pNodeAnim->mPositionKeys[i+1].mTime)
+			return i;
+	}
+	assert(0);
+	return 0;
+}
+void	Mesh::CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	if (pNodeAnim->mNumScalingKeys == 1)
+	{
+		Out	=	pNodeAnim->mScalingKeys[0].mValue;
+		return;
+	}
+	
+	unsigned int 	ScalingIndex		=	this->FindScaling(AnimationTime,pNodeAnim);
+	unsigned int 	NextScalingIndex	=	ScalingIndex + 1;
+
+	assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
+
+	float			DeltaTime			=	(float) (pNodeAnim->mScalingKeys[NextScalingIndex].mTime - 
+											pNodeAnim->mScalingKeys[ScalingIndex].mTime);
+	float			Factor				=	(AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime)/DeltaTime;
+	
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+
+	const aiVector3D & 	Start			=	pNodeAnim->mScalingKeys[ScalingIndex].mValue;
+	const aiVector3D & 	End				=	pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
+	aiVector3D			Delta			=	End - Start;
+	Out 								=	Start + Factor * Delta;	
+}
+void	Mesh::CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	if (pNodeAnim->mNumRotationKeys == 1)
+	{
+		Out	=	pNodeAnim->mRotationKeys[0].mValue;
+		return;
+	}
+	
+	unsigned int 	RotationIndex		=	this->FindRotation(AnimationTime,pNodeAnim);
+	unsigned int 	NextRotationIndex	=	RotationIndex + 1;
+
+	assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
+
+	float			DeltaTime			=	(float) (pNodeAnim->mRotationKeys[NextRotationIndex].mTime - 
+											pNodeAnim->mRotationKeys[RotationIndex].mTime);
+	float			Factor				=	(AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime)/DeltaTime;
+	
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+
+	const aiQuaternion&	Start			=	pNodeAnim->mRotationKeys[RotationIndex].mValue;
+	const aiQuaternion&	End				=	pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
+	aiQuaternion::Interpolate(Out, Start, End, Factor);
+	Out.Normalize();
+}
+void	Mesh::CalcInterpolatedPosition(aiVector3D & Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
+{
+	if (pNodeAnim->mNumPositionKeys == 1)
+	{
+		Out	=	pNodeAnim->mPositionKeys[0].mValue;
+		return;
+	}
+	
+	unsigned int 	PositionIndex		=	this->FindPosition(AnimationTime,pNodeAnim);
+	unsigned int 	NextPositionIndex	=	PositionIndex + 1;
+
+	assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
+
+	float			DeltaTime			=	(float) (pNodeAnim->mPositionKeys[NextPositionIndex].mTime - 
+											pNodeAnim->mPositionKeys[PositionIndex].mTime);
+	float			Factor				=	(AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime)/DeltaTime;
+	
+	assert(Factor >= 0.0f && Factor <= 1.0f);
+
+	const aiVector3D & 	Start			=	pNodeAnim->mPositionKeys[PositionIndex].mValue;
+	const aiVector3D & 	End				=	pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
+	aiVector3D			Delta			=	End - Start;
+	Out 								=	Start + Factor * Delta;	
+}
+const aiNodeAnim*	Mesh::FindNodeAnim(const aiAnimation* pAnimation, std::string const & NodeName)
+{
+	for (unsigned int i=0; i < pAnimation->mNumChannels; ++i)
+	{
+		const aiNodeAnim*	pNodeAnim	=	pAnimation->mChannels[i];
+		if (std::string(pNodeAnim->mNodeName.data) == NodeName)
+			return pNodeAnim;
+	}
+	
+	return nullptr;
+}
+unsigned int 		Mesh::GetAnimationIndex(std::string const & animation)
+{
+	// not implemented yet 
+	return 0;
 }
