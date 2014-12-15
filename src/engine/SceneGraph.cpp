@@ -25,7 +25,7 @@ SceneGraph::~SceneGraph()
 {
 	// not implemented yet
 }
-unsigned int	SceneGraph::AddObject(IObject* obj, glm::mat4 const & transf, unsigned int parent, 
+unsigned int	SceneGraph::AddMesh(Mesh* obj, glm::mat4 const & transf, unsigned int parent, 
 										bool hide, bool trans)
 {
 	// not implemented yet
@@ -43,7 +43,7 @@ bool			SceneGraph::DeleteObject(unsigned int id)
 	(void)id;
 	return false;
 }
-IObject*		SceneGraph::ChainTransformation(unsigned int id, glm::mat4 & transf)
+Mesh*		SceneGraph::ChainTransformation(unsigned int id, glm::mat4 & transf)
 {
 	// not implemented yet
 	(void)id;

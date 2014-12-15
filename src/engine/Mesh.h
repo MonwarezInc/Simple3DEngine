@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #ifndef MESH_INCLUED
 #define MESH_INCLUED
-#include "Object.hpp"
 #include "../tools/Texture.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -24,6 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <assimp/postprocess.h>
 #include <vector>
 #include <map>
+#ifndef GLM_FORCE_RADIANS
+#define GLM_FORCE_RADIANS
+#endif
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace GraphicEngine
 {
@@ -42,7 +47,7 @@ namespace GraphicEngine
 			m_normal=	normal;
 		}
 	};
-	class Mesh : public IObject
+	class Mesh
 	{
 		public:
 	

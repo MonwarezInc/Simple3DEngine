@@ -45,7 +45,7 @@ void	CEngine::SetActive(GLuint indice)
 {
 	// not implemented yet
 }
-void	CEngine::AddObject(IObject* object,GLuint & id)
+void	CEngine::AddMeshNode(Mesh* object,GLuint & id)
 {
 	ObjectNode	objectNode;
 	objectNode.object	=	object;
@@ -61,7 +61,7 @@ void	CEngine::DeleteObject(GLuint id)
 {
 	//not implemented yet
 }
-void	CEngine::SetObjectPosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch)
+void	CEngine::SetNodePosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch)
 {
 	if (id < m_vObjectNode.size())
 	{
@@ -71,13 +71,13 @@ void	CEngine::SetObjectPosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const 
 	}
 	// else we do nothing improve performance xD
 }
-void	CEngine::SetObjectScale(GLuint id, float scale)
+void	CEngine::SetNodeScale(GLuint id, float scale)
 {
 	if (id < m_vObjectNode.size())
 		m_vObjectNode[id].scale	=	scale;
 	// same things like SetObjectPosRot
 }
-void	CEngine::SetObjectAnimation(GLuint id, std::string const & animation)
+void	CEngine::SetNodeAnimation(GLuint id, std::string const & animation)
 {
 	if (id < m_vObjectNode.size())
 		m_vObjectNode[id].animation	=	animation;

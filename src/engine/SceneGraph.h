@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #ifndef SCENE_GRAPH_INCLUED
 #define SCENE_GRAPH_INCLUED
-#include "Object.hpp"
+#include "Mesh.h"
 #include <vector>
 #ifndef GLM_FORCE_RADIANS
 	#define GLM_FORCE_RADIANS
@@ -41,14 +41,14 @@ namespace	GraphicEngine
 			SceneGraph();
 			~SceneGraph();
 			// for beginning we just use mat4 transformation , after we will get quaternion transformation
-			unsigned int	AddObject(IObject* obj,glm::mat4 const & transf, unsigned int parent=0, 
+			unsigned int	AddMesh(Mesh* obj,glm::mat4 const & transf, unsigned int parent=0, 
 										bool hide= false, bool trans = false);	
 			bool			DeleteObject(unsigned int id);
-			IObject*		ChainTransformation(unsigned int id, glm::mat4 & transf);
+			Mesh*		ChainTransformation(unsigned int id, glm::mat4 & transf);
 		protected:
 			struct NodeInfo
 			{
-				IObject*		obj;
+				Mesh*			obj;
 				bool			hide;
 				bool			transparent;
 				Transformation	transformation;

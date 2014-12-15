@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #ifndef RC_MANAGER_H
 #define RC_MANAGER_H
-#include "../engine/Object.hpp"
 
 /*
 	I dont really want use singleton pattern (maybe in future)
@@ -26,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 namespace GraphicEngine
 {
+	// use template class
 	class RcManager
 	{
 		public:

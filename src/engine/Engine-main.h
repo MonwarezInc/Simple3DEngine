@@ -18,10 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define ENGINE_MAIN_INCLUED
 
 #include "../window/Graphics.h"
-#include "Object.hpp"
+#include "Mesh.h"
 #include "../tools/Shader.h"
 #include <vector>
-
 namespace GraphicEngine
 {
 	class CEngine
@@ -36,12 +35,12 @@ namespace GraphicEngine
 			virtual void	DeleteWindow(GLuint indice);
 			virtual	void	SetActive(GLuint indice);
 
-			virtual void	AddObject(IObject * object, GLuint & id);
+			virtual void	AddMeshNode(Mesh * object, GLuint & id);
 			virtual	void	DeleteObject(GLuint id);
 			
-			virtual	void	SetObjectPosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch);
-			virtual	void	SetObjectScale(GLuint id, float scale);
-			virtual	void	SetObjectAnimation(GLuint id, std::string const & animation);
+			virtual	void	SetNodePosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch);
+			virtual	void	SetNodeScale(GLuint id, float scale);
+			virtual	void	SetNodeAnimation(GLuint id, std::string const & animation);
 
 			virtual void 	SetCameraLocation(glm::vec3 const & pos,glm::vec3 const & center,glm::vec3 const & vert);
 			virtual	void	SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
@@ -59,7 +58,7 @@ namespace GraphicEngine
 			// Maybe next time we will do SceneGraph
 			struct	ObjectNode
 			{
-				IObject*	object;
+				Mesh*		object;
 				glm::vec3	position;
 				float		pitch[3];
 				float		scale;

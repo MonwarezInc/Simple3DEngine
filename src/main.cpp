@@ -1,10 +1,10 @@
 #include <iostream>
 #include "engine/Engine-main.h"
 #include "engine/Mesh.h"
-#include "engine/MiscObject.h"
 
 #include <stdio.h>
 #include <cmath>
+#include "main.h"
 
 using namespace std;
 int main (int argc, char **argv)
@@ -20,15 +20,14 @@ int main (int argc, char **argv)
 
 	// quick loader system
 	// not optimal and safe 
-	FILE*	file= nullptr;
-	file	=	fopen("./data/command.dat","r"); // camera settings and time of life
+	FileManager	file;
+	file.LoadFile("./data/command.dat","r"); // camera settings and time of life
 	glm::vec3	cPosition;
 	glm::vec3	cTarget;
 	glm::vec3	cVert;
 	int			lifetime	=	2000;
 	float		dangle		=	0;
-
-	if (nullptr != file)
+	try
 	{
 		// typical command file are just
 		// camera position(x,y,z) target(x,y,z) up(x,y,z)
@@ -36,7 +35,7 @@ int main (int argc, char **argv)
 		// rotate a
 		float 	x1,y1,z1,x2,y2,z2,x3,y3,z3,a;
 		int		t;
-		if (fscanf(file,"camera position(%f,%f,%f) target(%f,%f,%f) up(%f,%f,%f)\nlifetime %d\nrotate %f",
+		if (fscanf(file.GetFilePtr(),"camera position(%f,%f,%f) target(%f,%f,%f) up(%f,%f,%f)\nlifetime %d\nrotate %f",
 								&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3,&t,&a) != 11)
 		{
 			x1	=	350;	y1	=	200;	z1	=	300;
@@ -45,8 +44,7 @@ int main (int argc, char **argv)
 			t	=	5000;
 			a	=	45.0;
 		}
-		fclose(file);
-		file	=	nullptr;
+		file.Release();
 
 		cPosition	=	glm::vec3(x1,y1,z1);
 		cTarget		=	glm::vec3(x2,y2,z2);
@@ -56,22 +54,20 @@ int main (int argc, char **argv)
 		dangle		=	a;
 
 	}
-	else
+	catch (...)
 	{
 		std::cerr << "error when loading command.dat" << std::endl;
 	}		
-	file	=	fopen("./data/obj.dat","r");
+	file.LoadFile("./data/obj.dat","r");
 	std::vector<GraphicEngine::Mesh*>	vMesh;
 	std::vector<unsigned int>			vIDMesh;
 	try
 	{
-		if (nullptr	!= file)
-		{
 			
 			// first line nb of models
 			// then just modelPath position(x,y,z) rotate(a,b,c) scale(f)
 			int	nbModel;
-			if (fscanf(file,"models %d\n", &nbModel))
+			if (fscanf(file.GetFilePtr(),"models %d\n", &nbModel))
 			{
 				nbModel	=	max(0,nbModel);
 
@@ -88,27 +84,23 @@ int main (int argc, char **argv)
 				{
 					char	filePath[256];
 					float	x,y,z,a,b,c,f;
-					if (fscanf(file,"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)\n", filePath,&x,&y,&z,&a,&b,&c,&f) == 8)
+					if (fscanf(file.GetFilePtr(),"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)\n", filePath,&x,&y,&z,&a,&b,&c,&f) == 8)
 					{
 						unsigned int 	id	=	0;
 						vMesh[i]->LoadFromFile(filePath);
-						engine.AddObject(vMesh[i], id);
+						engine.AddMeshNode(vMesh[i], id);
 						vIDMesh[i]			=	id;
 						
-						engine.SetObjectPosRot(vIDMesh[i], glm::vec3(x,y,z), glm::vec3(a*M_PI/180.0, b*M_PI/180.0, c*M_PI/180.0));
-						engine.SetObjectScale(vIDMesh[i], f);
+						engine.SetNodePosRot(vIDMesh[i], glm::vec3(x,y,z), glm::vec3(a*M_PI/180.0, b*M_PI/180.0, c*M_PI/180.0));
+						engine.SetNodeScale(vIDMesh[i], f);
 					}
 					else
 					{	
-						fclose(file);
-						file	=	nullptr;	
+						file.Release();
 						throw std::string ("error data map");	
 					}
 				}
 			}
-			fclose(file);
-		}
-
 		// maybe we should encapsulate timer 
 		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
