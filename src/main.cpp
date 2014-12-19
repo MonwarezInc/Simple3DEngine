@@ -20,8 +20,6 @@ int main (int argc, char **argv)
 
 	// quick loader system
 	// not optimal and safe 
-	FileManager	file;
-	file.LoadFile("./data/command.dat","r"); // camera settings and time of life
 	glm::vec3	cPosition;
 	glm::vec3	cTarget;
 	glm::vec3	cVert;
@@ -29,6 +27,7 @@ int main (int argc, char **argv)
 	float		dangle		=	0;
 	try
 	{
+		FileManager	file("./data/command.dat","r"); // camera settings and time of life
 		// typical command file are just
 		// camera position(x,y,z) target(x,y,z) up(x,y,z)
 		// lifetime t
@@ -58,49 +57,48 @@ int main (int argc, char **argv)
 	{
 		std::cerr << "error when loading command.dat" << std::endl;
 	}		
-	file.LoadFile("./data/obj.dat","r");
 	std::vector<GraphicEngine::Mesh*>	vMesh;
 	std::vector<unsigned int>			vIDMesh;
 	try
 	{
 			
-			// first line nb of models
-			// then just modelPath position(x,y,z) rotate(a,b,c) scale(f)
-			int	nbModel;
-			if (fscanf(file.GetFilePtr(),"models %d\n", &nbModel))
-			{
-				nbModel	=	max(0,nbModel);
+		FileManager	file("./data/obj.dat","r");
+		BasicVectorManager<GraphicEngine::Mesh>	mesh;
+		// first line nb of models
+		// then just modelPath position(x,y,z) rotate(a,b,c) scale(f)
+		int	nbModel;
+		if (fscanf(file.GetFilePtr(),"models %d\n", &nbModel))
+		{
+			nbModel	=	max(0,nbModel);
 
-				vMesh.resize(nbModel);
-				for (unsigned int i =0; i < (unsigned int)nbModel; ++i)
-					vMesh[i]	=	new	GraphicEngine::Mesh();
-				
-				vIDMesh.resize(nbModel);
-	
-				engine.SetCameraSettings(70.0, 16/9.0, 0.01, 10000);
-				engine.SetCameraLocation(cPosition, cTarget, cVert);
-				
-				for (unsigned int i=0; i < nbModel; ++i)
+			mesh.Allocate(nbModel);
+			
+			vIDMesh.resize(nbModel);
+
+			engine.SetCameraSettings(70.0, 16/9.0, 0.01, 10000);
+			engine.SetCameraLocation(cPosition, cTarget, cVert);
+			
+			for (unsigned int i=0; i < nbModel; ++i)
+			{
+				char	filePath[256];
+				float	x,y,z,a,b,c,f;
+				if (fscanf(file.GetFilePtr(),"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)\n", filePath,&x,&y,&z,&a,&b,&c,&f) == 8)
 				{
-					char	filePath[256];
-					float	x,y,z,a,b,c,f;
-					if (fscanf(file.GetFilePtr(),"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)\n", filePath,&x,&y,&z,&a,&b,&c,&f) == 8)
-					{
-						unsigned int 	id	=	0;
-						vMesh[i]->LoadFromFile(filePath);
-						engine.AddMeshNode(vMesh[i], id);
-						vIDMesh[i]			=	id;
-						
-						engine.SetNodePosRot(vIDMesh[i], glm::vec3(x,y,z), glm::vec3(a*M_PI/180.0, b*M_PI/180.0, c*M_PI/180.0));
-						engine.SetNodeScale(vIDMesh[i], f);
-					}
-					else
-					{	
-						file.Release();
-						throw std::string ("error data map");	
-					}
+					unsigned int 	id	=	0;
+					mesh.GetVect()[i]->LoadFromFile(filePath);
+					engine.AddMeshNode(mesh.GetVect()[i], id);
+					vIDMesh[i]			=	id;
+					
+					engine.SetNodePosRot(vIDMesh[i], glm::vec3(x,y,z), glm::vec3(a*M_PI/180.0, b*M_PI/180.0, c*M_PI/180.0));
+					engine.SetNodeScale(vIDMesh[i], f);
+				}
+				else
+				{	
+					file.Release();
+					throw std::string ("error data map");	
 				}
 			}
+		}
 		// maybe we should encapsulate timer 
 		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
@@ -136,11 +134,6 @@ int main (int argc, char **argv)
 	catch(...)
 	{
 		std::cerr << "unexpected error " << std::endl;
-	}
-	// free stage
-	for (unsigned int i=0; i < vMesh.size(); ++i)
-	{
-		delete	vMesh[i];
 	}
 	return EXIT_SUCCESS;
 }
