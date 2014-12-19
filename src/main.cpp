@@ -57,7 +57,6 @@ int main (int argc, char **argv)
 	{
 		std::cerr << "error when loading command.dat" << std::endl;
 	}		
-	std::vector<GraphicEngine::Mesh*>	vMesh;
 	std::vector<unsigned int>			vIDMesh;
 	try
 	{
