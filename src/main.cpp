@@ -43,8 +43,6 @@ int main (int argc, char **argv)
 			t	=	5000;
 			a	=	45.0;
 		}
-		file.Release();
-
 		cPosition	=	glm::vec3(x1,y1,z1);
 		cTarget		=	glm::vec3(x2,y2,z2);
 		cVert		=	glm::vec3(x3,y3,z3);
@@ -98,6 +96,8 @@ int main (int argc, char **argv)
 				}
 			}
 		}
+		// we dont need file open anymore
+		file.Release();
 		// maybe we should encapsulate timer 
 		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
@@ -126,7 +126,7 @@ int main (int argc, char **argv)
 			start	=	SDL_GetTicks();
 		}
 	}
-	catch(string a)
+	catch(string const &a)
 	{
 		std::cerr << "erreur " << a << std::endl;
 	}

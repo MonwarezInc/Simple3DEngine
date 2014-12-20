@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include "Mesh.h"
 #include <assert.h>
+#include <iostream>
 using namespace GraphicEngine;
 Mesh::Mesh()
 {
@@ -66,7 +67,8 @@ void	Mesh::Draw(unsigned int elapsed_time, std::string const & animation)
 		2 is for texture coordinate
 		3 is for normal
 	*/
-	
+	std::vector<aiMatrix4x4>	transforms;
+	this->BoneTransform(elapsed_time, transforms, GetAnimationIndex(animation));
 	for (unsigned int i=0; i < m_Entries.size(); ++i)
 	{
 		glBindVertexArray(m_Entries[i].VAO);
@@ -286,10 +288,12 @@ void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 }
 void	Mesh::BoneTransform(float TimeInSec, std::vector<aiMatrix4x4> & Transforms, unsigned int idAnimation)
 {
+	if (!m_pScene->HasAnimations()) // if we have no animation quit the boneTransform
+		return;
 	aiMatrix4x4	Identity		=	aiMatrix4x4();
-	
 	float		TicksPerSec		=	(m_pScene->mAnimations[idAnimation] != 0 )? 
 									m_pScene->mAnimations[idAnimation]->mTicksPerSecond : 25.0f;
+	
 	float		TimeInTicks		=	TimeInSec * TicksPerSec;
 	float		AnimationTime	=	fmod(TimeInTicks, m_pScene->mAnimations[idAnimation]->mDuration);
 
