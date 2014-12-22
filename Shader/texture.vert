@@ -1,12 +1,12 @@
 // GLSL version
-#version 130
+#version 330
 
 // vertex input
-in 		vec3	in_Vertex;
-in		vec2	in_TexCoord0;
-in		vec3	in_Normal;
-in		ivec4	in_Bone_ID;
-in		vec4	in_BoneW;
+layout (location = 0) 	in 		vec3	in_Vertex;
+layout (location = 2)	in		vec2	in_TexCoord0;
+layout (location = 3)	in		vec3	in_Normal;
+layout (location = 4)	in		ivec4	in_Bone_ID;
+layout (location = 5)	in		vec4	in_BoneW;
 
 const 	int		MAX_BONES	=	100;
 // uniform

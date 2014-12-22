@@ -34,7 +34,7 @@ void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const s
 	m_pGraphics		=	(NULL == m_pGraphics) ?  new CGraphics(width, height, fullscreen, title, bpp, aa , major, minor):
 						m_pGraphics ;
 	// load shader
-	m_pShader	=	new	Shader("./Shader-130/texture.vert","./Shader-130/texture.frag");
+	m_pShader	=	new	Shader("./Shader/texture.vert","./Shader/texture.frag");
 	m_pShader->charger();
 }
 void	CEngine::DeleteWindow(GLuint indice)

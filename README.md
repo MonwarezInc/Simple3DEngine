@@ -1,7 +1,7 @@
 GraphicEngine
 =============
 
-
+GraphicEngine turned to OpenGL 3.2 (core profile) and 330 for shader 
 
 This is a graphics engine for a future project,
 I will probably reuse a part of my personal project.<br/>

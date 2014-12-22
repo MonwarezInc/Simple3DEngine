@@ -1,5 +1,5 @@
 // GLSL version
-#version 130
+#version 330
 
 // Input
 in vec2 			coordTexture;
@@ -7,7 +7,7 @@ in vec3 			Normal0;
 // Uniform
 uniform sampler2D	text;	 
 // Output
-out vec4 out_Color;
+layout (location = 0) out vec4 out_Color;
 
 void main()
 {
