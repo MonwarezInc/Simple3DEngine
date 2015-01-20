@@ -10,6 +10,10 @@ If u have a different location of libraries<br/>
 You can add to CMakeCache.txt (created by the first invoke of cmake) these lines: <br/>
 lib_include:FILEPATH=/path/to/include/directory <br/>
 lib_lib:FILEPATH=/path/to/lib/directory <br/>
+Note: <br/>
+Support for mesh with bones seems not working at all, it's result on a seg fault for unknow reason. <br/>
+Only one mesh with bones are tested, maybe is the model.
+
 Copyright (C) 2014 Payet Thibault
 
 This program is free software: you can redistribute it and/or modify

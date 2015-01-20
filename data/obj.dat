@@ -1,7 +1,8 @@
-models 5
+models 6
 ../data/cobra.md2 position(-10,50,10) rotate(90,0,0) scale(0.2)
 ../data/girl/girl.3ds position(0,-10,10) rotate(0,0,0) scale(0.2)
 ../data/Ruins/CathedralRuins_01/CathedralRuins_01.dae position(0,0,0) rotate(0,0,0) scale(1)
 ../data/Ruins/FoundationRuin_01/foundationRuin_01.dae position(0,0,0) rotate(0,0,0) scale(1)
 ../data/Ruins/SpeakingStones_01/SpeakingStones_01.dae position(0,0,0) rotate(0,0,0) scale(1)
+../data/bob_lamp/bob_lamp_update_export.md5mesh position(-10,60,10) rotate(0,0,0) scale(1)
 
