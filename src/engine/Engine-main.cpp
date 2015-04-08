@@ -24,7 +24,7 @@ CEngine::CEngine()
 CEngine::~CEngine()
 {
 	delete m_pGraphics;
-	// for the list of object, we didn't manage the object memorie , so just delete the list , and not the content
+	// for the list of object, we didn't manage the object memory , so just delete the list , and not the content
 	delete m_pShader;
 }
 void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const std::string & title,

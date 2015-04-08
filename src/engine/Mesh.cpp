@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 Payet thibault
+Copyright (C) 2014-2015 Payet thibault
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -67,10 +67,9 @@ void	Mesh::Draw(unsigned int elapsed_time, std::string const & animation)
 		2 is for texture coordinate
 		3 is for normal
 	*/
-	/* Bones support temporaly disabled
 	std::vector<aiMatrix4x4>	transforms;
 	this->BoneTransform(elapsed_time, transforms, GetAnimationIndex(animation));
-	*/
+
 	for (unsigned int i=0; i < m_Entries.size(); ++i)
 	{
 		glBindVertexArray(m_Entries[i].VAO);
@@ -98,9 +97,7 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
 	m_Entries[index].MaterialIndex	=	paiMesh->mMaterialIndex;
 	std::vector<Vertex>				vertices;
 	std::vector<unsigned int>		indices;
-	/* Bones support disabled
 	std::vector<VertexBoneData>		bones;
-	*/
 
 	unsigned	int				NumVertices	=	0;
 	unsigned	int				NumIndices	=	0;
@@ -109,9 +106,7 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
 	NumIndices								=	3*paiMesh->mNumFaces;
 
 	vertices.reserve(NumVertices);
-	/* Bones support disabled
-	bones.reserve(NumVertices);
-	*/
+	bones.resize(NumVertices);
 	indices.resize(NumIndices);
 	aiVector3D	const			zero3D(0.0f,0.0f,0.0f);
 	
@@ -136,10 +131,9 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
 		indices.push_back(face.mIndices[1]);
 		indices.push_back(face.mIndices[2]);
 	}
-	/* Bones disabled
+
 	this->LoadBones(index, paiMesh, bones);
-	*/
-	std::vector<VertexBoneData> bones;
+
 	m_Entries[index].Init(vertices,indices,bones);
 }
 		
@@ -240,7 +234,7 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &indices[0], GL_STATIC_DRAW);
-		/* Bones disabled
+
 		glBindBuffer(GL_ARRAY_BUFFER, BONES);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
 			
@@ -249,7 +243,6 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 
 			glEnableVertexAttribArray(4);
 			glEnableVertexAttribArray(5);
-		*/
 	glBindVertexArray(0);
 }
 void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<VertexBoneData> & bones)
@@ -283,6 +276,9 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 }
 void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 {
+	/*
+	std::cout << "IDs " << IDs << std::endl; // a prematured deleted memory should be the reason of SIGSEV
+	std::cout << "Weights " << Weights << std::endl;
 	for (unsigned int i=0; i < NUM_BONES_PER_VERTEX; ++i)
 	{
 		if (Weights[i]	==	0.0)
@@ -295,6 +291,7 @@ void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 	}
 	// if we have more than NUM_BONES_PER_VERTEX
 	assert(0);
+	//*/
 }
 void	Mesh::BoneTransform(float TimeInSec, std::vector<aiMatrix4x4> & Transforms, unsigned int idAnimation)
 {

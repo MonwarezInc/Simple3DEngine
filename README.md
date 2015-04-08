@@ -13,8 +13,10 @@ lib_lib:FILEPATH=/path/to/lib/directory <br/>
 Note: <br/>
 Support for mesh with bones seems not working at all, it's result on a seg fault for unknow reason. <br/>
 Only one mesh with bones are tested, maybe is the model.
+Ok so maybe it's because a premature memory delete.<br/>
+In fact Weights and IDs are not nullptr , but we get SIGSEV by trying to see they value<br/>
 
-Copyright (C) 2014 Payet Thibault
+Copyright (C) 2014-2015 Payet Thibault
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
