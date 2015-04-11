@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <cmath>
 #include "main.h"
-
+#include "misc/Camera.h"
 using namespace std;
 int main (int argc, char **argv)
 {
@@ -17,6 +17,9 @@ int main (int argc, char **argv)
 	GraphicEngine::CEngine	engine;
 	engine.CreateWindow(1600,900,true,"Test Engine", 32, 2, 3,2);
 	engine.ClearColor(0.0,0.0,0.0,1.0);
+
+	// Input
+	CInput	input;
 
 	// quick loader system
 	// not optimal and safe 
@@ -96,24 +99,27 @@ int main (int argc, char **argv)
 				}
 			}
 		}
+		Camera	camera(cPosition,cTarget,cVert);
 		// we dont need file open anymore
 		file.Release();
 		// maybe we should encapsulate timer 
 		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
 		unsigned int	elapsed		=	0;
-		float			angle		=	0;			
-		while (start < lifetime)
+
+		input.GrabCursor(true);
+		input.ShowCursor(false);	
+		
+		camera.setSpeed(0.1);
+		while (!input.terminer())
 		{
+			input.UpdateEvent();
+			camera.keyBoardEvent(input);	
+			camera.deplacer(input,elapsed);
 			unsigned int begin = SDL_GetTicks();
 			// do graphical stuff
-			// do animation like moving camera
-			float	cosAngle	=	cos(angle);
-			float	sinAngle	=	sin(angle);
-			glm::vec3	position= 	glm::vec3(cPosition[0] * cosAngle + cPosition[1] * sinAngle, 
-												cPosition[1] * cosAngle - cPosition[0] * sinAngle,
-												cPosition[2]);
-			engine.SetCameraLocation(position,cTarget,cVert);
+			// do animation 
+			engine.SetCameraLocation(camera.GetPosition(),camera.GetPointCible(),cVert);
 			engine.Init();
 			engine.Draw(elapsed);
 			elapsed = SDL_GetTicks() - begin;
@@ -122,8 +128,9 @@ int main (int argc, char **argv)
 					SDL_Delay(frametime - elapsed);
 					elapsed	=	SDL_GetTicks() - begin;
 				}
-			angle	+= (elapsed*0.001)*(dangle)*(M_PI/180);
 			start	=	SDL_GetTicks();
+			if (input.GetTouche(SDL_SCANCODE_ESCAPE))
+				break;
 		}
 	}
 	catch(string const &a)
