@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "Mesh.h"
 #include <assert.h>
 #include <iostream>
+#include <sstream>
 using namespace GraphicEngine;
 Mesh::Mesh()
 {
@@ -42,7 +43,7 @@ void	Mesh::LoadFromFile(std::string const & filename)
 			throw std::string("error init from scene");
 	}
 	else
-		throw std::string("Error parsing" + filename + " : " + importer.GetErrorString() );
+		throw std::string("Error parsing" + filename + " : " + m_Importer.GetErrorString() );
 
 }
 bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
@@ -104,7 +105,7 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
 
 	NumVertices								=	paiMesh->mNumVertices;
 	NumIndices								=	3*paiMesh->mNumFaces;
-
+	
 	vertices.reserve(NumVertices);
 	bones.resize(NumVertices);
 	indices.resize(NumIndices);
@@ -268,17 +269,22 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 		
 		for (unsigned int j=0; j < pMesh->mBones[i]->mNumWeights; ++j)
 		{
-			unsigned int 	VertexID	=	m_Entries[index].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+			//unsigned int 	VertexID	=	m_Entries[index].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
+			unsigned int	VertexID	=	pMesh->mBones[i]->mWeights[j].mVertexId;
 			float			Weight		=	pMesh->mBones[i]->mWeights[j].mWeight;
-			bones[VertexID].AddBoneData(BoneIndex, Weight);
+			if (VertexID < bones.size())
+				bones[VertexID].AddBoneData(BoneIndex, Weight);
+			else
+			{
+				std::stringstream out;
+				out << "Error bones have " << bones.size() << " elements , but VertexID is equal to " << VertexID;
+				throw out.str();
+			}
 		}
 	}	
 }
 void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 {
-	/*
-	std::cout << "IDs " << IDs << std::endl; // a prematured deleted memory should be the reason of SIGSEV
-	std::cout << "Weights " << Weights << std::endl;
 	for (unsigned int i=0; i < NUM_BONES_PER_VERTEX; ++i)
 	{
 		if (Weights[i]	==	0.0)
@@ -291,7 +297,6 @@ void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 	}
 	// if we have more than NUM_BONES_PER_VERTEX
 	assert(0);
-	//*/
 }
 void	Mesh::BoneTransform(float TimeInSec, std::vector<aiMatrix4x4> & Transforms, unsigned int idAnimation)
 {

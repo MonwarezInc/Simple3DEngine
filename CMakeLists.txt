@@ -20,7 +20,8 @@ set(GLib GL)
 if (win)
 	set(GLib opengl32)
 endif (win)
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #Declaration of executable
 add_executable(
 	test-engine
