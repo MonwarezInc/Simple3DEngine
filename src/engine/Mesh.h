@@ -87,7 +87,7 @@ namespace GraphicEngine
 			};
 			void		Clear();
 			bool		InitFromScene(const aiScene* pScene, std::string const & filename);
-			void		InitMesh(unsigned int index, const aiMesh* paiMesh);
+			void		InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex, unsigned int BaseIndex);
 			bool		InitMaterials(const aiScene* pScene, std::string const & filename);
 			void		LoadBones(unsigned int index, const aiMesh* , std::vector<VertexBoneData> & bones);			
 			void		BoneTransform(float TimeInSec, std::vector<aiMatrix4x4>& Transforms, unsigned int idAnimation);

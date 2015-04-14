@@ -55,7 +55,7 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 	for (unsigned int i = 0; i < m_Entries.size(); ++i)
 	{
 		const aiMesh*	paiMesh	=	pScene->mMeshes[i];
-		this->InitMesh(i, paiMesh);
+		this->InitMesh(i, paiMesh, 0, 0); // 0 because it's one VAO by meshEntrie
 	}
 
 	return	InitMaterials(pScene, filename);
@@ -93,9 +93,13 @@ void	Mesh::Clear()
 		delete 	m_Textures[i];
 	}
 }	
-void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh)
+void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex, unsigned int BaseIndex)
 {
 	m_Entries[index].MaterialIndex	=	paiMesh->mMaterialIndex;
+	m_Entries[index].NumIndices		=	paiMesh->mNumFaces * 3;
+	m_Entries[index].BaseVertex		=	BaseVertex;
+	m_Entries[index].BaseIndex		=	BaseIndex;
+
 	std::vector<Vertex>				vertices;
 	std::vector<unsigned int>		indices;
 	std::vector<VertexBoneData>		bones;
@@ -269,8 +273,7 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 		
 		for (unsigned int j=0; j < pMesh->mBones[i]->mNumWeights; ++j)
 		{
-			//unsigned int 	VertexID	=	m_Entries[index].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
-			unsigned int	VertexID	=	pMesh->mBones[i]->mWeights[j].mVertexId;
+			unsigned int 	VertexID	=	m_Entries[index].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
 			float			Weight		=	pMesh->mBones[i]->mWeights[j].mWeight;
 			if (VertexID < bones.size())
 				bones[VertexID].AddBoneData(BoneIndex, Weight);
