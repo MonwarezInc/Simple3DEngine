@@ -54,11 +54,11 @@ namespace GraphicEngine
 			Mesh();
 			virtual	~Mesh();
 			virtual	void	LoadFromFile(std::string const & filename);
-			virtual	void	Draw(unsigned int elapsed_time, std::string const & animation);
+			virtual	void	Draw(unsigned int elapsed_time, GLuint shaderID,std::string const & animation);
 		private:
 			#define NUM_BONES_PER_VERTEX 4
 			#define INVALID_MATERIAL	0xFFFFFFFF
-
+			
 			struct 	BoneInfo
 			{
 				aiMatrix4x4		BoneOffset;
@@ -119,6 +119,7 @@ namespace GraphicEngine
 				unsigned int	MaterialIndex;
 				unsigned int	BaseVertex;
 				unsigned int	BaseIndex;
+				int				skinned;
 			};
 			std::vector<MeshEntry>				m_Entries;
 			std::vector<Texture*>				m_Textures;

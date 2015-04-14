@@ -116,7 +116,7 @@ void	CEngine::Draw(unsigned int elapsed)
 			// send to OpenGL
 			glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
 			// then draw it
-			m_vObjectNode[i].object->Draw(elapsed, m_vObjectNode[i].animation);
+			m_vObjectNode[i].object->Draw(elapsed, shaderID,m_vObjectNode[i].animation);
 		}
 	glUseProgram(0);
 	m_pGraphics->SwapWindow();
