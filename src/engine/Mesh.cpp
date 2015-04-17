@@ -72,7 +72,7 @@ void	Mesh::Draw(unsigned int elapsed_time,GLuint shaderID, std::string const & a
 	this->BoneTransform(elapsed_time, transforms, GetAnimationIndex(animation));
 	for (unsigned int i=0; i < transforms.size(); ++i)
 	{
-			// we have to send unform matrix
+		// we have to send unform matrix
 		char Name[128];
 		memset(Name, 0, sizeof(Name));
 		snprintf(Name, sizeof(Name), "Bones[%d]", i);
@@ -80,9 +80,9 @@ void	Mesh::Draw(unsigned int elapsed_time,GLuint shaderID, std::string const & a
 		GLfloat tr[16];
 		for (unsigned int j=0; j < 16; ++j)
 		{
-				tr[j]	=	static_cast<GLfloat>(*transforms[i][j]);
+			//tr[j]	=	(j == 0 || j == 5 || j == 10 || j == 15)? 1 : 0;
+			tr[j]	=	static_cast<GLfloat>(*transforms[i][j]);
 		}
-				
 		glUniformMatrix4fv(location, 1, GL_TRUE, (const GLfloat*) tr);
 	}
 	for (unsigned int i=0; i < m_Entries.size(); ++i)
@@ -259,6 +259,7 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 
 		glBindBuffer(GL_ARRAY_BUFFER, BONES);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
+
 			
 			glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
 			glVertexAttribPointer(5, 4 , GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
