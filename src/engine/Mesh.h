@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 namespace GraphicEngine
 {
+	void	aiMatrix4x4ToMat4(aiMatrix4x4 const & src, glm::mat4 & dest);
 	struct	Vertex
 	{
 		glm::vec3	m_pos;
@@ -61,13 +62,13 @@ namespace GraphicEngine
 			
 			struct 	BoneInfo
 			{
-				aiMatrix4x4		BoneOffset;
-				aiMatrix4x4		FinalTransformation;
+				glm::mat4		BoneOffset;
+				glm::mat4		FinalTransformation;
 
 				BoneInfo()
 				{
-					BoneOffset			=	aiMatrix4x4();
-					FinalTransformation	=	aiMatrix4x4();
+					BoneOffset			=	glm::mat4();
+					FinalTransformation	=	glm::mat4();
 				}
 			};
 			struct 	VertexBoneData
@@ -90,8 +91,8 @@ namespace GraphicEngine
 			void		InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex, unsigned int BaseIndex);
 			bool		InitMaterials(const aiScene* pScene, std::string const & filename);
 			void		LoadBones(unsigned int index, const aiMesh* , std::vector<VertexBoneData> & bones);			
-			void		BoneTransform(float TimeInSec, std::vector<aiMatrix4x4>& Transforms, unsigned int idAnimation);
-			void		ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, aiMatrix4x4 const & ParentTransform, unsigned int idAnimation);
+			void		BoneTransform(float TimeInSec, std::vector<glm::mat4>& Transforms, unsigned int idAnimation);
+			void		ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 const & ParentTransform, unsigned int idAnimation);
 
 			void		CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
 			void		CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
@@ -125,7 +126,7 @@ namespace GraphicEngine
 			std::vector<Texture*>				m_Textures;
 			const aiScene*						m_pScene;
 			Assimp::Importer					m_Importer;
-			aiMatrix4x4							m_GlobalInverseTransform;
+			glm::mat4							m_GlobalInverseTransform;
 			std::map<std::string, unsigned int>	m_BoneMapping;
 			unsigned int						m_NumBones;
 			std::vector<BoneInfo>				m_BoneInfo;

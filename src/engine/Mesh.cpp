@@ -18,6 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <assert.h>
 #include <iostream>
 #include <sstream>
+#include <glm/gtc/matrix_inverse.hpp>
+#define	POSITION_LOCATION		0
+#define TEX_COORD_LOCATION		2
+#define NORMAL_LOCATION			3
+#define BONE_ID_LOCATION		4
+#define BONE_WEIGHT_LOCATION	5
 using namespace GraphicEngine;
 Mesh::Mesh()
 {
@@ -36,8 +42,9 @@ void	Mesh::LoadFromFile(std::string const & filename)
 									aiProcess_GenSmoothNormals	|	aiProcess_FlipUVs);
 	if (m_pScene)
 	{
-		m_GlobalInverseTransform	=	m_pScene->mRootNode->mTransformation;
-		m_GlobalInverseTransform.Inverse();
+		aiMatrix4x4ToMat4(m_pScene->mRootNode->mTransformation, m_GlobalInverseTransform);
+		m_GlobalInverseTransform	=	glm::inverse( m_GlobalInverseTransform);
+		
 		// can launch an except
 		if(!this->InitFromScene(m_pScene,filename))
 			throw std::string("error init from scene");
@@ -62,13 +69,7 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 }		
 void	Mesh::Draw(unsigned int elapsed_time,GLuint shaderID, std::string const & animation)
 {
-	// animation not implemented yet
-	/* So
-		0 is for vertex position
-		2 is for texture coordinate
-		3 is for normal
-	*/
-	std::vector<aiMatrix4x4>	transforms;
+	std::vector<glm::mat4>	transforms;
 	this->BoneTransform(elapsed_time, transforms, GetAnimationIndex(animation));
 	for (unsigned int i=0; i < transforms.size(); ++i)
 	{
@@ -77,13 +78,7 @@ void	Mesh::Draw(unsigned int elapsed_time,GLuint shaderID, std::string const & a
 		memset(Name, 0, sizeof(Name));
 		snprintf(Name, sizeof(Name), "Bones[%d]", i);
 		GLuint location	=	glGetUniformLocation(shaderID, Name);
-		GLfloat tr[16];
-		for (unsigned int j=0; j < 16; ++j)
-		{
-			//tr[j]	=	(j == 0 || j == 5 || j == 10 || j == 15)? 1 : 0;
-			tr[j]	=	static_cast<GLfloat>(*transforms[i][j]);
-		}
-		glUniformMatrix4fv(location, 1, GL_TRUE, (const GLfloat*) tr);
+		glUniformMatrix4fv(location, 1, GL_TRUE, (const GLfloat*) glm::value_ptr(transforms[i]));
 	}
 	for (unsigned int i=0; i < m_Entries.size(); ++i)
 	{
@@ -106,6 +101,7 @@ void	Mesh::Clear()
 	{
 		delete 	m_Textures[i];
 	}
+	m_Entries.clear();
 }	
 void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex, unsigned int BaseIndex)
 {
@@ -246,13 +242,13 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 		glBindBuffer(GL_ARRAY_BUFFER, VB);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 			
-			glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), 0);
-			glVertexAttribPointer(2,2,GL_FLOAT, GL_FALSE,sizeof(Vertex), (const GLvoid*)12);
-			glVertexAttribPointer(3,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), (const GLvoid*)20);
+			glVertexAttribPointer(POSITION_LOCATION,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), 0);
+			glVertexAttribPointer(TEX_COORD_LOCATION,2,GL_FLOAT, GL_FALSE,sizeof(Vertex), (const GLvoid*)12);
+			glVertexAttribPointer(NORMAL_LOCATION,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), (const GLvoid*)20);
 
-			glEnableVertexAttribArray(0);
-			glEnableVertexAttribArray(2);
-			glEnableVertexAttribArray(3);
+			glEnableVertexAttribArray(POSITION_LOCATION);
+			glEnableVertexAttribArray(TEX_COORD_LOCATION);
+			glEnableVertexAttribArray(NORMAL_LOCATION);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &indices[0], GL_STATIC_DRAW);
@@ -261,11 +257,11 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 			glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
 
 			
-			glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
-			glVertexAttribPointer(5, 4 , GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+			glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+			glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4 , GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
 
-			glEnableVertexAttribArray(4);
-			glEnableVertexAttribArray(5);
+			glEnableVertexAttribArray(BONE_ID_LOCATION);
+			glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
 	glBindVertexArray(0);
 }
 void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<VertexBoneData> & bones)
@@ -287,8 +283,8 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 			BoneIndex	=	m_BoneMapping[BoneName];
 		}
 		m_BoneMapping[BoneName]	=	BoneIndex;
-		m_BoneInfo[BoneIndex].BoneOffset	=	pMesh->mBones[i]->mOffsetMatrix;
-		
+		aiMatrix4x4ToMat4(pMesh->mBones[i]->mOffsetMatrix, m_BoneInfo[BoneIndex].BoneOffset);
+
 		for (unsigned int j=0; j < pMesh->mBones[i]->mNumWeights; ++j)
 		{
 			unsigned int 	VertexID	=	m_Entries[index].BaseVertex + pMesh->mBones[i]->mWeights[j].mVertexId;
@@ -319,12 +315,12 @@ void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 	// if we have more than NUM_BONES_PER_VERTEX
 	assert(0);
 }
-void	Mesh::BoneTransform(float TimeInSec, std::vector<aiMatrix4x4> & Transforms, unsigned int idAnimation)
+void	Mesh::BoneTransform(float TimeInSec, std::vector<glm::mat4> & Transforms, unsigned int idAnimation)
 {
 	if (!m_pScene->HasAnimations()) // if we have no animation quit the boneTransform
 		return;
-	aiMatrix4x4	Identity		=	aiMatrix4x4();
-	float		TicksPerSec		=	(m_pScene->mAnimations[idAnimation] != 0 )? 
+	glm::mat4	Identity		=	glm::mat4();
+	float		TicksPerSec		=	(m_pScene->mAnimations[idAnimation] != nullptr )? 
 									m_pScene->mAnimations[idAnimation]->mTicksPerSecond : 25.0f;
 	
 	float		TimeInTicks		=	TimeInSec * TicksPerSec;
@@ -338,12 +334,14 @@ void	Mesh::BoneTransform(float TimeInSec, std::vector<aiMatrix4x4> & Transforms,
 		Transforms[i]	=	m_BoneInfo[i].FinalTransformation;
 	}
 }
-void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, aiMatrix4x4 const & ParentTransform, unsigned int idAnimation)
+void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 const & ParentTransform, unsigned int idAnimation)
 {
 	std::string 		NodeName(pNode->mName.data);
 	
 	const aiAnimation*	pAnimation			=	m_pScene->mAnimations[idAnimation];
-	aiMatrix4x4			NodeTransformation(pNode->mTransformation);
+	glm::mat4			NodeTransformation;
+	aiMatrix4x4ToMat4(pNode->mTransformation,NodeTransformation);
+	
 	const aiNodeAnim*	pNodeAnim			=	this->FindNodeAnim(pAnimation, NodeName);
 	
 	if (pNodeAnim)
@@ -351,22 +349,24 @@ void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, aiMatrix4x
 		// Interpolate Scaling
 		aiVector3D		scaling;
 		this->CalcInterpolatedScaling(scaling, AnimationTime, pNodeAnim);
-		aiMatrix4x4		scalingM;
-		scalingM		=	aiMatrix4x4::Scaling(scaling,scalingM);
+		glm::mat4		scalingM;
+		scalingM		=	glm::scale(scalingM,glm::vec3(scaling.x,scaling.y,scaling.z));
 		// Interpolate rotation
 		aiQuaternion	rotationQ;
 		this->CalcInterpolatedRotation(rotationQ, AnimationTime, pNodeAnim);
-		aiMatrix4x4		rotationM(rotationQ.GetMatrix());
+		glm::mat4	rotationM;
+		rotationM	=	glm::mat4_cast(glm::quat(rotationQ.x,rotationQ.y,rotationQ.z,rotationQ.w));
 		// Interpolate translation
 		aiVector3D		translation;
 		this->CalcInterpolatedPosition(translation, AnimationTime, pNodeAnim);
-		aiMatrix4x4		translationM;
-		translationM	=	aiMatrix4x4::Translation(translation,translationM);
+		glm::mat4	translationM;
+		translationM	=	glm::translate(translationM,glm::vec3(translation.x,translation.y,translation.z));
 		
 		// Combine above transformation
-		NodeTransformation	=	translationM * rotationM * scalingM;	
+		NodeTransformation	=	translationM * rotationM * scalingM;
+
 	}
-	aiMatrix4x4	GlobalTransformation	=	ParentTransform * NodeTransformation;
+	glm::mat4 GlobalTransformation	=	ParentTransform * NodeTransformation;
 	
 	if (m_BoneMapping.find(NodeName) != m_BoneMapping.end())
 	{
@@ -505,4 +505,11 @@ unsigned int 		Mesh::GetAnimationIndex(std::string const & animation)
 {
 	// not implemented yet 
 	return 0;
+}
+void	GraphicEngine::aiMatrix4x4ToMat4(aiMatrix4x4 const & src, glm::mat4  & dest)
+{
+	dest[0][0]	=	src.a1;	dest[0][1]	=	src.a2;	dest[0][2]	=	src.a3;	dest[0][3]	=	src.a4;	
+	dest[1][0]	=	src.b1;	dest[1][1]	=	src.b2;	dest[1][2]	=	src.b3;	dest[1][3]	=	src.b4;	
+	dest[2][0]	=	src.c1;	dest[2][1]	=	src.c2;	dest[2][2]	=	src.c3;	dest[2][3]	=	src.c4;	
+	dest[3][0]	=	src.d1;	dest[3][1]	=	src.d2;	dest[3][2]	=	src.d3;	dest[3][3]	=	src.d4;	
 }

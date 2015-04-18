@@ -5,5 +5,5 @@ models 7
 ../data/Ruins/FoundationRuin_01/foundationRuin_01.dae position(0,0,0) rotate(0,0,0) scale(1)
 ../data/Ruins/SpeakingStones_01/SpeakingStones_01.dae position(0,0,0) rotate(0,0,0) scale(1)
 ../data/Defender.3ds position(-10,40,10) rotate(0,0,0) scale(5)
-../data/bob_lamp/bob_lamp_update_export.md5mesh position(-10,60,10) rotate(0,0,0) scale(1)
+../data/bob_lamp/bob_lamp_update.md5mesh position(-10,60,10) rotate(0,0,0) scale(1)
 
