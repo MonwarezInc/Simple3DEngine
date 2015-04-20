@@ -10,11 +10,7 @@ If u have a different location of libraries<br/>
 You can add to CMakeCache.txt (created by the first invoke of cmake) these lines: <br/>
 lib_include:FILEPATH=/path/to/include/directory <br/>
 lib_lib:FILEPATH=/path/to/lib/directory <br/>
-Note: <br/>
-Support for mesh with bones seems not working at all, it's result on a seg fault for unknow reason. <br/>
-Only one mesh with bones are tested, maybe is the model.
-Ok so maybe it's because a premature memory delete.<br/>
-In fact Weights and IDs are not nullptr , but we get SIGSEV by trying to see they value<br/>
+Feature: skinned animation works. <br/>
 
 Copyright (C) 2014-2015 Payet Thibault
 
@@ -31,4 +27,4 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-For Assimp Loader , I use a code in tutorial22 from <http://ogldev.atspace.co.uk/index.html>
+For Assimp Loader , I use a code in tutorial22, tutorial38 from <http://ogldev.atspace.co.uk/index.html>
