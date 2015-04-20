@@ -1,9 +1,10 @@
-models 7
+models 8
 ../data/cobra.md2 position(-10,50,10) rotate(90,0,0) scale(0.2)
 ../data/girl/girl.3ds position(0,-10,10) rotate(0,0,0) scale(0.2)
 ../data/Ruins/CathedralRuins_01/CathedralRuins_01.dae position(0,0,0) rotate(0,0,0) scale(1)
 ../data/Ruins/FoundationRuin_01/foundationRuin_01.dae position(0,0,0) rotate(0,0,0) scale(1)
 ../data/Ruins/SpeakingStones_01/SpeakingStones_01.dae position(0,0,0) rotate(0,0,0) scale(1)
 ../data/Defender.3ds position(-10,40,10) rotate(0,0,0) scale(5)
-../data/bob_lamp/bob_lamp_update.md5mesh position(-10,60,10) rotate(0,0,0) scale(1)
+../data/TreasureChest/treasure_chest.obj position(-20,40,12.25) rotate(90,90,0) scale(50)
+../data/bob_lamp/bob_lamp_update_export.md5mesh position(-30,50,20) rotate(0,0,0) scale(1)
 

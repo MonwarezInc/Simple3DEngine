@@ -15,10 +15,8 @@ uniform mat4	Bones[MAX_BONES];
 uniform int		skinned;
 // output
 out 	vec2	coordTexture;
-//#define SKINNED	
 void	main()
 {
-	#ifdef SKINNED
 	if (skinned == 1)
 	{
 		mat4	BoneTransform=	Bones[in_Bone_ID[0]] * in_BoneW[0];
@@ -27,6 +25,7 @@ void	main()
 		BoneTransform       +=  Bones[in_Bone_ID[3]] * in_BoneW[3];
 
 		vec4	positionL	=	BoneTransform * vec4(in_Vertex, 1.0);
+		//	Final position
 		gl_Position		=	MVP * positionL;
 	}
 	else
@@ -34,9 +33,6 @@ void	main()
 	// Final position
 	gl_Position	=	MVP * vec4(in_Vertex,1.0);
 	}
-	#else
-	gl_Position = 	MVP * vec4(in_Vertex,1.0);
-	#endif
 	// output
 	coordTexture	=	in_TexCoord0;
 }

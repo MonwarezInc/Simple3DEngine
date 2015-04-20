@@ -42,7 +42,7 @@ void	Mesh::LoadFromFile(std::string const & filename)
 									aiProcess_GenSmoothNormals	|	aiProcess_FlipUVs);
 	if (m_pScene)
 	{
-		aiMatrix4x4ToMat4(m_pScene->mRootNode->mTransformation, m_GlobalInverseTransform);
+		m_GlobalInverseTransform	=	aiMatrix4x4ToMat4(m_pScene->mRootNode->mTransformation);
 		m_GlobalInverseTransform	=	glm::inverse( m_GlobalInverseTransform);
 		
 		// can launch an except
@@ -67,10 +67,10 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 
 	return	InitMaterials(pScene, filename);
 }		
-void	Mesh::Draw(unsigned int elapsed_time,GLuint shaderID, std::string const & animation)
+void	Mesh::Draw(unsigned int  elapsed_time,GLuint shaderID, std::string const & animation)
 {
 	std::vector<glm::mat4>	transforms;
-	this->BoneTransform(elapsed_time, transforms, GetAnimationIndex(animation));
+	this->BoneTransform(((float)elapsed_time)/(float)1000.0, transforms, GetAnimationIndex(animation));
 	for (unsigned int i=0; i < transforms.size(); ++i)
 	{
 		// we have to send unform matrix
@@ -78,7 +78,7 @@ void	Mesh::Draw(unsigned int elapsed_time,GLuint shaderID, std::string const & a
 		memset(Name, 0, sizeof(Name));
 		snprintf(Name, sizeof(Name), "Bones[%d]", i);
 		GLuint location	=	glGetUniformLocation(shaderID, Name);
-		glUniformMatrix4fv(location, 1, GL_TRUE, (const GLfloat*) glm::value_ptr(transforms[i]));
+		glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*) glm::value_ptr(transforms[i]));
 	}
 	for (unsigned int i=0; i < m_Entries.size(); ++i)
 	{
@@ -282,8 +282,8 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 		{
 			BoneIndex	=	m_BoneMapping[BoneName];
 		}
-		m_BoneMapping[BoneName]	=	BoneIndex;
-		aiMatrix4x4ToMat4(pMesh->mBones[i]->mOffsetMatrix, m_BoneInfo[BoneIndex].BoneOffset);
+		m_BoneMapping[BoneName]				=	BoneIndex;
+		m_BoneInfo[BoneIndex].BoneOffset	=	aiMatrix4x4ToMat4(pMesh->mBones[i]->mOffsetMatrix);
 
 		for (unsigned int j=0; j < pMesh->mBones[i]->mNumWeights; ++j)
 		{
@@ -340,7 +340,7 @@ void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 
 	
 	const aiAnimation*	pAnimation			=	m_pScene->mAnimations[idAnimation];
 	glm::mat4			NodeTransformation;
-	aiMatrix4x4ToMat4(pNode->mTransformation,NodeTransformation);
+	NodeTransformation						=	aiMatrix4x4ToMat4(pNode->mTransformation);
 	
 	const aiNodeAnim*	pNodeAnim			=	this->FindNodeAnim(pAnimation, NodeName);
 	
@@ -433,7 +433,7 @@ void	Mesh::CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const 
 
 	float			DeltaTime			=	(float) (pNodeAnim->mScalingKeys[NextScalingIndex].mTime - 
 											pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-	float			Factor				=	(AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime)/DeltaTime;
+	float			Factor				=	abs(AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime)/DeltaTime;
 	
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 
@@ -457,7 +457,7 @@ void	Mesh::CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, con
 
 	float			DeltaTime			=	(float) (pNodeAnim->mRotationKeys[NextRotationIndex].mTime - 
 											pNodeAnim->mRotationKeys[RotationIndex].mTime);
-	float			Factor				=	(AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime)/DeltaTime;
+	float			Factor				=	abs(AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime)/DeltaTime;
 	
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 
@@ -481,7 +481,7 @@ void	Mesh::CalcInterpolatedPosition(aiVector3D & Out, float AnimationTime, const
 
 	float			DeltaTime			=	(float) (pNodeAnim->mPositionKeys[NextPositionIndex].mTime - 
 											pNodeAnim->mPositionKeys[PositionIndex].mTime);
-	float			Factor				=	(AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime)/DeltaTime;
+	float			Factor				=	abs(AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime)/DeltaTime;
 	
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 
@@ -506,10 +506,12 @@ unsigned int 		Mesh::GetAnimationIndex(std::string const & animation)
 	// not implemented yet 
 	return 0;
 }
-void	GraphicEngine::aiMatrix4x4ToMat4(aiMatrix4x4 const & src, glm::mat4  & dest)
+inline glm::mat4 	GraphicEngine::aiMatrix4x4ToMat4(aiMatrix4x4 const & src)
 {
-	dest[0][0]	=	src.a1;	dest[0][1]	=	src.a2;	dest[0][2]	=	src.a3;	dest[0][3]	=	src.a4;	
-	dest[1][0]	=	src.b1;	dest[1][1]	=	src.b2;	dest[1][2]	=	src.b3;	dest[1][3]	=	src.b4;	
-	dest[2][0]	=	src.c1;	dest[2][1]	=	src.c2;	dest[2][2]	=	src.c3;	dest[2][3]	=	src.c4;	
-	dest[3][0]	=	src.d1;	dest[3][1]	=	src.d2;	dest[3][2]	=	src.d3;	dest[3][3]	=	src.d4;	
+	glm::mat4 	dest;
+	dest[0][0]	=	src.a1;	dest[0][1]	=	src.b1;	dest[0][2]	=	src.c1;	dest[0][3]	=	src.d1;	
+	dest[1][0]	=	src.a2;	dest[1][1]	=	src.b2;	dest[1][2]	=	src.c2;	dest[1][3]	=	src.d2;	
+	dest[2][0]	=	src.a3;	dest[2][1]	=	src.b3;	dest[2][2]	=	src.c3;	dest[2][3]	=	src.d3;	
+	dest[3][0]	=	src.a4;	dest[3][1]	=	src.b4;	dest[3][2]	=	src.c4;	dest[3][3]	=	src.d4;	
+	return 		dest;
 }

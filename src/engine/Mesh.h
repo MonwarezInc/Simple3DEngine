@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 namespace GraphicEngine
 {
-	void	aiMatrix4x4ToMat4(aiMatrix4x4 const & src, glm::mat4 & dest);
+	inline	glm::mat4	aiMatrix4x4ToMat4(aiMatrix4x4 const & src);
 	struct	Vertex
 	{
 		glm::vec3	m_pos;
@@ -55,7 +55,7 @@ namespace GraphicEngine
 			Mesh();
 			virtual	~Mesh();
 			virtual	void	LoadFromFile(std::string const & filename);
-			virtual	void	Draw(unsigned int elapsed_time, GLuint shaderID,std::string const & animation);
+			virtual	void	Draw(unsigned int  elapsed_time, GLuint shaderID,std::string const & animation);
 		private:
 			#define NUM_BONES_PER_VERTEX 4
 			#define INVALID_MATERIAL	0xFFFFFFFF
@@ -67,8 +67,8 @@ namespace GraphicEngine
 
 				BoneInfo()
 				{
-					BoneOffset			=	glm::mat4();
-					FinalTransformation	=	glm::mat4();
+					BoneOffset			=	glm::mat4(0);
+					FinalTransformation	=	glm::mat4(0);
 				}
 			};
 			struct 	VertexBoneData
