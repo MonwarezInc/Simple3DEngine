@@ -1,4 +1,4 @@
 camera position(-100,-100,60) target(0,0,0) up(0,0,1)
-lifetime 9000
-rotate 45
+resolution 1600x900
+fullscreen 1
 

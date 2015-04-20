@@ -15,8 +15,6 @@ int main (int argc, char **argv)
 	cout << "Test engine " << endl;
 	
 	GraphicEngine::CEngine	engine;
-	engine.CreateWindow(1600,900,true,"Test Engine", 32, 2, 3,2);
-	engine.ClearColor(0.0,0.0,0.0,1.0);
 
 	// Input
 	CInput	input;
@@ -25,9 +23,10 @@ int main (int argc, char **argv)
 	// not optimal and safe 
 	glm::vec3	cPosition;
 	glm::vec3	cTarget;
-	glm::vec3	cVert;
-	int			lifetime	=	2000;
-	float		dangle		=	0;
+	glm::vec3	cVert(0,0,1);
+	int			screenX		=	640;
+	int			screenY		=	480;
+	bool		fullscreen	=	0;
 	try
 	{
 		FileManager	file("./data/command.dat","r"); // camera settings and time of life
@@ -35,24 +34,25 @@ int main (int argc, char **argv)
 		// camera position(x,y,z) target(x,y,z) up(x,y,z)
 		// lifetime t
 		// rotate a
-		float 	x1,y1,z1,x2,y2,z2,x3,y3,z3,a;
-		int		t;
-		if (fscanf(file.GetFilePtr(),"camera position(%f,%f,%f) target(%f,%f,%f) up(%f,%f,%f)\nlifetime %d\nrotate %f",
-								&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3,&t,&a) != 11)
+		float 	x1,y1,z1,x2,y2,z2,x3,y3,z3;
+		int		w,h,f;
+		if (fscanf(file.GetFilePtr(),"camera position(%f,%f,%f) target(%f,%f,%f) up(%f,%f,%f)\nresolution %dx%d\nfullscreen %d",
+								&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3,&w,&h,&f) != 12)
 		{
 			x1	=	350;	y1	=	200;	z1	=	300;
 			x2	=	2;		y2	=	5;		z2	=	0;
 			x3	=	0;		y3	=	0;		z3	=	1;
-			t	=	5000;
-			a	=	45.0;
+			w	=	640;	h	=	480;
+			f	=	0;
 		}
 		cPosition	=	glm::vec3(x1,y1,z1);
 		cTarget		=	glm::vec3(x2,y2,z2);
 		cVert		=	glm::vec3(x3,y3,z3);
 
-		lifetime	=	t;
-		dangle		=	a;
-
+		screenX		=	w;
+		screenY		=	h;
+	
+		fullscreen	=	(f != 0)?true:false;
 	}
 	catch (...)
 	{
@@ -61,6 +61,9 @@ int main (int argc, char **argv)
 	std::vector<unsigned int>			vIDMesh;
 	try
 	{
+		
+		engine.CreateWindow(screenX,screenY,fullscreen,"Test Engine", 32, 2, 3,2);
+		engine.ClearColor(0.0,0.0,0.0,1.0);
 			
 		FileManager	file("./data/obj.dat","r");
 		BasicVectorManager<GraphicEngine::Mesh>	mesh;
