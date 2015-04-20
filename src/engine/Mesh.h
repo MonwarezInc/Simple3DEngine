@@ -32,7 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 namespace GraphicEngine
 {
-	inline	glm::mat4	aiMatrix4x4ToMat4(aiMatrix4x4 const & src);
+	inline	glm::mat4	aiMatrixToMat4(aiMatrix4x4 const & src);
+	inline	glm::mat4	aiMatrixToMat4(aiMatrix3x3 const & src);
 	struct	Vertex
 	{
 		glm::vec3	m_pos;

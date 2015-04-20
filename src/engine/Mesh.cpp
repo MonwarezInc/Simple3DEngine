@@ -42,7 +42,7 @@ void	Mesh::LoadFromFile(std::string const & filename)
 									aiProcess_GenSmoothNormals	|	aiProcess_FlipUVs);
 	if (m_pScene)
 	{
-		m_GlobalInverseTransform	=	aiMatrix4x4ToMat4(m_pScene->mRootNode->mTransformation);
+		m_GlobalInverseTransform	=	aiMatrixToMat4(m_pScene->mRootNode->mTransformation);
 		m_GlobalInverseTransform	=	glm::inverse( m_GlobalInverseTransform);
 		
 		// can launch an except
@@ -283,7 +283,7 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 			BoneIndex	=	m_BoneMapping[BoneName];
 		}
 		m_BoneMapping[BoneName]				=	BoneIndex;
-		m_BoneInfo[BoneIndex].BoneOffset	=	aiMatrix4x4ToMat4(pMesh->mBones[i]->mOffsetMatrix);
+		m_BoneInfo[BoneIndex].BoneOffset	=	aiMatrixToMat4(pMesh->mBones[i]->mOffsetMatrix);
 
 		for (unsigned int j=0; j < pMesh->mBones[i]->mNumWeights; ++j)
 		{
@@ -340,7 +340,7 @@ void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 
 	
 	const aiAnimation*	pAnimation			=	m_pScene->mAnimations[idAnimation];
 	glm::mat4			NodeTransformation;
-	NodeTransformation						=	aiMatrix4x4ToMat4(pNode->mTransformation);
+	NodeTransformation						=	aiMatrixToMat4(pNode->mTransformation);
 	
 	const aiNodeAnim*	pNodeAnim			=	this->FindNodeAnim(pAnimation, NodeName);
 	
@@ -355,7 +355,7 @@ void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 
 		aiQuaternion	rotationQ;
 		this->CalcInterpolatedRotation(rotationQ, AnimationTime, pNodeAnim);
 		glm::mat4	rotationM;
-		rotationM	=	glm::mat4_cast(glm::quat(rotationQ.x,rotationQ.y,rotationQ.z,rotationQ.w));
+		rotationM		=	aiMatrixToMat4(rotationQ.GetMatrix());
 		// Interpolate translation
 		aiVector3D		translation;
 		this->CalcInterpolatedPosition(translation, AnimationTime, pNodeAnim);
@@ -433,7 +433,7 @@ void	Mesh::CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const 
 
 	float			DeltaTime			=	(float) (pNodeAnim->mScalingKeys[NextScalingIndex].mTime - 
 											pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-	float			Factor				=	abs(AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime)/DeltaTime;
+	float			Factor				=	AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime/DeltaTime;
 	
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 
@@ -457,7 +457,7 @@ void	Mesh::CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, con
 
 	float			DeltaTime			=	(float) (pNodeAnim->mRotationKeys[NextRotationIndex].mTime - 
 											pNodeAnim->mRotationKeys[RotationIndex].mTime);
-	float			Factor				=	abs(AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime)/DeltaTime;
+	float			Factor				=	AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime/DeltaTime;
 	
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 
@@ -481,7 +481,7 @@ void	Mesh::CalcInterpolatedPosition(aiVector3D & Out, float AnimationTime, const
 
 	float			DeltaTime			=	(float) (pNodeAnim->mPositionKeys[NextPositionIndex].mTime - 
 											pNodeAnim->mPositionKeys[PositionIndex].mTime);
-	float			Factor				=	abs(AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime)/DeltaTime;
+	float			Factor				=	AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime/DeltaTime;
 	
 	assert(Factor >= 0.0f && Factor <= 1.0f);
 
@@ -506,12 +506,21 @@ unsigned int 		Mesh::GetAnimationIndex(std::string const & animation)
 	// not implemented yet 
 	return 0;
 }
-inline glm::mat4 	GraphicEngine::aiMatrix4x4ToMat4(aiMatrix4x4 const & src)
+inline glm::mat4 	GraphicEngine::aiMatrixToMat4(aiMatrix4x4 const & src)
 {
 	glm::mat4 	dest;
 	dest[0][0]	=	src.a1;	dest[0][1]	=	src.b1;	dest[0][2]	=	src.c1;	dest[0][3]	=	src.d1;	
 	dest[1][0]	=	src.a2;	dest[1][1]	=	src.b2;	dest[1][2]	=	src.c2;	dest[1][3]	=	src.d2;	
 	dest[2][0]	=	src.a3;	dest[2][1]	=	src.b3;	dest[2][2]	=	src.c3;	dest[2][3]	=	src.d3;	
 	dest[3][0]	=	src.a4;	dest[3][1]	=	src.b4;	dest[3][2]	=	src.c4;	dest[3][3]	=	src.d4;	
+	return 		dest;
+}
+inline glm::mat4 	GraphicEngine::aiMatrixToMat4(aiMatrix3x3 const & src)
+{
+	glm::mat4 	dest;
+	dest[0][0]	=	src.a1;	dest[0][1]	=	src.b1;	dest[0][2]	=	src.c1;	dest[0][3]	=	0;	
+	dest[1][0]	=	src.a2;	dest[1][1]	=	src.b2;	dest[1][2]	=	src.c2;	dest[1][3]	=	0;	
+	dest[2][0]	=	src.a3;	dest[2][1]	=	src.b3;	dest[2][2]	=	src.c3;	dest[2][3]	=	0;	
+	dest[3][0]	=	0	;	dest[3][1]	=	0	;	dest[3][2]	=	0	;	dest[3][3]	=	1;	
 	return 		dest;
 }

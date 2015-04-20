@@ -106,7 +106,7 @@ int main (int argc, char **argv)
 		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
 		unsigned int	elapsed		=	0;
-
+		unsigned int	totalTime	=	SDL_GetTicks() - start;
 		input.GrabCursor(true);
 		input.ShowCursor(false);	
 		
@@ -121,16 +121,16 @@ int main (int argc, char **argv)
 			// do animation 
 			engine.SetCameraLocation(camera.GetPosition(),camera.GetPointCible(),cVert);
 			engine.Init();
-			engine.Draw(elapsed);
+			engine.Draw(totalTime);
 			elapsed = SDL_GetTicks() - begin;
 			if (elapsed < frametime)
 				{
 					SDL_Delay(frametime - elapsed);
 					elapsed	=	SDL_GetTicks() - begin;
 				}
-			start	=	SDL_GetTicks();
 			if (input.GetTouche(SDL_SCANCODE_ESCAPE))
 				break;
+		totalTime	=	SDL_GetTicks() - start;
 		}
 	}
 	catch(string const &a)
