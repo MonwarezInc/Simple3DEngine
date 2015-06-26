@@ -19,7 +19,7 @@ using namespace GraphicEngine;
 CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::string &title,
                      GLuint bpp, GLuint aa, GLuint major, GLuint minor ):m_bpp(bpp),m_aa(aa)
 {
-    m_pWindow       =   new Window(title, width, height,fullscreen);
+    m_pWindow       =   std::make_shared<Window>(title, width, height,fullscreen);
 
     // Version d'OpenGL
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,   major);
@@ -74,6 +74,4 @@ void 		CGraphics::Clear()
 CGraphics::~CGraphics()
 {
     SDL_GL_DeleteContext(m_glContext);
-    delete m_pWindow;
-
 }

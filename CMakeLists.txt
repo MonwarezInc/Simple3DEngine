@@ -17,10 +17,11 @@ file(
 	src/*
 )
 set(GLib GL)
+set(Extra_CXX_Flags "-Wall -std=c++11")
 if (win)
 	set(GLib opengl32)
 endif (win)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #Declaration of executable
 add_executable(

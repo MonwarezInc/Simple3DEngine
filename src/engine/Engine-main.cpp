@@ -18,23 +18,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 using namespace GraphicEngine;
 CEngine::CEngine()
 {
-	m_pGraphics	=	NULL;
-	m_pShader	=	NULL;
 }
 CEngine::~CEngine()
 {
-	delete m_pGraphics;
 	// for the list of object, we didn't manage the object memory , so just delete the list , and not the content
-	delete m_pShader;
 }
 void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const std::string & title,
 								GLuint bpp, GLuint aa, GLuint major, GLuint minor)
 {
-	// to begin , we just manage 1 window
-	m_pGraphics		=	(NULL == m_pGraphics) ?  new CGraphics(width, height, fullscreen, title, bpp, aa , major, minor):
-						m_pGraphics ;
+	if (!m_pGraphics)
+		m_pGraphics	=	std::make_shared<CGraphics>(width,height,fullscreen,title,bpp,aa,major,minor);
 	// load shader
-	m_pShader	=	new	Shader("./Shader/texture.vert","./Shader/texture.frag");
+	if (!m_pShader)
+		m_pShader	=	std::make_shared<Shader>("./Shader/texture.vert","./Shader/texture.frag");
 	m_pShader->charger();
 }
 void	CEngine::DeleteWindow(GLuint indice)

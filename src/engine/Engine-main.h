@@ -51,7 +51,7 @@ namespace GraphicEngine
 			virtual	void	Draw(unsigned int elapsed);
 
 		protected:
-			GraphicEngine::CGraphics*				m_pGraphics;
+			std::shared_ptr<GraphicEngine::CGraphics>	m_pGraphics;
 			glm::mat4								m_modelview;
 			glm::mat4								m_projection;
 			// struct ObjectList
@@ -67,7 +67,7 @@ namespace GraphicEngine
 			};
 
 			std::vector< ObjectNode>				m_vObjectNode;	
-			Shader*									m_pShader;
+			std::shared_ptr<Shader>					m_pShader;
 	};
 }
 #endif

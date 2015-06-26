@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <iostream>
 #include "../tools/DebugGL.h"
 #include <stdlib.h>
+#include <memory>
 
 namespace GraphicEngine
 {
@@ -39,11 +40,11 @@ namespace GraphicEngine
 			virtual	void	Clear(); // next step is to encapsulate glClear flag
 
     	protected:
-        	Window*         m_pWindow;
-        	SDL_GLContext   m_glContext;
-        	// paramètre opengl
-        	GLuint          m_bpp;
-        	GLuint          m_aa;
+        	std::shared_ptr<Window>	m_pWindow;
+        	SDL_GLContext   		m_glContext;
+        	//OpenGL specifics
+        	GLuint          		m_bpp;
+        	GLuint          		m_aa;
 	
 	};
 }
