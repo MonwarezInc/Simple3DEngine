@@ -1,11 +1,11 @@
 #include <iostream>
-#include "engine/Engine-main.h"
-#include "engine/Mesh.h"
+#include <GraphicEngine/Engine-main.h>
+#include <GraphicEngine/Mesh.h>
 
 #include <stdio.h>
 #include <cmath>
 #include "main.h"
-#include "misc/Camera.h"
+#include <GraphicEngine/Camera.h>
 using namespace std;
 int main (int argc, char **argv)
 {

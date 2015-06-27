@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include "Graphics.h"
+#include <GraphicEngine/Graphics.h>
 using namespace GraphicEngine;
 CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::string &title,
                      GLuint bpp, GLuint aa, GLuint major, GLuint minor ):m_bpp(bpp),m_aa(aa)

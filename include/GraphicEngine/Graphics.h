@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <GL/glew.h>
 
 #include <iostream>
-#include "../tools/DebugGL.h"
+#include "DebugGL.h"
 #include <stdlib.h>
 #include <memory>
 

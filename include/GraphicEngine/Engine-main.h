@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #ifndef ENGINE_MAIN_INCLUED
 #define ENGINE_MAIN_INCLUED
 
-#include "../window/Graphics.h"
+#include "Graphics.h"
 #include "Mesh.h"
-#include "../tools/Shader.h"
+#include "Shader.h"
 #include <vector>
 namespace GraphicEngine
 {

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 // GLEW for all platform
 #include <GL/glew.h>
 #include <vector>
-#include "../tools/Texture.h"
+#include "Texture.h"
 // for exception - use string for beginning
 #include <string>
 namespace GraphicEngine

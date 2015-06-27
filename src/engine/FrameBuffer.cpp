@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include "FrameBuffer.h"
+#include <GraphicEngine/FrameBuffer.h>
 using namespace GraphicEngine;
 FrameBuffer::FrameBuffer():m_id(0), m_largeur(0), m_hauteur(0), m_colorBuffers(0), m_depthBufferID(0)
 {

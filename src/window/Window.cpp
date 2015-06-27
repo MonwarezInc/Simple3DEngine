@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include "Window.h"
+#include <GraphicEngine/Window.h>
 using namespace GraphicEngine;
 Window::Window(const std::string &title, unsigned int width, unsigned int height, bool fullscreen)
 {

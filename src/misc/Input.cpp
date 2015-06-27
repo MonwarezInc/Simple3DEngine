@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include "Input.h"
+#include <GraphicEngine/Input.h>
 
 CInput::CInput():m_x(0),m_y(0),m_xRel(0),m_yRel(0),m_terminer(false)
 {
