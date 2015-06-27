@@ -57,34 +57,31 @@ class BasicVectorManager
 		BasicVectorManager(){}
 		BasicVectorManager(size_t nb)
 		{
-			m_pVect.reserve(nb);
+			m_pVect.resize(nb);
 			for (size_t i=0; i < nb; ++i)
-				m_pVect[i]	=	new T;
+				m_pVect[i]	=	std::make_unique<T>();
 		}
 		virtual	void	Allocate(size_t nb)
 		{
 			this->Release();
-			m_pVect.reserve(nb);
+			m_pVect.resize(nb);
 			for (size_t i=0; i < nb;++i)
-				m_pVect[i]	=	new T;
+				m_pVect[i]	=	std::make_unique<T>();
 		}
 		virtual	void	Release()
 		{
-			for (size_t i=0; i < m_pVect.size(); ++i)
-				delete m_pVect[i];
 			m_pVect.clear();
 		}
 		virtual 		~BasicVectorManager()
 		{
 			this->Release();
 		}
-
-		virtual	std::vector<T *> const & 	GetVect()
+		virtual	T*	GetVectPtr(size_t i)
 		{
-			return m_pVect;
+			return m_pVect[i].get();
 		}
 	protected:
-		std::vector<T *>		m_pVect;
+		std::vector<std::unique_ptr<T>>	m_pVect;
 };
 // End BasicMemoryManager
 #endif

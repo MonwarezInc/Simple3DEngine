@@ -81,15 +81,16 @@ int main (int argc, char **argv)
 			engine.SetCameraSettings(70.0, 16/9.0, 0.01, 10000);
 			engine.SetCameraLocation(cPosition, cTarget, cVert);
 			
-			for (unsigned int i=0; i < nbModel; ++i)
+			for (size_t i=0; i < nbModel; ++i)
 			{
 				char	filePath[256];
 				float	x,y,z,a,b,c,f;
 				if (fscanf(file.GetFilePtr(),"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)\n", filePath,&x,&y,&z,&a,&b,&c,&f) == 8)
 				{
 					unsigned int 	id	=	0;
-					mesh.GetVect()[i]->LoadFromFile(filePath);
-					engine.AddMeshNode(mesh.GetVect()[i], id);
+					auto	mesh_ptr	=	mesh.GetVectPtr(i);
+					mesh_ptr->LoadFromFile(filePath);
+					engine.AddMeshNode(mesh_ptr, id);
 					vIDMesh[i]			=	id;
 					
 					engine.SetNodePosRot(vIDMesh[i], glm::vec3(x,y,z), glm::vec3(a*M_PI/180.0, b*M_PI/180.0, c*M_PI/180.0));

@@ -17,7 +17,7 @@ file(
 	src/*
 )
 set(GLib GL)
-set(Extra_CXX_Flags "-Wall -std=c++11")
+set(Extra_CXX_Flags "-Wall -std=c++1y")
 if (win)
 	set(GLib opengl32)
 endif (win)
