@@ -109,6 +109,9 @@ void	CEngine::Draw(unsigned int elapsed)
 	glUseProgram(shaderID);
 		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
 		GLuint		mvpLocation	=	glGetUniformLocation(shaderID,"MVP");
+		GLuint		modelviewloc=	glGetUniformLocation(shaderID,"modelview");
+		GLuint		projectionl	=	glGetUniformLocation(shaderID,"projection");
+		
 		//Light
 		// for_each light
 		if (m_light)
@@ -117,6 +120,8 @@ void	CEngine::Draw(unsigned int elapsed)
 			m_light->Show();
 			m_light->SetEyeWorldPos(m_CameraPosition);
 		}
+		glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(m_modelview));
+		glUniformMatrix4fv(projectionl, 1, GL_FALSE, glm::value_ptr(m_projection));
 		// end light
 		for (unsigned int i=0; i < m_vObjectNode.size(); ++i)
 		{
