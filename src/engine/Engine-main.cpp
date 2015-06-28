@@ -53,6 +53,10 @@ void	CEngine::AddMeshNode(Mesh* object,GLuint & id)
 	m_vObjectNode.push_back(objectNode);
 	id	=	m_vObjectNode.size() - 1;
 }
+void	CEngine::AttachLight(std::shared_ptr<Light> light)
+{
+	m_light		=	light;
+}
 void	CEngine::DeleteObject(GLuint id)
 {
 	//not implemented yet
@@ -81,6 +85,9 @@ void	CEngine::SetNodeAnimation(GLuint id, std::string const & animation)
 void 	CEngine::SetCameraLocation(glm::vec3 const & pos, glm::vec3 const & center, glm::vec3 const & vert)
 {
 	m_modelview	=	glm::lookAt(pos,center,vert);
+	m_CameraPosition	=	pos;
+	m_CameraCenter		=	center;
+	m_CameraVertical	=	vert;
 }
 void	CEngine::SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far)
 {
@@ -102,6 +109,15 @@ void	CEngine::Draw(unsigned int elapsed)
 	glUseProgram(shaderID);
 		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
 		GLuint		mvpLocation	=	glGetUniformLocation(shaderID,"MVP");
+		//Light
+		// for_each light
+		if (m_light)
+		{
+			m_light->SetShaderID(shaderID);
+			m_light->Show();
+			m_light->SetEyeWorldPos(m_CameraPosition);
+		}
+		// end light
 		for (unsigned int i=0; i < m_vObjectNode.size(); ++i)
 		{
 			// do transformation stuff

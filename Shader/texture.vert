@@ -13,8 +13,12 @@ const 	int		MAX_BONES	=	100;
 uniform	mat4	MVP;
 uniform mat4	Bones[MAX_BONES];
 uniform int		skinned;
+uniform mat4	projection;
+uniform mat4	modelview;
 // output
 out 	vec2	coordTexture;
+out		vec3	WorldPos0;
+out		vec3	Normal0;
 void	main()
 {
 	if (skinned == 1)
@@ -35,5 +39,7 @@ void	main()
 	}
 	// output
 	coordTexture	=	in_TexCoord0;
+	Normal0			=	(modelview * vec4(in_Normal,0.0)).xyz;
+	WorldPos0		=	(modelview * vec4(in_Vertex,1.0)).xyz;
 }
 

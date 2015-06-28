@@ -115,6 +115,17 @@ int main (int argc, char **argv)
 		input.ShowCursor(false);	
 		
 		camera.setSpeed(0.1);
+		// Adding some light
+		auto 				light	=	std::make_shared<Light>();
+		DirectionalLight	dlight;
+		dlight.Color				=	glm::vec3(0.5,0.5,0.8);
+		dlight.AmbientIntensity		=	0.4;
+		dlight.Direction			=	glm::vec3(1.0,1.0,1.0);
+		dlight.DiffuseIntensity		=	0.6;
+		light->SetMatSpecularIntensity(1.0);
+		light->SetMatSpecularPower(32);
+		engine.AttachLight(light);
+		// End adding some light		
 		while (!input.terminer())
 		{
 			input.UpdateEvent();
@@ -123,6 +134,10 @@ int main (int argc, char **argv)
 			unsigned int begin = SDL_GetTicks();
 			// do graphical stuff
 			// do animation 
+			// light animation
+			dlight.Direction	=	glm::vec3(std::cos(totalTime),std::sin(totalTime),-1.0);
+			light->SetDirectionalLight(dlight);
+			//
 			engine.SetCameraLocation(camera.GetPosition(),camera.GetPointCible(),cVert);
 			engine.Init();
 			engine.Draw(totalTime);
