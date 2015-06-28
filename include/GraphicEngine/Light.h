@@ -51,13 +51,14 @@ struct PointLight	:	public BaseLight
 class Light
 {
 	public:
+		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	2;
 		Light();
 		virtual	void	Show();
 		virtual void 	SetDirectionalLight(const DirectionalLight &light);
 		virtual	void	SetEyeWorldPos(const glm::vec3 &eyeWorldPos);
 		virtual	void	SetMatSpecularIntensity(GLfloat intensity);
 		virtual	void	SetMatSpecularPower(GLfloat power);
-		virtual	void	SetPointLights(std::vector<PointLight>  lights);
+		virtual	void	SetPointLights(std::vector<PointLight> const &  lights);
 		virtual	void	SetShaderID(GLuint shaderID);
 
 	protected:
@@ -84,8 +85,7 @@ class Light
 				GLuint		Linear;
 				GLuint		Exp;
 			} Atten;
-		}; 
-		std::vector <PointLightLocation>	m_pointLightsLocation;
+		}m_pointLightsLocation[MAX_POINT_LIGHTS]; 
 		GLuint				m_ShaderID;
-		std::vector <PointLight>			m_pointLight;
+		GLuint				m_numPointLightsLocation;
 };

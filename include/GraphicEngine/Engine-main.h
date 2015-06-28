@@ -37,7 +37,7 @@ namespace GraphicEngine
 			virtual	void	SetActive(GLuint indice);
 
 			virtual void	AddMeshNode(Mesh * object, GLuint & id);
-			virtual	void	AttachLight(std::shared_ptr<Light> light);
+			virtual	void	AttachLight(std::shared_ptr<Light> light, std::vector<PointLight> const & pointlight);
 			virtual	void	DeleteObject(GLuint id);
 			
 			virtual	void	SetNodePosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch);
@@ -70,8 +70,9 @@ namespace GraphicEngine
 
 			std::vector< ObjectNode>				m_vObjectNode;	
 			std::shared_ptr<Shader>					m_pShader;
-			// For the moment only one light
+			// One instance of light to manage other light
 			std::shared_ptr<Light>					m_light;
+			std::vector<PointLight>					m_PointLight;
 			// Save some camera settings
 			glm::vec3								m_CameraPosition;
 			glm::vec3								m_CameraCenter;

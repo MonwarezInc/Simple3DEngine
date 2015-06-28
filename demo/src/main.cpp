@@ -117,16 +117,26 @@ int main (int argc, char **argv)
 		camera.setSpeed(0.1);
 		// Adding some light
 		auto 				light	=	std::make_shared<Light>();
-		DirectionalLight	dlight;
-		dlight.Color				=	glm::vec3(0.5,0.5,0.8);
-		dlight.AmbientIntensity		=	0.2;
-		dlight.Direction			=	glm::vec3(1.0,1.0,1.0);
-		dlight.DiffuseIntensity		=	0.6;
 		light->SetMatSpecularIntensity(1.0);
 		light->SetMatSpecularPower(2);
-		engine.AttachLight(light);
+		std::vector<PointLight>	pointlight;
+		PointLight	pl;
+		pl.DiffuseIntensity	=	0.5;
+		pl.Color			=	glm::vec3(1.0,1.0,0.9);
+		pl.Position			=	glm::vec3(30,50,30);
+		pl.Attenuation.Linear	=	0.1;
+		pl.Attenuation.Constant	=	1.0;
+		pl.Attenuation.Exp		=	0.2;
+		pointlight.push_back(pl);
+		pl.DiffuseIntensity	=	0.5;
+		pl.Color			=	glm::vec3(1.0,1.0,0.9);
+		pl.Position			=	glm::vec3(50,20,30);
+		pl.Attenuation.Linear	=	0.1;
+		pl.Attenuation.Constant	=	1.0;
+		pl.Attenuation.Exp		=	0.2;
+		pointlight.push_back(pl);
+		engine.AttachLight(light,pointlight);
 		// End adding some light
-		float	t	=	0;
 
 		while (!input.terminer())
 		{
@@ -136,10 +146,6 @@ int main (int argc, char **argv)
 			unsigned int begin = SDL_GetTicks();
 			// do graphical stuff
 			// do animation 
-			// light animation
-			dlight.Direction	=	glm::vec3(std::cos(t),std::sin(t),-1.0);
-			light->SetDirectionalLight(dlight);
-			//
 			engine.SetCameraLocation(camera.GetPosition(),camera.GetPointCible(),cVert);
 			engine.Init();
 			engine.Draw(totalTime);
@@ -152,7 +158,6 @@ int main (int argc, char **argv)
 			if (input.GetTouche(SDL_SCANCODE_ESCAPE))
 				break;
 		totalTime	=	SDL_GetTicks() - start;
-		t	+= elapsed/2000.0;
 		}
 	}
 	catch(string const &a)

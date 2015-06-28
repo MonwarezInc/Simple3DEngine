@@ -1,6 +1,5 @@
 // GLSL version
 #version 330
-
 // vertex input
 layout (location = 0) 	in 		vec3	in_Vertex;
 layout (location = 2)	in		vec2	in_TexCoord0;

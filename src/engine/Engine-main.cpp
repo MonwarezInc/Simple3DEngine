@@ -53,9 +53,10 @@ void	CEngine::AddMeshNode(Mesh* object,GLuint & id)
 	m_vObjectNode.push_back(objectNode);
 	id	=	m_vObjectNode.size() - 1;
 }
-void	CEngine::AttachLight(std::shared_ptr<Light> light)
+void	CEngine::AttachLight(std::shared_ptr<Light> light, std::vector<PointLight> const & pointlight)
 {
-	m_light		=	light;
+	m_light			=	light;
+	m_PointLight	=	pointlight;
 }
 void	CEngine::DeleteObject(GLuint id)
 {
@@ -117,7 +118,8 @@ void	CEngine::Draw(unsigned int elapsed)
 		if (m_light)
 		{
 			m_light->SetShaderID(shaderID);
-			m_light->Show();
+			//m_light->Show();
+			m_light->SetPointLights(m_PointLight);
 			m_light->SetEyeWorldPos(m_CameraPosition);
 		}
 		glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(m_modelview));
