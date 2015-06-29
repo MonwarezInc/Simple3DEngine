@@ -51,7 +51,7 @@ struct PointLight	:	public BaseLight
 class Light
 {
 	public:
-		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	2;
+		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	6;
 		Light();
 		virtual	void	Show();
 		virtual void 	SetDirectionalLight(const DirectionalLight &light);

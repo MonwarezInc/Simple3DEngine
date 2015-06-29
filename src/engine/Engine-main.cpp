@@ -122,18 +122,23 @@ void	CEngine::Draw(unsigned int elapsed)
 			m_light->SetPointLights(m_PointLight);
 			m_light->SetEyeWorldPos(m_CameraPosition);
 		}
-		glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(m_modelview));
 		glUniformMatrix4fv(projectionl, 1, GL_FALSE, glm::value_ptr(m_projection));
 		// end light
 		for (unsigned int i=0; i < m_vObjectNode.size(); ++i)
 		{
 			// do transformation stuff
 			// ...
-			glm::mat4		mvp			=	m_modelview;	// load camera pos
+			//glm::mat4		mvp			=	m_modelview;	// load camera pos
+			glm::mat4	mvp;
 			m_vObjectNode[i].DoTransformation(mvp);
-			mvp	=	m_projection * mvp;
+			// Send to OpenGL the modelview before apply camera transformation and after object transformation
+			glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(mvp));
+			mvp	=	m_projection * m_modelview * mvp;
 			// send to OpenGL
 			glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
+			// send material
+			m_light->SetMatSpecularIntensity(1.0);
+			m_light->SetMatSpecularPower(2);
 			// then draw it
 			m_vObjectNode[i].object->Draw(elapsed, shaderID,m_vObjectNode[i].animation);
 		}

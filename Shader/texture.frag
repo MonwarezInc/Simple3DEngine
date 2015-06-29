@@ -1,6 +1,6 @@
 //GLSL version
 #version 330
-const int MAX_POINT_LIGHTS = 2;
+const int MAX_POINT_LIGHTS = 6;
 
 //Input 
 
@@ -77,11 +77,10 @@ vec4	CalcPointLight(int Index, vec3 Normal)
 	float	Distance		=	length(LightDirection);
 	LightDirection			=	normalize(LightDirection);
 	vec4	Color			=	CalcLightInternal(PointLights[Index].Base, LightDirection, Normal);
-	float	Attenuation		=	PointLights[Index].Atten.Constant +
+	float	atten			=	PointLights[Index].Atten.Constant +
 								PointLights[Index].Atten.Linear * Distance +
 								PointLights[Index].Atten.Exp * Distance * Distance;
-	vec4	color_return	=	Color ; // Attenuation ;	
-	return	color_return;
+	return	Color/atten;	
 }
 // Fonction main
 

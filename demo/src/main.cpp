@@ -32,8 +32,6 @@ int main (int argc, char **argv)
 		FileManager	file("./data/command.dat","r"); // camera settings and time of life
 		// typical command file are just
 		// camera position(x,y,z) target(x,y,z) up(x,y,z)
-		// lifetime t
-		// rotate a
 		float 	x1,y1,z1,x2,y2,z2,x3,y3,z3;
 		int		w,h,f;
 		if (fscanf(file.GetFilePtr(),"camera position(%f,%f,%f) target(%f,%f,%f) up(%f,%f,%f)\nresolution %dx%d\nfullscreen %d",
@@ -117,23 +115,24 @@ int main (int argc, char **argv)
 		camera.setSpeed(0.1);
 		// Adding some light
 		auto 				light	=	std::make_shared<Light>();
-		light->SetMatSpecularIntensity(1.0);
-		light->SetMatSpecularPower(2);
 		std::vector<PointLight>	pointlight;
 		PointLight	pl;
-		pl.DiffuseIntensity	=	0.5;
-		pl.Color			=	glm::vec3(1.0,1.0,0.9);
-		pl.Position			=	glm::vec3(30,50,30);
-		pl.Attenuation.Linear	=	0.1;
-		pl.Attenuation.Constant	=	1.0;
-		pl.Attenuation.Exp		=	0.2;
+		pl.DiffuseIntensity			=	0.9;
+		pl.Color					=	glm::vec3(1.0,0.0,0.0);
+		pl.Position					=	glm::vec3(-20,50,20);
+		pl.Attenuation.Linear		=	0.001;
+		pl.Attenuation.Constant		=	1.0;
+		pl.Attenuation.Exp			=	0.002;
 		pointlight.push_back(pl);
-		pl.DiffuseIntensity	=	0.5;
-		pl.Color			=	glm::vec3(1.0,1.0,0.9);
-		pl.Position			=	glm::vec3(50,20,30);
-		pl.Attenuation.Linear	=	0.1;
-		pl.Attenuation.Constant	=	1.0;
-		pl.Attenuation.Exp		=	0.2;
+		pl.DiffuseIntensity			=	0.9;
+		pl.Color					=	glm::vec3(0.0,1.0,0.0);
+		pl.Position					=	glm::vec3(10,20,20);
+		pl.Attenuation.Linear		=	0.001;
+		pl.Attenuation.Constant		=	1.0;
+		pl.Attenuation.Exp			=	0.002;
+		pointlight.push_back(pl);
+		pl.Position					=	glm::vec3(-40,50,20);
+		pl.Color					=	glm::vec3(0.0,0.0,1.0);
 		pointlight.push_back(pl);
 		engine.AttachLight(light,pointlight);
 		// End adding some light
