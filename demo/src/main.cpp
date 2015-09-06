@@ -119,26 +119,39 @@ int main (int argc, char **argv)
 		PointLight	pl;
 		pl.DiffuseIntensity			=	0.9;
 		pl.Color					=	glm::vec3(1.0,0.0,0.0);
-		pl.Position					=	glm::vec3(-20,50,20);
+		//pl.Position					=	glm::vec3(-20,50,20);
 		pl.Attenuation.Linear		=	0.001;
 		pl.Attenuation.Constant		=	1.0;
 		pl.Attenuation.Exp			=	0.002;
 		pointlight.push_back(pl);
 		pl.DiffuseIntensity			=	0.9;
 		pl.Color					=	glm::vec3(0.0,1.0,0.0);
-		pl.Position					=	glm::vec3(10,20,20);
+		//pl.Position					=	glm::vec3(10,20,20);
 		pl.Attenuation.Linear		=	0.001;
 		pl.Attenuation.Constant		=	1.0;
 		pl.Attenuation.Exp			=	0.002;
 		pointlight.push_back(pl);
-		pl.Position					=	glm::vec3(-40,50,20);
+		//pl.Position					=	glm::vec3(-40,50,20);
 		pl.Color					=	glm::vec3(0.0,0.0,1.0);
 		pointlight.push_back(pl);
 		engine.AttachLight(light,pointlight);
 		// End adding some light
-
+		float	t	=	0;
 		while (!input.terminer())
 		{
+			auto numLight	=	pointlight.size();
+			for (size_t i = 0; i < numLight; ++i)
+			{
+				
+				auto	relcenter	=	glm::vec3(std::cos(t*2*i*M_PI/(float)numLight),
+										std::sin(t*2*i*M_PI/(float)numLight),0);
+				auto	abscenter	=	glm::vec3(-10,35,20);
+				float	rayon		=	20.0;
+				auto	circle		=	glm::vec3(std::cos(t),std::sin(t),0);
+				pointlight[i].Position	=	abscenter + rayon*(relcenter +  circle);
+			}
+			engine.AttachLight(light,pointlight);
+
 			input.UpdateEvent();
 			camera.keyBoardEvent(input);	
 			camera.deplacer(input,elapsed);
@@ -157,6 +170,7 @@ int main (int argc, char **argv)
 			if (input.GetTouche(SDL_SCANCODE_ESCAPE))
 				break;
 		totalTime	=	SDL_GetTicks() - start;
+		t	+=	elapsed/1800.0;
 		}
 	}
 	catch(string const &a)
