@@ -1,5 +1,6 @@
 //GLSL version
-#version 330
+#version 150
+#extension GL_ARB_explicit_attrib_location : require
 const int MAX_POINT_LIGHTS = 6;
 
 //Input 

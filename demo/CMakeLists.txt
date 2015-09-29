@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.3)
 
 #Configuration of project
 #for the moment we will just do the exec (library will come later)

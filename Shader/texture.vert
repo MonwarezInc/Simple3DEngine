@@ -1,5 +1,6 @@
 // GLSL version
-#version 330
+#version 150
+#extension GL_ARB_explicit_attrib_location : require
 // vertex input
 layout (location = 0) 	in 		vec3	in_Vertex;
 layout (location = 2)	in		vec2	in_TexCoord0;

@@ -1,7 +1,9 @@
 GraphicEngine
 =============
 
-GraphicEngine turned to OpenGL 3.2 (core profile) and 330 for shader 
+GraphicEngine turned to OpenGL 3.2 (core profile) and 150 for shader <br/>
+List of shader extension used:<br/>
+GL_ARB_explicit_attrib_location <br/>
 
 This is a graphics engine for a future project,
 I will probably reuse a part of my personal project.<br/>
