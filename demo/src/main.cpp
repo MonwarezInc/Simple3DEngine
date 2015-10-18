@@ -6,6 +6,8 @@
 #include <cmath>
 #include "main.h"
 #include <GraphicEngine/Camera.h>
+
+#define MAX_LIGHT 6 	// define this for now
 using namespace std;
 int main (int argc, char **argv)
 {
@@ -115,25 +117,74 @@ int main (int argc, char **argv)
 		camera.setSpeed(0.1);
 		// Adding some light
 		auto 				light	=	std::make_shared<Light>();
-		std::vector<PointLight>	pointlight;
-		PointLight	pl;
-		pl.DiffuseIntensity			=	0.9;
-		pl.Color					=	glm::vec3(1.0,0.0,0.0);
-		//pl.Position					=	glm::vec3(-20,50,20);
-		pl.Attenuation.Linear		=	0.001;
-		pl.Attenuation.Constant		=	1.0;
-		pl.Attenuation.Exp			=	0.002;
-		pointlight.push_back(pl);
-		pl.DiffuseIntensity			=	0.9;
-		pl.Color					=	glm::vec3(0.0,1.0,0.0);
-		//pl.Position					=	glm::vec3(10,20,20);
-		pl.Attenuation.Linear		=	0.001;
-		pl.Attenuation.Constant		=	1.0;
-		pl.Attenuation.Exp			=	0.002;
-		pointlight.push_back(pl);
-		//pl.Position					=	glm::vec3(-40,50,20);
-		pl.Color					=	glm::vec3(0.0,0.0,1.0);
-		pointlight.push_back(pl);
+		std::vector<PointLight>			pointlight;
+		std::vector<LinearInterpolate<float>>	posintlight;
+		try
+		{
+			file.LoadFile("./data/light.dat","r");
+			int nblights	=	0;
+			if (fscanf(file.GetFilePtr(),"lights %d\n",&nblights) == 1)
+			{
+				for (auto i = 0; i < nblights && i < MAX_LIGHT; ++i)
+				{
+					PointLight	pl;
+					float x,y,z,r,g,b,a,d,l,c,e;
+					int	controlpoint(0);
+					char	curvetype[256];
+					if (fscanf(file.GetFilePtr(),
+						"color(%f,%f,%f) ambiant(%f) diffuse(%f) linear(%f) constant(%f) exp(%f)\n",
+						&r,&g,&b,&a,&d,&l,&c,&e) != 8)
+						throw std::string("error in the first line of light");
+					if (fscanf(file.GetFilePtr(),"controlpoint(%d) %255s\n", &controlpoint,curvetype) != 2)
+						throw std::string("error in the controlpoint line");
+					// set static settings first
+					pl.Color				=	glm::vec3(r,g,b);
+					pl.AmbientIntensity		=	a;
+					pl.DiffuseIntensity		=	d;
+					pl.Attenuation.Constant	=	c;
+					pl.Attenuation.Linear	=	l;
+					pl.Attenuation.Exp		=	e;
+					std::string scurvetype(curvetype);
+					if (scurvetype == "linear") // We only manage linear curve for now
+					{
+						posintlight.push_back(LinearInterpolate<float>());
+						for (auto j = 0; j < controlpoint; ++j)
+						{
+							float time;
+							if(fscanf(file.GetFilePtr(),"position(%f,%f,%f) timemill(%f)\n",&x,&y,&z,&time) != 4)
+								throw std::string("error in controlpoint line position");
+							posintlight.back().AddPoint(Position3D<float>(x,y,z), time);	
+						}
+					}
+					else
+					{
+						// We consider it's linear for now
+						posintlight.push_back(LinearInterpolate<float>());
+						float time;
+						if(fscanf(file.GetFilePtr(),"position(%f,%f,%f) timemill(%f)\n",&x,&y,&z,&time) != 4)
+							throw std::string("error in controlpoint line position");
+						posintlight.back().AddPoint(Position3D<float>(x,y,z), time);	
+					}
+					pointlight.push_back(pl);
+				}
+			}
+			else
+			{
+				throw std::string("error lights number of lights");
+			}
+			file.Release();
+		}
+		catch(std::string err)
+		{
+			std::cerr << "Uncategorized error" << std::endl;
+			std::cerr << err << std::endl;
+			file.Release();
+		}
+		catch(...)
+		{
+			std::cerr << "Error during loading ./data/lights.dat" << std::endl;
+			file.Release();
+		}
 		engine.AttachLight(light,pointlight);
 		// End adding some light
 		float	t	=	0;
@@ -142,13 +193,9 @@ int main (int argc, char **argv)
 			auto numLight	=	pointlight.size();
 			for (size_t i = 0; i < numLight; ++i)
 			{
-				
-				auto	relcenter	=	glm::vec3(std::cos(t*2*i*M_PI/(float)numLight),
-										std::sin(t*2*i*M_PI/(float)numLight),0);
-				auto	abscenter	=	glm::vec3(-10,35,20);
-				float	rayon		=	20.0;
-				auto	circle		=	glm::vec3(std::cos(t),std::sin(t),0);
-				pointlight[i].Position	=	abscenter + rayon*(relcenter +  circle);
+				// Apply Interpolated curve position
+				Position3D<float>	lightpos	=	posintlight[i].GetInterpolated(totalTime);
+				pointlight[i].Position	=	glm::vec3(lightpos.x,lightpos.y,lightpos.z);	
 			}
 			engine.AttachLight(light,pointlight);
 
