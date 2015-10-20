@@ -165,6 +165,8 @@ int main (int argc, char **argv)
 							throw std::string("error in controlpoint line position");
 						posintlight.back().AddPoint(Position3D<float>(x,y,z), time);	
 					}
+					// Set looped for posintlight
+					posintlight.back().SetLooped(true);
 					pointlight.push_back(pl);
 				}
 			}

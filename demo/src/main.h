@@ -123,18 +123,32 @@ class LinearInterpolate : public CurveInterpolate<T>
 			m_vposition3D.push_back(pos);
 			m_time.push_back(time);
 		}
-		virtual void			SetLooped(bool looped){}
+		virtual void			SetLooped(bool looped)
+		{
+			m_looped	=	looped;
+		}
 		virtual Position3D<T>	GetInterpolated(T totaltime)
 		{
 			auto	sizeVpos	=	m_vposition3D.size();
 			T	currenttime	=	0;
+			T	lasttime	=	0;
+			T	t			=	0;
 			auto	indice	=	0;
+			if (m_looped)
+			{
+				for (auto i =0; i < sizeVpos; ++i)
+					currenttime += m_time[indice];
+				if (totaltime > currenttime)
+					totaltime	= (int)totaltime % (int)currenttime;
+				currenttime		=	0;
+			}
 			while(indice < sizeVpos)
 			{
 				currenttime	+=	m_time[indice];
 				if (totaltime <= currenttime)
 					break;
 				++indice;
+				lasttime	=	currenttime;
 			}
 			if (1 == sizeVpos)
 				return m_vposition3D.front();
@@ -142,9 +156,10 @@ class LinearInterpolate : public CurveInterpolate<T>
 				throw std::string ("error no pos light defined");
 			if (0 == currenttime)
 				throw std::string("error currenttime equal 0 , can't divide");
-			T t	=	totaltime / currenttime;
+			t	=	totaltime - lasttime;
 			if ((indice + 1 < sizeVpos) && (indice < sizeVpos))
 			{ 
+				t /= m_time[indice];
 				T x,y,z;
 				x	=	t * m_vposition3D[indice+1].x + (1 - t)* m_vposition3D[indice].x;
 				y	=	t * m_vposition3D[indice+1].y + (1 - t)* m_vposition3D[indice].y;
@@ -159,5 +174,6 @@ class LinearInterpolate : public CurveInterpolate<T>
 		
 		std::vector <Position3D<T>>	m_vposition3D;
 		std::vector <T>				m_time;
+		bool						m_looped;
 };
 #endif
