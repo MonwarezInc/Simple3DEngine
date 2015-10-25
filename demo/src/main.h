@@ -139,7 +139,7 @@ class LinearInterpolate : public CurveInterpolate<T>
 				for (auto i =0; i < sizeVpos; ++i)
 					currenttime += m_time[indice];
 				if (totaltime > currenttime)
-					totaltime	= (int)totaltime % (int)currenttime;
+					totaltime	= fmod(totaltime,currenttime);
 				currenttime		=	0;
 			}
 			while(indice < sizeVpos)

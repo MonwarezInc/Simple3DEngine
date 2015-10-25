@@ -1,16 +1,22 @@
-lights 2
+lights 3
 color(1.0,1.0,0.0) ambiant(0.2) diffuse(0.9) linear(0.001) constant(1.0) exp(0.005)
 controlpoint(6) linear
-position(10,0,20) timemill(4000)
-position(-10,50,20) timemill(4000)
-position(-20,60,20) timemill(4000)
-position(-30,50,20) timemill(4000)
-position(-20,50,20) timemill(4000)
-position(10,0,20) timemill(4000)
+position(10,0,30) timemill(2000)
+position(-10,50,30) timemill(4000)
+position(-20,60,30) timemill(2000)
+position(-30,50,30) timemill(2000)
+position(-20,50,30) timemill(2000)
+position(10,0,30) timemill(4000)
 color(0.0,1.0,1.0) ambiant(0.2) diffuse(0.9) linear(0.001) constant(1.0) exp(0.005)
 controlpoint(4) linear
-position(-10,50,20) timemill(9000)
-position(-10,-50,20) timemill(9000)
-position(-20,50,20) timemill(9000)
-position(-10,50,20) timemill(9000)
+position(-10,50,30) timemill(2000)
+position(-10,-50,30) timemill(3000)
+position(-20,50,30) timemill(2000)
+position(-10,50,30) timemill(1000)
+color(1.0,1.0,1.0) ambiant(0.2) diffuse(0.9) linear(0.001) constant(1.0) exp(0.005)
+controlpoint(4) linear
+position(-60,50,25) timemill(1500)
+position(-10,50,25) timemill(2000)
+position(-50,80,25) timemill(2000)
+position(-60,50,25) timemill(1500)
 
