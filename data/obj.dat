@@ -7,5 +7,5 @@ models 9
 ../data/Defender.3ds position(-10,40,10) rotate(0,0,0) scale(5)
 ../data/TreasureChest/treasure_chest.obj position(-20,40,12.25) rotate(90,90,0) scale(50)
 ../data/bob_lamp/bob_lamp_update_export.md5mesh position(-30,50,10) rotate(0,0,0) scale(1)
-../demo-data/data/home/home1.obj position(-30,70,11) rotate(90,0,0) scale(5)
+../demo-data/data/table/table.obj position(-30,40,11) rotate(0,0,90) scale(1)
 

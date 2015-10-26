@@ -4,7 +4,9 @@
 
 #include <stdio.h>
 #include <cmath>
-#include "main.h"
+#include "utils/FileManager.h"
+#include "utils/MemoryManager.h"
+#include "utils/Interpolate.h"
 #include <GraphicEngine/Camera.h>
 
 #define MAX_LIGHT 6 	// define this for now
