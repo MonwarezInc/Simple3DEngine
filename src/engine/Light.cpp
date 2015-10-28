@@ -16,9 +16,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include <GraphicEngine/Light.h>
 #include <cstdio>
-Light::Light()
+Light::Light():Shader()
 {
 	
+}
+Light::Light(Light const &shaderToCopy):Shader(shaderToCopy)
+{
+}
+Light::Light(std::string const &vertexSource, std::string const &fragmentSource):Shader(vertexSource,fragmentSource)
+{
+}
+Light::~Light()
+{
 }
 void	Light::SetEyeWorldPos(const glm::vec3 &eye)
 {
@@ -66,44 +75,43 @@ void	Light::Show()
 	glUniform1f(m_matSpecularIntensityLocation, m_specularIntensity);
 	glUniform1f(m_matSpecularPowerLocation, m_specularPower);
 }
-void	Light::SetShaderID(GLuint shaderID)
+void	Light::Init()
 {
-	m_ShaderID							=	shaderID;
 	// Get the location of the light uniform in the shader
-	m_dirLightColorLocation				=	glGetUniformLocation(shaderID,"directionalLight.Base.Color");
-	m_dirLightAmbientIntensityLocation	=	glGetUniformLocation(shaderID,"directionalLight.Base.AmbientIntensity");
-	m_dirLightDirectionLocation			=	glGetUniformLocation(shaderID,"directionalLight.Direction");
-	m_dirLightDiffuseIntensityLocation	=	glGetUniformLocation(shaderID,"directionalLight.Base.DiffuseIntensity");
-	m_eyeWorldPosLocation				=	glGetUniformLocation(shaderID,"eyeWorldLocation");
-	m_matSpecularIntensityLocation		=	glGetUniformLocation(shaderID,"matSpecularIntensity");
-	m_matSpecularPowerLocation			=	glGetUniformLocation(shaderID,"matSpecularPower");
+	m_dirLightColorLocation				=	GetUniformLocation("directionalLight.Base.Color");
+	m_dirLightAmbientIntensityLocation	=	GetUniformLocation("directionalLight.Base.AmbientIntensity");
+	m_dirLightDirectionLocation			=	GetUniformLocation("directionalLight.Direction");
+	m_dirLightDiffuseIntensityLocation	=	GetUniformLocation("directionalLight.Base.DiffuseIntensity");
+	m_eyeWorldPosLocation				=	GetUniformLocation("eyeWorldLocation");
+	m_matSpecularIntensityLocation		=	GetUniformLocation("matSpecularIntensity");
+	m_matSpecularPowerLocation			=	GetUniformLocation("matSpecularPower");
 	
-	m_numPointLightsLocation				=	glGetUniformLocation(shaderID,"NumPointLights");
+	m_numPointLightsLocation			=	GetUniformLocation("NumPointLights");
 	for (unsigned int i=0; i < MAX_POINT_LIGHTS;++i)
 	{
 		char Name[128];
 		memset(Name,0,sizeof(Name));
 
 		snprintf(Name,sizeof(Name),"PointLights[%d].Base.Color",i);
-		m_pointLightsLocation[i].Color				=	glGetUniformLocation(shaderID,Name);
+		m_pointLightsLocation[i].Color				=	GetUniformLocation(Name);
 		
 		snprintf(Name,sizeof(Name),"PointLights[%d].Base.AmbientIntensity",i);
-		m_pointLightsLocation[i].AmbientIntensity	=	glGetUniformLocation(shaderID,Name);
+		m_pointLightsLocation[i].AmbientIntensity	=	GetUniformLocation(Name);
 		
 		snprintf(Name,sizeof(Name),"PointLights[%d].Position",i);
-		m_pointLightsLocation[i].Position			=	glGetUniformLocation(shaderID,Name);
+		m_pointLightsLocation[i].Position			=	GetUniformLocation(Name);
 		
 		snprintf(Name,sizeof(Name),"PointLights[%d].Base.DiffuseIntensity",i);
-		m_pointLightsLocation[i].DiffuseIntensity	=	glGetUniformLocation(shaderID,Name);
+		m_pointLightsLocation[i].DiffuseIntensity	=	GetUniformLocation(Name);
 		
 		snprintf(Name,sizeof(Name),"PointLights[%d].Atten.Constant",i);
-		m_pointLightsLocation[i].Atten.Constant		=	glGetUniformLocation(shaderID,Name);
+		m_pointLightsLocation[i].Atten.Constant		=	GetUniformLocation(Name);
 		
 		snprintf(Name,sizeof(Name),"PointLights[%d].Atten.Linear",i);
-		m_pointLightsLocation[i].Atten.Linear		=	glGetUniformLocation(shaderID,Name);
+		m_pointLightsLocation[i].Atten.Linear		=	GetUniformLocation(Name);
 		
 		snprintf(Name,sizeof(Name),"PointLights[%d].Atten.Exp",i);
-		m_pointLightsLocation[i].Atten.Exp			=	glGetUniformLocation(shaderID,Name);
+		m_pointLightsLocation[i].Atten.Exp			=	GetUniformLocation(Name);
 	}
 
 }

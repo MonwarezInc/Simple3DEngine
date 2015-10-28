@@ -14,6 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
+#include "Shader.h"
 #ifndef GLM_FORCE_RADIANS
 	#define GLM_FORCE_RADIANS
 #endif
@@ -48,18 +49,22 @@ struct PointLight	:	public BaseLight
 	} Attenuation;
 };
 
-class Light
+class Light : public Shader
 {
 	public:
 		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	6;
 		Light();
+		Light(std::string const &vertexSource , std::string const &fragmentSource);
+		Light(Light const &);
+		
+		~Light();
 		virtual	void	Show();
 		virtual void 	SetDirectionalLight(const DirectionalLight &light);
 		virtual	void	SetEyeWorldPos(const glm::vec3 &eyeWorldPos);
 		virtual	void	SetMatSpecularIntensity(GLfloat intensity);
 		virtual	void	SetMatSpecularPower(GLfloat power);
 		virtual	void	SetPointLights(std::vector<PointLight> const &  lights);
-		virtual	void	SetShaderID(GLuint shaderID);
+		virtual	void	Init();
 
 	protected:
 		DirectionalLight	m_dlight;
@@ -86,6 +91,5 @@ class Light
 				GLuint		Exp;
 			} Atten;
 		}m_pointLightsLocation[MAX_POINT_LIGHTS]; 
-		GLuint				m_ShaderID;
 		GLuint				m_numPointLightsLocation;
 };

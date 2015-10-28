@@ -205,7 +205,7 @@ int main (int argc, char **argv)
 			std::cerr << "Error during loading ./data/lights.dat" << std::endl;
 			file.Release();
 		}
-		engine.AttachLight(light,pointlight);
+		engine.AttachLight(pointlight);
 		// End adding some light
 		float	t	=	0;
 		while (!input.terminer())
@@ -217,7 +217,7 @@ int main (int argc, char **argv)
 				Position3D<float>	lightpos	=	posintlight[i].GetInterpolated(totalTime);
 				pointlight[i].Position	=	glm::vec3(lightpos.x,lightpos.y,lightpos.z);	
 			}
-			engine.AttachLight(light,pointlight);
+			engine.AttachLight(pointlight);
 
 			input.UpdateEvent();
 			camera.keyBoardEvent(input);	

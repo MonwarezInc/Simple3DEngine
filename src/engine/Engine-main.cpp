@@ -30,7 +30,7 @@ void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const s
 		m_pGraphics	=	std::make_shared<CGraphics>(width,height,fullscreen,title,bpp,aa,major,minor);
 	// load shader
 	if (!m_pShader)
-		m_pShader	=	std::make_shared<Shader>("./Shader/texture.vert","./Shader/texture.frag");
+		m_pShader	=	std::make_shared<Light>("./Shader/texture.vert","./Shader/texture.frag");
 }
 void	CEngine::DeleteWindow(GLuint indice)
 {
@@ -52,9 +52,8 @@ void	CEngine::AddMeshNode(Mesh* object,GLuint & id)
 	m_vObjectNode.push_back(objectNode);
 	id	=	m_vObjectNode.size() - 1;
 }
-void	CEngine::AttachLight(std::shared_ptr<Light> light, std::vector<PointLight> const & pointlight)
+void	CEngine::AttachLight(std::vector<PointLight> const & pointlight)
 {
-	m_light			=	light;
 	m_PointLight	=	pointlight;
 }
 void	CEngine::DeleteObject(GLuint id)
@@ -104,8 +103,6 @@ void	CEngine::Init()
 }
 void	CEngine::Draw(unsigned int elapsed)
 {
-	GLuint	 		shaderID	=	m_pShader->GetProgramID();
-	
 	m_pShader->Enable();
 		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
 		GLuint		mvpLocation	=	m_pShader->GetUniformLocation("MVP");
@@ -113,14 +110,11 @@ void	CEngine::Draw(unsigned int elapsed)
 		GLuint		projectionl	=	m_pShader->GetUniformLocation("projection");
 		
 		//Light
-		// for_each light
-		if (m_light)
-		{
-			m_light->SetShaderID(shaderID);
-			//m_light->Show();
-			m_light->SetPointLights(m_PointLight);
-			m_light->SetEyeWorldPos(m_CameraPosition);
-		}
+		m_pShader->Init();
+		//m_light->Show();
+		m_pShader->SetPointLights(m_PointLight);
+		m_pShader->SetEyeWorldPos(m_CameraPosition);
+
 		glUniformMatrix4fv(projectionl, 1, GL_FALSE, glm::value_ptr(m_projection));
 		// end light
 		for (unsigned int i=0; i < m_vObjectNode.size(); ++i)
@@ -136,8 +130,8 @@ void	CEngine::Draw(unsigned int elapsed)
 			// send to OpenGL
 			glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
 			// send material
-			m_light->SetMatSpecularIntensity(1.0);
-			m_light->SetMatSpecularPower(2);
+			m_pShader->SetMatSpecularIntensity(1.0);
+			m_pShader->SetMatSpecularPower(2);
 			// then draw it
 			m_vObjectNode[i].object->Draw(elapsed, m_pShader,m_vObjectNode[i].animation);
 		}

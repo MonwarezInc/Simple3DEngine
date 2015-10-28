@@ -45,12 +45,6 @@ class Shader
 	private:
     	virtual void	Load();
     	bool BuildShader(GLuint &shader, GLenum type, std::string const &source);
-	// For little compatibilities
-	public:
-    	GLuint GetProgramID() const;
-
-
-    private:
 
     	GLuint m_vertexID;
     	GLuint m_fragmentID;

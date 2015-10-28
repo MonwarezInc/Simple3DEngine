@@ -281,10 +281,3 @@ bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &source)
         return true;
 }
 
-
-// Getter
-
-GLuint Shader::GetProgramID() const
-{
-    return m_programID;
-}
