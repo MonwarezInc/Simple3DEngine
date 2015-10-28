@@ -32,26 +32,32 @@ class Shader
 {
     public:
 
-    Shader();
-    Shader(Shader const &shaderACopier);
-    Shader(std::string vertexSource, std::string fragmentSource);
-    ~Shader();
+    	Shader();
+    	Shader(Shader const &shaderToCopy);
+    	Shader(std::string const &vertexSource, std::string const &fragmentSource);
+    	~Shader();
 
-    Shader& operator=(Shader const &shaderACopier);
+    	Shader& operator=(Shader const &shaderToCopy);
 
-    bool charger();
-    bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
-    GLuint getProgramID() const;
+		virtual	void	Enable();
+		virtual	void	Disable();
+		virtual GLuint	GetUniformLocation(std::string const &name) const;
+	private:
+    	virtual void	Load();
+    	bool BuildShader(GLuint &shader, GLenum type, std::string const &source);
+	// For little compatibilities
+	public:
+    	GLuint GetProgramID() const;
 
 
     private:
 
-    GLuint m_vertexID;
-    GLuint m_fragmentID;
-    GLuint m_programID;
+    	GLuint m_vertexID;
+    	GLuint m_fragmentID;
+    	GLuint m_programID;
 
-    std::string m_vertexSource;
-    std::string m_fragmentSource;
+    	std::string m_vertexSource;
+    	std::string m_fragmentSource;
 };
 
 #endif

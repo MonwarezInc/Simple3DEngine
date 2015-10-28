@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #ifndef MESH_INCLUED
 #define MESH_INCLUED
 #include "Texture.h"
+#include "Shader.h"
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/mesh.h>
@@ -56,7 +58,7 @@ namespace GraphicEngine
 			Mesh();
 			virtual	~Mesh();
 			virtual	void	LoadFromFile(std::string const & filename);
-			virtual	void	Draw(unsigned int  elapsed_time, GLuint shaderID,std::string const & animation);
+			virtual	void	Draw(unsigned int  elapsed_time, std::shared_ptr<Shader> const & shader,std::string const & animation);
 		private:
 			#define NUM_BONES_PER_VERTEX 4
 			#define INVALID_MATERIAL	0xFFFFFFFF

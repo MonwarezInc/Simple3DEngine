@@ -31,7 +31,6 @@ void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const s
 	// load shader
 	if (!m_pShader)
 		m_pShader	=	std::make_shared<Shader>("./Shader/texture.vert","./Shader/texture.frag");
-	m_pShader->charger();
 }
 void	CEngine::DeleteWindow(GLuint indice)
 {
@@ -105,13 +104,13 @@ void	CEngine::Init()
 }
 void	CEngine::Draw(unsigned int elapsed)
 {
-	GLuint	 		shaderID	=	m_pShader->getProgramID();
+	GLuint	 		shaderID	=	m_pShader->GetProgramID();
 	
-	glUseProgram(shaderID);
+	m_pShader->Enable();
 		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
-		GLuint		mvpLocation	=	glGetUniformLocation(shaderID,"MVP");
-		GLuint		modelviewloc=	glGetUniformLocation(shaderID,"modelview");
-		GLuint		projectionl	=	glGetUniformLocation(shaderID,"projection");
+		GLuint		mvpLocation	=	m_pShader->GetUniformLocation("MVP");
+		GLuint		modelviewloc=	m_pShader->GetUniformLocation("modelview");
+		GLuint		projectionl	=	m_pShader->GetUniformLocation("projection");
 		
 		//Light
 		// for_each light
@@ -140,9 +139,9 @@ void	CEngine::Draw(unsigned int elapsed)
 			m_light->SetMatSpecularIntensity(1.0);
 			m_light->SetMatSpecularPower(2);
 			// then draw it
-			m_vObjectNode[i].object->Draw(elapsed, shaderID,m_vObjectNode[i].animation);
+			m_vObjectNode[i].object->Draw(elapsed, m_pShader,m_vObjectNode[i].animation);
 		}
-	glUseProgram(0);
+	m_pShader->Disable();
 	m_pGraphics->SwapWindow();
 }
 void	CEngine::ObjectNode::DoTransformation(glm::mat4 & mdv)
