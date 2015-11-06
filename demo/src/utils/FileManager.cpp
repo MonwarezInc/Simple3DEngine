@@ -14,24 +14,34 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef FILEMANAGER_HEADER_INCLUED
-#define FILEMANAGER_HEADER_INCLUED
-#include <memory>
-#include <stdio.h>
-#include <string>
-#include <vector>
-
-//	FileManager
-class FileManager
+#include "FileManager.h"
+FileManager::FileManager()
 {
-	public:
-		FileManager();
-		FileManager(std::string const & filename, std::string const & mode);
-		void	LoadFile(std::string const & filename, std::string const & mode);
-		FILE*	GetFilePtr();
-		void	Release();
-		~FileManager();
-	protected:
-		FILE*	file;
-};
-#endif
+	file	=	nullptr;
+}
+FileManager::FileManager(std::string const & filename, std::string const & mode)
+{
+	file	=	nullptr;
+	file	=	fopen(filename.c_str(),mode.c_str());
+}
+FILE* FileManager::GetFilePtr()
+{
+	if (!file)
+		throw std::string("Error I/O ");
+	return file;
+}
+FileManager::~FileManager()
+{
+	this->Release();	
+}
+void	FileManager::Release()
+{
+	if(file)
+		fclose(file);
+	file	=	nullptr;
+}
+void 	FileManager::LoadFile(std::string const & filename, std::string const & mode)
+{
+	this->Release();
+	file	=	fopen(filename.c_str(), mode.c_str());
+}

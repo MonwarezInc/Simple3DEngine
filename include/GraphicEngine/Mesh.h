@@ -126,7 +126,7 @@ namespace GraphicEngine
 				int				skinned;
 			};
 			std::vector<MeshEntry>				m_Entries;
-			std::vector<Texture*>				m_Textures;
+			std::vector<Texture>				m_Textures;
 			const aiScene*						m_pScene;
 			Assimp::Importer					m_Importer;
 			glm::mat4							m_GlobalInverseTransform;

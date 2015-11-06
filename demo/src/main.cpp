@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include <stdio.h>
 #include <cmath>
-#include "utils/FileManager.h"
-#include "utils/MemoryManager.h"
-#include "utils/Interpolate.h"
+#include "utils/MemoryManager.hpp"
+#include "utils/Interpolate.hpp"
+#include "utils/Loader.h"
 #include <GraphicEngine/Camera.h>
 
 #define MAX_LIGHT 6 	// define this for now
@@ -39,65 +39,47 @@ int main (int argc, char **argv)
 	// Input
 	CInput	input;
 
-	// quick loader system
-	// not optimal and safe 
-	glm::vec3	cPosition;
-	glm::vec3	cTarget;
-	glm::vec3	cVert(0,0,1);
-	int			screenX		=	640;
-	int			screenY		=	480;
-	bool		fullscreen	=	0;
+	// loader system
+	Loader	loader;
+	// Some struct for loader system
+ 	ConfigData	config;
+	// Set some default
+	config.position		=	glm::vec3(350,200,300);
+	config.target		=	glm::vec3(2,5,0);
+	config.up			=	glm::vec3(0,0,1);
+	config.width		=	640;
+	config.height		=	480;
+	config.fullscreen	=	false;
+
 	try
 	{
-		FileManager	file("./data/command.dat","r"); // camera settings and time of life
-		// typical command file are just
-		// camera position(x,y,z) target(x,y,z) up(x,y,z)
-		float 	x1,y1,z1,x2,y2,z2,x3,y3,z3;
-		int		w,h,f;
-		if (fscanf(file.GetFilePtr(),"camera position(%f,%f,%f) target(%f,%f,%f) up(%f,%f,%f)\nresolution %dx%d\nfullscreen %d",
-								&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3,&w,&h,&f) != 12)
-		{
-			x1	=	350;	y1	=	200;	z1	=	300;
-			x2	=	2;		y2	=	5;		z2	=	0;
-			x3	=	0;		y3	=	0;		z3	=	1;
-			w	=	640;	h	=	480;
-			f	=	0;
-		}
-		cPosition	=	glm::vec3(x1,y1,z1);
-		cTarget		=	glm::vec3(x2,y2,z2);
-		cVert		=	glm::vec3(x3,y3,z3);
-
-		screenX		=	w;
-		screenY		=	h;
-	
-		fullscreen	=	(f != 0)?true:false;
+		loader.Load("./data/config",LOADER_CONFIG);
 	}
-	catch (...)
+	catch (string a)
 	{
-		std::cerr << "error when loading command.dat" << std::endl;
-	}		
+		std::cerr << a << std::endl;
+	}
 	std::vector<unsigned int>			vIDMesh;
 	try
 	{
-		
-		engine.CreateWindow(screenX,screenY,fullscreen,"Test Engine", 32, 2, 3,2);
+		config	=	loader.GetConfigData();
+		engine.CreateWindow(config.width,config.height,config.fullscreen,"Test Engine", 32, 2, 3,2);
 		engine.ClearColor(0.0,0.0,0.0,1.0);
 			
 		FileManager	file("./data/obj.dat","r");
 		BasicVectorManager<GraphicEngine::Mesh>	mesh;
 		// first line nb of models
 		// then just modelPath position(x,y,z) rotate(a,b,c) scale(f)
-		int	nbModel;
-		if (fscanf(file.GetFilePtr(),"models %d\n", &nbModel))
+		unsigned int	nbModel;
+		if (fscanf(file.GetFilePtr(),"models %u\n", &nbModel))
 		{
-			nbModel	=	max(0,nbModel);
 
 			mesh.Allocate(nbModel);
 			
 			vIDMesh.resize(nbModel);
 
 			engine.SetCameraSettings(70.0, 16/9.0, 0.01, 10000);
-			engine.SetCameraLocation(cPosition, cTarget, cVert);
+			engine.SetCameraLocation(config.position, config.target, config.up);
 			
 			for (size_t i=0; i < nbModel; ++i)
 			{
@@ -121,7 +103,7 @@ int main (int argc, char **argv)
 				}
 			}
 		}
-		Camera	camera(cPosition,cTarget,cVert);
+		Camera	camera(config.position,config.target,config.up);
 		// we dont need file open anymore
 		file.Release();
 		// maybe we should encapsulate timer 
@@ -140,8 +122,8 @@ int main (int argc, char **argv)
 		try
 		{
 			file.LoadFile("./data/light.dat","r");
-			int nblights	=	0;
-			if (fscanf(file.GetFilePtr(),"lights %d\n",&nblights) == 1)
+			unsigned int nblights	=	0;
+			if (fscanf(file.GetFilePtr(),"lights %u\n",&nblights) == 1)
 			{
 				for (auto i = 0; i < nblights && i < MAX_LIGHT; ++i)
 				{
@@ -225,7 +207,7 @@ int main (int argc, char **argv)
 			unsigned int begin = SDL_GetTicks();
 			// do graphical stuff
 			// do animation 
-			engine.SetCameraLocation(camera.GetPosition(),camera.GetPointCible(),cVert);
+			engine.SetCameraLocation(camera.GetPosition(),camera.GetPointCible(),config.up);
 			engine.Init();
 			engine.Draw(totalTime);
 			elapsed = SDL_GetTicks() - begin;

@@ -14,24 +14,39 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef FILEMANAGER_HEADER_INCLUED
-#define FILEMANAGER_HEADER_INCLUED
-#include <memory>
+#ifndef LOADER_HEADER_INCLUED_H
+#define LOADER_HEADER_INCLUED_H
+#include "FileManager.h"
+#include <glm/glm.hpp>
 #include <stdio.h>
 #include <string>
-#include <vector>
+enum Loader_Type
+{ LOADER_CONFIG, LOADER_MESH, LOADER_LIGHT, LOADER_DYNAMICS };
+struct ConfigData
+{
+	glm::vec3		position;
+	glm::vec3		target;
+	glm::vec3		up;
+	
+	unsigned	int	width;
+	unsigned	int	height;
+	bool			fullscreen;
+};
 
-//	FileManager
-class FileManager
+class	Loader
 {
 	public:
-		FileManager();
-		FileManager(std::string const & filename, std::string const & mode);
-		void	LoadFile(std::string const & filename, std::string const & mode);
-		FILE*	GetFilePtr();
-		void	Release();
-		~FileManager();
+		Loader ();
+		void		Load(std::string const &filename, Loader_Type type);
+		ConfigData	GetConfigData();
 	protected:
-		FILE*	file;
+		void	LoadConfig(FileManager &file);
+		void	LoadMesh(FileManager &file);
+		void 	LoadLight(FileManager &file);
+		void	LoadDynamics(FileManager &file);
+
+		std::string		m_lastfilename;
+		unsigned char	m_state;
+		ConfigData		m_config;
 };
 #endif

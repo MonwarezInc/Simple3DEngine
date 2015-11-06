@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 using namespace GraphicEngine;
 Mesh::Mesh()
 {
+	m_pScene	=	nullptr;
 }
 Mesh::~Mesh()
 {
@@ -40,7 +41,7 @@ void	Mesh::LoadFromFile(std::string const & filename)
 	Assimp::Importer importer;
 	m_pScene	=	m_Importer.ReadFile(filename.c_str(), aiProcess_Triangulate |
 									aiProcess_GenSmoothNormals	|	aiProcess_FlipUVs);
-	if (m_pScene)
+	if (m_pScene != nullptr)
 	{
 		m_GlobalInverseTransform	=	aiMatrixToMat4(m_pScene->mRootNode->mTransformation);
 		m_GlobalInverseTransform	=	glm::inverse( m_GlobalInverseTransform);
@@ -85,9 +86,9 @@ void	Mesh::Draw(unsigned int  elapsed_time,std::shared_ptr<Shader> const &shader
 		glBindVertexArray(m_Entries[i].VAO);
 			const unsigned int materialIndex	=	m_Entries[i].MaterialIndex;
 			glUniform1i(shader->GetUniformLocation("skinned"),m_Entries[i].skinned);
-			if (materialIndex < m_Textures.size() && m_Textures[materialIndex] )
+			if (materialIndex < m_Textures.size())
 			{
-				glBindTexture(GL_TEXTURE_2D, m_Textures[materialIndex]->GetID());
+				glBindTexture(GL_TEXTURE_2D, m_Textures[materialIndex].GetID());
 			}
 			glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
 			
@@ -97,11 +98,9 @@ void	Mesh::Draw(unsigned int  elapsed_time,std::shared_ptr<Shader> const &shader
 }
 void	Mesh::Clear()
 {
-	for (unsigned int i = 0; i < m_Textures.size() ; ++i)
-	{
-		delete 	m_Textures[i];
-	}
+	m_pScene	=	nullptr;
 	m_Entries.clear();
+	m_Textures.clear();
 }	
 void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex, unsigned int BaseIndex)
 {
@@ -174,7 +173,6 @@ bool	Mesh::InitMaterials(const aiScene* pScene, std::string const & filename)
 	{
 		const	aiMaterial*	pMaterial	=	pScene->mMaterials[i];
 		
-		m_Textures[i]	=	NULL;
 		
 		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 		{
@@ -183,25 +181,24 @@ bool	Mesh::InitMaterials(const aiScene* pScene, std::string const & filename)
 			{
 				std::string		fullPath = dir +"/"+path.data;
 				
-				m_Textures[i]	=	new Texture(fullPath);
+				m_Textures[i].SetFilename(fullPath);
 				
-				if (!m_Textures[i]->Load())
+				if (!m_Textures[i].Load())
 				{
 					// maybe use except mechanism ?
 					std::cerr << "Error loading texture " << fullPath << std::endl;
-					delete	m_Textures[i];
-					m_Textures[i]	=	NULL;
 					ret				=	false;
 				}
 			}
 		}
-		
 		// load a white texture in case the model didn't have it's own texture
-		if (!m_Textures[i])
+		else
 		{
-			m_Textures[i]	=	new	Texture("./white.png");
-			ret				=	m_Textures[i]->Load();
+			m_Textures[i].SetFilename("./white.png");
+			ret	=	m_Textures[i].Load();
 		}
+
+		
 	}	
 		
 	return ret;
@@ -344,7 +341,7 @@ void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 
 	
 	const aiNodeAnim*	pNodeAnim			=	this->FindNodeAnim(pAnimation, NodeName);
 	
-	if (pNodeAnim)
+	if (pNodeAnim != nullptr)
 	{
 		// Interpolate Scaling
 		aiVector3D		scaling;
@@ -495,8 +492,11 @@ const aiNodeAnim*	Mesh::FindNodeAnim(const aiAnimation* pAnimation, std::string 
 	for (unsigned int i=0; i < pAnimation->mNumChannels; ++i)
 	{
 		const aiNodeAnim*	pNodeAnim	=	pAnimation->mChannels[i];
-		if (std::string(pNodeAnim->mNodeName.data) == NodeName)
-			return pNodeAnim;
+		if (pNodeAnim != nullptr)
+		{
+			if (std::string(pNodeAnim->mNodeName.data) == NodeName)
+				return pNodeAnim;
+		}
 	}
 	
 	return nullptr;
