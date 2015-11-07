@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <GraphicEngine/Engine-main.h>
 #include <GraphicEngine/Mesh.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include <cmath>
 #include "utils/MemoryManager.hpp"
 #include "utils/Interpolate.hpp"
@@ -42,7 +42,8 @@ int main (int argc, char **argv)
 	// loader system
 	Loader	loader;
 	// Some struct for loader system
- 	ConfigData	config;
+ 	ConfigData			config;
+	vector<MeshData>	pmeshdata;
 	// Set some default
 	config.position		=	glm::vec3(350,200,300);
 	config.target		=	glm::vec3(2,5,0);
@@ -65,47 +66,27 @@ int main (int argc, char **argv)
 		config	=	loader.GetConfigData();
 		engine.CreateWindow(config.width,config.height,config.fullscreen,"Test Engine", 32, 2, 3,2);
 		engine.ClearColor(0.0,0.0,0.0,1.0);
-			
-		FileManager	file("./data/obj.dat","r");
+		engine.SetCameraSettings(70.0, (float)config.width/(float)config.height, 0.01, 10000);
+		engine.SetCameraLocation(config.position, config.target, config.up);
+
+		loader.Load("./data/obj.dat",LOADER_MESH);
+		pmeshdata	=	loader.GetMeshData();	
 		BasicVectorManager<GraphicEngine::Mesh>	mesh;
-		// first line nb of models
-		// then just modelPath position(x,y,z) rotate(a,b,c) scale(f)
-		unsigned int	nbModel;
-		if (fscanf(file.GetFilePtr(),"models %u\n", &nbModel))
+		auto	nbModel	=	pmeshdata.size();
+		mesh.Allocate(nbModel);
+		vIDMesh.resize(nbModel);
+		for (size_t	i = 0; i < nbModel ; ++i)
 		{
+			unsigned int	id	=	0;
+			auto mesh_ptr	=	mesh.GetVectPtr(i);
+			mesh_ptr->LoadFromFile(pmeshdata[i].filename);
+			engine.AddMeshNode(mesh_ptr, id);
+			vIDMesh[i]		=	id;
 
-			mesh.Allocate(nbModel);
-			
-			vIDMesh.resize(nbModel);
-
-			engine.SetCameraSettings(70.0, 16/9.0, 0.01, 10000);
-			engine.SetCameraLocation(config.position, config.target, config.up);
-			
-			for (size_t i=0; i < nbModel; ++i)
-			{
-				char	filePath[256];
-				float	x,y,z,a,b,c,f;
-				if (fscanf(file.GetFilePtr(),"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)\n", filePath,&x,&y,&z,&a,&b,&c,&f) == 8)
-				{
-					unsigned int 	id	=	0;
-					auto	mesh_ptr	=	mesh.GetVectPtr(i);
-					mesh_ptr->LoadFromFile(filePath);
-					engine.AddMeshNode(mesh_ptr, id);
-					vIDMesh[i]			=	id;
-					
-					engine.SetNodePosRot(vIDMesh[i], glm::vec3(x,y,z), glm::vec3(a*M_PI/180.0, b*M_PI/180.0, c*M_PI/180.0));
-					engine.SetNodeScale(vIDMesh[i], f);
-				}
-				else
-				{	
-					file.Release();
-					throw std::string ("error data map");	
-				}
-			}
+			engine.SetNodePosRot(vIDMesh[i], pmeshdata[i].position, pmeshdata[i].pitch);
+			engine.SetNodeScale(vIDMesh[i], pmeshdata[i].scale);
 		}
 		Camera	camera(config.position,config.target,config.up);
-		// we dont need file open anymore
-		file.Release();
 		// maybe we should encapsulate timer 
 		unsigned int 	start		=	SDL_GetTicks();
 		unsigned int 	frametime	=	16;
@@ -119,6 +100,7 @@ int main (int argc, char **argv)
 		auto 				light	=	std::make_shared<Light>();
 		std::vector<PointLight>			pointlight;
 		std::vector<LinearInterpolate<float>>	posintlight;
+		FileManager	file;
 		try
 		{
 			file.LoadFile("./data/light.dat","r");

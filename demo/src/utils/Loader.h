@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define LOADER_HEADER_INCLUED_H
 #include "FileManager.h"
 #include <glm/glm.hpp>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 enum Loader_Type
 { LOADER_CONFIG, LOADER_MESH, LOADER_LIGHT, LOADER_DYNAMICS };
@@ -32,21 +32,30 @@ struct ConfigData
 	unsigned	int	height;
 	bool			fullscreen;
 };
-
+// MeshData is for one mesh
+struct MeshData
+{
+	std::string 	filename;
+	glm::vec3		position;
+	glm::vec3		pitch;
+	float			scale;
+};
 class	Loader
 {
 	public:
 		Loader ();
-		void		Load(std::string const &filename, Loader_Type type);
-		ConfigData	GetConfigData();
+		void					Load(std::string const &filename, Loader_Type type);
+		ConfigData				GetConfigData();
+		std::vector<MeshData>	GetMeshData();
 	protected:
 		void	LoadConfig(FileManager &file);
 		void	LoadMesh(FileManager &file);
 		void 	LoadLight(FileManager &file);
 		void	LoadDynamics(FileManager &file);
 
-		std::string		m_lastfilename;
-		unsigned char	m_state;
-		ConfigData		m_config;
+		std::string				m_lastfilename;
+		unsigned char			m_state;
+		ConfigData				m_config;
+		std::vector<MeshData>	m_pMesh;	
 };
 #endif

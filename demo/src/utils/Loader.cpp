@@ -16,6 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include "Loader.h"
 using std::string;
+using std::fscanf;
+using std::vector;
 // Some Bits operation define
 #define CONFIG_MASK	1
 #define MESH_MASK 	2
@@ -68,6 +70,33 @@ void Loader::LoadConfig(FileManager & file)
 }
 void Loader::LoadMesh(FileManager & file)
 {
+	// check if MeshData was not loaded before
+	if (1 == (m_state & MESH_MASK))
+	{
+		m_pMesh.clear();
+		m_state -= MESH_MASK;
+	}
+	unsigned int	n;
+	auto ret	=	fscanf(file.GetFilePtr(),"models %u\n",&n);
+	if (ret != 1)
+		throw string("error during loading meshfile : ") + m_lastfilename;
+	m_pMesh.resize(n);
+	for (unsigned int i = 0; i < n; ++i)
+	{
+		char	name[256];
+		float	x,y,z,u,v,w,f;
+		ret	=	fscanf(file.GetFilePtr(),"%255s position(%f,%f,%f) rotate(%f,%f,%f) scale(%f)",name,&x,&y,&z,
+						&u,&v,&w,&f);
+		if (ret != 8)
+			throw string("error during loading meshfile : ") + m_lastfilename;
+		fscanf(file.GetFilePtr(),"\n");
+		m_pMesh[i].filename	=	name;
+		m_pMesh[i].position	=	glm::vec3(x,y,z);
+		m_pMesh[i].pitch	=	glm::vec3(glm::radians(u),glm::radians(v),glm::radians(w));
+		m_pMesh[i].scale	=	f;
+	}
+	// Everything goes well
+	m_state	=	m_state | MESH_MASK;
 }
 void Loader::LoadLight(FileManager & file)
 {
@@ -77,7 +106,13 @@ void Loader::LoadDynamics(FileManager & file)
 }
 ConfigData	Loader::GetConfigData()
 {
-	if (1 != (m_state & CONFIG_MASK))
-		throw string ("error can't get config data before loading it");
+	if (0 == (m_state & CONFIG_MASK))
+		throw string ("error can't get data config before loading it");
 	return	m_config;
+}
+vector<MeshData> Loader::GetMeshData()
+{
+	if (0 == (m_state & MESH_MASK))
+		throw string ("error can't get mesh config before loading it");
+	return m_pMesh;
 }

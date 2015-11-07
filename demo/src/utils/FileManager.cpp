@@ -15,11 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include "FileManager.h"
+using namespace std;
 FileManager::FileManager()
 {
 	file	=	nullptr;
 }
-FileManager::FileManager(std::string const & filename, std::string const & mode)
+FileManager::FileManager(string const & filename, string const & mode)
 {
 	file	=	nullptr;
 	file	=	fopen(filename.c_str(),mode.c_str());
@@ -27,7 +28,7 @@ FileManager::FileManager(std::string const & filename, std::string const & mode)
 FILE* FileManager::GetFilePtr()
 {
 	if (!file)
-		throw std::string("Error I/O ");
+		throw string("Error I/O ");
 	return file;
 }
 FileManager::~FileManager()
@@ -40,7 +41,7 @@ void	FileManager::Release()
 		fclose(file);
 	file	=	nullptr;
 }
-void 	FileManager::LoadFile(std::string const & filename, std::string const & mode)
+void 	FileManager::LoadFile(string const & filename, string const & mode)
 {
 	this->Release();
 	file	=	fopen(filename.c_str(), mode.c_str());
