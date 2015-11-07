@@ -26,71 +26,74 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <GL/glew.h>
 #include <vector>
 
-struct DirectionalLight
+namespace S3DE
 {
-	glm::vec3	Color;
-	GLfloat		AmbientIntensity;
-	glm::vec3	Direction;
-	GLfloat		DiffuseIntensity;
-};
-struct BaseLight
-{
-	glm::vec3	Color;
-	GLfloat		AmbientIntensity;
-	GLfloat		DiffuseIntensity;
-};
-struct PointLight	:	public BaseLight
-{
-	glm::vec3		Position;
-	struct
+	struct DirectionalLight
 	{
-		GLfloat		Constant;
-		GLfloat		Linear;
-		GLfloat		Exp;
-	} Attenuation;
-};
+		glm::vec3	Color;
+		GLfloat		AmbientIntensity;
+		glm::vec3	Direction;
+		GLfloat		DiffuseIntensity;
+	};
+	struct BaseLight
+	{
+		glm::vec3	Color;
+		GLfloat		AmbientIntensity;
+		GLfloat		DiffuseIntensity;
+	};
+	struct PointLight	:	public BaseLight
+	{
+		glm::vec3		Position;
+		struct
+		{
+			GLfloat		Constant;
+			GLfloat		Linear;
+			GLfloat		Exp;
+		} Attenuation;
+	};
 
-class Light : public Shader
-{
-	public:
-		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	6;
-		Light();
-		Light(std::string const &vertexSource , std::string const &fragmentSource);
-		Light(Light const &);
+	class Light : public Shader
+	{
+		public:
+			static 	const	unsigned	int	MAX_POINT_LIGHTS	=	6;
+			Light();
+			Light(std::string const &vertexSource , std::string const &fragmentSource);
+			Light(Light const &);
 		
-		~Light();
-		virtual	void	Show();
-		virtual void 	SetDirectionalLight(const DirectionalLight &light);
-		virtual	void	SetEyeWorldPos(const glm::vec3 &eyeWorldPos);
-		virtual	void	SetMatSpecularIntensity(GLfloat intensity);
-		virtual	void	SetMatSpecularPower(GLfloat power);
-		virtual	void	SetPointLights(std::vector<PointLight> const &  lights);
-		virtual	void	Init();
+			~Light();
+			virtual	void	Show();
+			virtual void 	SetDirectionalLight(const DirectionalLight &light);
+			virtual	void	SetEyeWorldPos(const glm::vec3 &eyeWorldPos);
+			virtual	void	SetMatSpecularIntensity(GLfloat intensity);
+			virtual	void	SetMatSpecularPower(GLfloat power);
+			virtual	void	SetPointLights(std::vector<PointLight> const &  lights);
+			virtual	void	Init();
 
-	protected:
-		DirectionalLight	m_dlight;
-		glm::vec3			m_eyeWorldPos;
-		GLfloat				m_specularIntensity;
-		GLfloat				m_specularPower;
-		// Location
-		GLuint				m_dirLightColorLocation;
-		GLuint				m_dirLightAmbientIntensityLocation;
-		GLuint				m_dirLightDirectionLocation;
-		GLuint				m_dirLightDiffuseIntensityLocation;
-		GLuint				m_eyeWorldPosLocation;
-		GLuint				m_matSpecularIntensityLocation;
-		GLuint				m_matSpecularPowerLocation;
-		struct PointLightLocation{
-			GLuint			Color;
-			GLuint			AmbientIntensity;
-			GLuint			DiffuseIntensity;
-			GLuint			Position;
-			struct
-			{
-				GLuint		Constant;
-				GLuint		Linear;
-				GLuint		Exp;
-			} Atten;
-		}m_pointLightsLocation[MAX_POINT_LIGHTS]; 
-		GLuint				m_numPointLightsLocation;
-};
+		protected:
+			DirectionalLight	m_dlight;
+			glm::vec3			m_eyeWorldPos;
+			GLfloat				m_specularIntensity;
+			GLfloat				m_specularPower;
+			// Location
+			GLuint				m_dirLightColorLocation;
+			GLuint				m_dirLightAmbientIntensityLocation;
+			GLuint				m_dirLightDirectionLocation;
+			GLuint				m_dirLightDiffuseIntensityLocation;
+			GLuint				m_eyeWorldPosLocation;
+			GLuint				m_matSpecularIntensityLocation;
+			GLuint				m_matSpecularPowerLocation;
+			struct PointLightLocation{
+				GLuint			Color;
+				GLuint			AmbientIntensity;
+				GLuint			DiffuseIntensity;
+				GLuint			Position;
+				struct
+				{
+					GLuint		Constant;
+					GLuint		Linear;
+					GLuint		Exp;
+				} Atten;
+			}m_pointLightsLocation[MAX_POINT_LIGHTS]; 
+			GLuint				m_numPointLightsLocation;
+	};
+}

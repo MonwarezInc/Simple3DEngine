@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include <S3DE/Light.h>
 #include <cstdio>
+using namespace S3DE;
 Light::Light():Shader()
 {
 	

@@ -97,8 +97,8 @@ int main (int argc, char **argv)
 		
 		camera.setSpeed(0.1);
 		// Adding some light
-		auto 				light	=	std::make_shared<Light>();
-		std::vector<PointLight>			pointlight;
+		auto 				light	=	std::make_shared<S3DE::Light>();
+		std::vector<S3DE::PointLight>			pointlight;
 		std::vector<LinearInterpolate<float>>	posintlight;
 		FileManager	file;
 		try
@@ -109,7 +109,7 @@ int main (int argc, char **argv)
 			{
 				for (auto i = 0; i < nblights && i < MAX_LIGHT; ++i)
 				{
-					PointLight	pl;
+					S3DE::PointLight	pl;
 					float x,y,z,r,g,b,a,d,l,c,e;
 					int	controlpoint(0);
 					char	curvetype[256];

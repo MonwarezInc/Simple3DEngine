@@ -19,10 +19,10 @@ using std::string;
 using std::fscanf;
 using std::vector;
 // Some Bits operation define
-#define CONFIG_MASK	1
-#define MESH_MASK 	2
-#define LIGHT_MASK 	4
-#define DYN_MASK	8
+#define CONFIG_MASK	1		//	00000001
+#define MESH_MASK 	2		//	00000010
+#define LIGHT_MASK 	4		//	00000100
+#define DYN_MASK	8		//	00001000
 Loader::Loader()
 {
 	m_state	=	0;
@@ -66,12 +66,12 @@ void Loader::LoadConfig(FileManager & file)
 	m_config.height		=	height;
 	m_config.fullscreen	=	(1==fullscreen)?true:false;	
 	// Update state
-	m_state	=	m_state | CONFIG_MASK;									
+	m_state				|=	CONFIG_MASK;									
 }
 void Loader::LoadMesh(FileManager & file)
 {
 	// check if MeshData was not loaded before
-	if (1 == (m_state & MESH_MASK))
+	if (0 != (m_state & MESH_MASK))
 	{
 		m_pMesh.clear();
 		m_state -= MESH_MASK;
@@ -96,7 +96,7 @@ void Loader::LoadMesh(FileManager & file)
 		m_pMesh[i].scale	=	f;
 	}
 	// Everything goes well
-	m_state	=	m_state | MESH_MASK;
+	m_state	|= MESH_MASK;
 }
 void Loader::LoadLight(FileManager & file)
 {

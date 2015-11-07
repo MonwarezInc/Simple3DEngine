@@ -25,33 +25,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <string>
 #include <fstream>
 
-
-// Classe Shader
-
-class Shader
+namespace S3DE
 {
-    public:
+	// Classe Shader
 
-    	Shader();
-    	Shader(Shader const &shaderToCopy);
-    	Shader(std::string const &vertexSource, std::string const &fragmentSource);
-    	~Shader();
+	class Shader
+	{
+    	public:
 
-    	Shader& operator=(Shader const &shaderToCopy);
+    		Shader();
+    		Shader(Shader const &shaderToCopy);
+    		Shader(std::string const &vertexSource, std::string const &fragmentSource);
+    		~Shader();
 
-		virtual	void	Enable();
-		virtual	void	Disable();
-		virtual GLuint	GetUniformLocation(std::string const &name) const;
-	private:
-    	virtual void	Load();
-    	bool BuildShader(GLuint &shader, GLenum type, std::string const &source);
+    		Shader& operator=(Shader const &shaderToCopy);
 
-    	GLuint m_vertexID;
-    	GLuint m_fragmentID;
-    	GLuint m_programID;
+			virtual	void	Enable();
+			virtual	void	Disable();
+			virtual GLuint	GetUniformLocation(std::string const &name) const;
+		private:
+    		virtual void	Load();
+    		bool BuildShader(GLuint &shader, GLenum type, std::string const &source);
 
-    	std::string m_vertexSource;
-    	std::string m_fragmentSource;
-};
+    		GLuint m_vertexID;
+    		GLuint m_fragmentID;
+    		GLuint m_programID;
 
+    		std::string m_vertexSource;
+    		std::string m_fragmentSource;
+	};
+}
 #endif
