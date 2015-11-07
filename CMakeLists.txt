@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 
 #Configuration of project
 #Here is the library
-project(GraphicEngine)
+project(Simple3DEngine)
 
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 
@@ -27,7 +27,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #Declaration of executable
 add_library(
-	GraphicEngine
+	Simple3DEngine
 	STATIC
 	${source_file}
 )

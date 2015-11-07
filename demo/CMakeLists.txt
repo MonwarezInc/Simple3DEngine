@@ -34,7 +34,7 @@ add_executable(
 #Configuration of link resolution
 target_link_libraries(
 	TestEngine
-	GraphicEngine
+	Simple3DEngine
 	${GL}
 	SDL2
 	SDL2_image
