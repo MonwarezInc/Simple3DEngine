@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace GraphicEngine
+namespace S3DE
 {
 	inline	glm::mat4	aiMatrixToMat4(aiMatrix4x4 const & src);
 	inline	glm::mat4	aiMatrixToMat4(aiMatrix3x3 const & src);

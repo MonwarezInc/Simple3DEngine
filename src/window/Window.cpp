@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include <GraphicEngine/Window.h>
-using namespace GraphicEngine;
+#include <S3DE/Window.h>
+using namespace S3DE;
 Window::Window(const std::string &title, unsigned int width, unsigned int height, bool fullscreen)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)

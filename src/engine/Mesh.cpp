@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include <GraphicEngine/Mesh.h>
+#include <S3DE/Mesh.h>
 #include <assert.h>
 #include <iostream>
 #include <sstream>
@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #define NORMAL_LOCATION			3
 #define BONE_ID_LOCATION		4
 #define BONE_WEIGHT_LOCATION	5
-using namespace GraphicEngine;
+using namespace S3DE;
 Mesh::Mesh()
 {
 	m_pScene	=	nullptr;
@@ -506,7 +506,7 @@ unsigned int 		Mesh::GetAnimationIndex(std::string const & animation)
 	// not implemented yet 
 	return 0;
 }
-inline glm::mat4 	GraphicEngine::aiMatrixToMat4(aiMatrix4x4 const & src)
+inline glm::mat4 	S3DE::aiMatrixToMat4(aiMatrix4x4 const & src)
 {
 	glm::mat4 	dest;
 	dest[0][0]	=	src.a1;	dest[0][1]	=	src.b1;	dest[0][2]	=	src.c1;	dest[0][3]	=	src.d1;	
@@ -515,7 +515,7 @@ inline glm::mat4 	GraphicEngine::aiMatrixToMat4(aiMatrix4x4 const & src)
 	dest[3][0]	=	src.a4;	dest[3][1]	=	src.b4;	dest[3][2]	=	src.c4;	dest[3][3]	=	src.d4;	
 	return 		dest;
 }
-inline glm::mat4 	GraphicEngine::aiMatrixToMat4(aiMatrix3x3 const & src)
+inline glm::mat4 	S3DE::aiMatrixToMat4(aiMatrix3x3 const & src)
 {
 	glm::mat4 	dest;
 	dest[0][0]	=	src.a1;	dest[0][1]	=	src.b1;	dest[0][2]	=	src.c1;	dest[0][3]	=	0;	

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 	but I will have only one RcManager (for graphical stuff)
 */
 
-namespace GraphicEngine
+namespace S3DE
 {
 	// use template class
 	class RcManager

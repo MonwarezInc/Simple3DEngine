@@ -14,9 +14,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include <GraphicEngine/SceneGraph.h>
+#include <S3DE/SceneGraph.h>
 
-using namespace GraphicEngine;
+using namespace S3DE;
 SceneGraph::SceneGraph()
 {
 	// not implemented yet

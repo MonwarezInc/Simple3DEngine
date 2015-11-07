@@ -14,10 +14,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include <GraphicEngine/Texture.h>
+#include <S3DE/Texture.h>
 
 using namespace std;
-using namespace GraphicEngine;
+using namespace S3DE;
 Texture::Texture(const string &filename): m_id(0), m_filename(filename), m_largeur(0), m_hauteur(0), m_format(0),
                                         m_formatInterne(0), m_textureVide(false)
 {

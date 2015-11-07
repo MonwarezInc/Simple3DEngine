@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <glm/gtc/type_ptr.hpp>
 
 
-namespace	GraphicEngine
+namespace	S3DE
 {
 	struct	Transformation
 	{

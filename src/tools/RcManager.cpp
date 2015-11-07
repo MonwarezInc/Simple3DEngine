@@ -14,8 +14,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include <GraphicEngine/RcManager.h>
-using namespace GraphicEngine;
+#include <S3DE/RcManager.h>
+using namespace S3DE;
 RcManager::RcManager()
 {
 	// not implemented yet

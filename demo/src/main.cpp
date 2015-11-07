@@ -15,15 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include <iostream>
-#include <GraphicEngine/Engine-main.h>
-#include <GraphicEngine/Mesh.h>
+#include <S3DE/Engine-main.h>
+#include <S3DE/Mesh.h>
 
 #include <cstdio>
 #include <cmath>
 #include "utils/MemoryManager.hpp"
 #include "utils/Interpolate.hpp"
 #include "utils/Loader.h"
-#include <GraphicEngine/Camera.h>
+#include <S3DE/Camera.h>
 
 #define MAX_LIGHT 6 	// define this for now
 using namespace std;
@@ -34,7 +34,7 @@ int main (int argc, char **argv)
 
 	cout << "Test engine " << endl;
 	
-	GraphicEngine::CEngine	engine;
+	S3DE::CEngine	engine;
 
 	// Input
 	CInput	input;
@@ -71,7 +71,7 @@ int main (int argc, char **argv)
 
 		loader.Load("./data/obj.dat",LOADER_MESH);
 		pmeshdata	=	loader.GetMeshData();	
-		BasicVectorManager<GraphicEngine::Mesh>	mesh;
+		BasicVectorManager<S3DE::Mesh>	mesh;
 		auto	nbModel	=	pmeshdata.size();
 		mesh.Allocate(nbModel);
 		vIDMesh.resize(nbModel);

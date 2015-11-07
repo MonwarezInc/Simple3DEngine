@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include <GraphicEngine/DebugGL.h>
+#include <S3DE/DebugGL.h>
 
 using namespace std;
 bool Debug::glCheck(string filename, int line)

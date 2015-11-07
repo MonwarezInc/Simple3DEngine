@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include "Shader.h"
 #include "Light.h"
 #include <vector>
-namespace GraphicEngine
+namespace S3DE
 {
 	class CEngine
 	{
@@ -53,7 +53,7 @@ namespace GraphicEngine
 			virtual	void	Draw(unsigned int elapsed);
 
 		protected:
-			std::shared_ptr<GraphicEngine::CGraphics>	m_pGraphics;
+			std::shared_ptr<S3DE::CGraphics>		m_pGraphics;
 			glm::mat4								m_modelview;
 			glm::mat4								m_projection;
 			// struct ObjectList
