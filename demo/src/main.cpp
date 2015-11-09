@@ -97,77 +97,47 @@ int main (int argc, char **argv)
 		
 		camera.setSpeed(0.1);
 		// Adding some light
-		auto 				light	=	std::make_shared<S3DE::Light>();
+		std::vector<LightData>					lightdata;
 		std::vector<S3DE::PointLight>			pointlight;
 		std::vector<LinearInterpolate<float>>	posintlight;
-		FileManager	file;
 		try
 		{
-			file.LoadFile("./data/light.dat","r");
-			unsigned int nblights	=	0;
-			if (fscanf(file.GetFilePtr(),"lights %u\n",&nblights) == 1)
+			loader.Load("./data/light.dat", LOADER_LIGHT);
+			lightdata	=	loader.GetLightData();
+			size_t	nlights	=	lightdata.size();
+			for (size_t i = 0; i < nlights && i < MAX_LIGHT; ++i)
 			{
-				for (auto i = 0; i < nblights && i < MAX_LIGHT; ++i)
+				S3DE::PointLight	pl;
+				pl.Color				=	lightdata[i].color;
+				pl.AmbientIntensity		=	lightdata[i].ambient;
+				pl.DiffuseIntensity		=	lightdata[i].diffuse;
+				pl.Attenuation.Constant	=	lightdata[i].constant;
+				pl.Attenuation.Linear	=	lightdata[i].linear;
+				pl.Attenuation.Exp		=	lightdata[i].exp;
+				if (lightdata[i].controltype	==	"linear")
 				{
-					S3DE::PointLight	pl;
-					float x,y,z,r,g,b,a,d,l,c,e;
-					int	controlpoint(0);
-					char	curvetype[256];
-					if (fscanf(file.GetFilePtr(),
-						"color(%f,%f,%f) ambiant(%f) diffuse(%f) linear(%f) constant(%f) exp(%f)\n",
-						&r,&g,&b,&a,&d,&l,&c,&e) != 8)
-						throw std::string("error in the first line of light");
-					if (fscanf(file.GetFilePtr(),"controlpoint(%d) %255s\n", &controlpoint,curvetype) != 2)
-						throw std::string("error in the controlpoint line");
-					// set static settings first
-					pl.Color				=	glm::vec3(r,g,b);
-					pl.AmbientIntensity		=	a;
-					pl.DiffuseIntensity		=	d;
-					pl.Attenuation.Constant	=	c;
-					pl.Attenuation.Linear	=	l;
-					pl.Attenuation.Exp		=	e;
-					std::string scurvetype(curvetype);
-					if (scurvetype == "linear") // We only manage linear curve for now
+					size_t controlpoint	=	lightdata[i].vControlPoint.size();
+					posintlight.push_back(LinearInterpolate<float>());
+					for (size_t j = 0; j < controlpoint; ++j)
 					{
-						posintlight.push_back(LinearInterpolate<float>());
-						for (auto j = 0; j < controlpoint; ++j)
-						{
-							float time;
-							if(fscanf(file.GetFilePtr(),"position(%f,%f,%f) timemill(%f)\n",&x,&y,&z,&time) != 4)
-								throw std::string("error in controlpoint line position");
-							posintlight.back().AddPoint(Position3D<float>(x,y,z), time);	
-						}
+						auto vec	=	lightdata[i].vControlPoint[j].position;
+						Position3D<float>	position(vec.x,vec.y,vec.z);
+						posintlight.back().AddPoint(position, lightdata[i].vControlPoint[j].time);
 					}
-					else
-					{
-						// We consider it's linear for now
-						posintlight.push_back(LinearInterpolate<float>());
-						float time;
-						if(fscanf(file.GetFilePtr(),"position(%f,%f,%f) timemill(%f)\n",&x,&y,&z,&time) != 4)
-							throw std::string("error in controlpoint line position");
-						posintlight.back().AddPoint(Position3D<float>(x,y,z), time);	
-					}
-					// Set looped for posintlight
-					posintlight.back().SetLooped(true);
-					pointlight.push_back(pl);
 				}
+				else	// throw except
+				{
+					throw string ("Error: ") + lightdata[i].controltype + string(" curve not implemented");
+				}
+				// Set looped for beginning
+				posintlight.back().SetLooped(true);
+				pointlight.push_back(pl);
 			}
-			else
-			{
-				throw std::string("error lights number of lights");
-			}
-			file.Release();
 		}
-		catch(std::string err)
+		catch(string const &err)
 		{
 			std::cerr << "Uncategorized error" << std::endl;
 			std::cerr << err << std::endl;
-			file.Release();
-		}
-		catch(...)
-		{
-			std::cerr << "Error during loading ./data/lights.dat" << std::endl;
-			file.Release();
 		}
 		engine.AttachLight(pointlight);
 		// End adding some light
