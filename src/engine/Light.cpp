@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include <S3DE/Light.h>
 #include <cstdio>
+#include <sstream>
 using namespace S3DE;
 Light::Light():Shader()
 {
@@ -90,29 +91,34 @@ void	Light::Init()
 	m_numPointLightsLocation			=	GetUniformLocation("NumPointLights");
 	for (unsigned int i=0; i < MAX_POINT_LIGHTS;++i)
 	{
-		char Name[128];
-		memset(Name,0,sizeof(Name));
+		std::stringstream	out;
 
-		snprintf(Name,sizeof(Name),"PointLights[%d].Base.Color",i);
-		m_pointLightsLocation[i].Color				=	GetUniformLocation(Name);
+		out <<"PointLights["<< i <<"].Base.Color";
+		m_pointLightsLocation[i].Color				=	GetUniformLocation(out.str());
+		out.str("");
+
+		out <<"PointLights["<< i <<"].Base.AmbientIntensity";
+		m_pointLightsLocation[i].AmbientIntensity	=	GetUniformLocation(out.str());
+		out.str("");
 		
-		snprintf(Name,sizeof(Name),"PointLights[%d].Base.AmbientIntensity",i);
-		m_pointLightsLocation[i].AmbientIntensity	=	GetUniformLocation(Name);
+		out <<"PointLights["<< i <<"].Position";
+		m_pointLightsLocation[i].Position			=	GetUniformLocation(out.str());
+		out.str("");
 		
-		snprintf(Name,sizeof(Name),"PointLights[%d].Position",i);
-		m_pointLightsLocation[i].Position			=	GetUniformLocation(Name);
+		out <<"PointLights["<< i <<"].Base.DiffuseIntensity";
+		m_pointLightsLocation[i].DiffuseIntensity	=	GetUniformLocation(out.str());
+		out.str("");
 		
-		snprintf(Name,sizeof(Name),"PointLights[%d].Base.DiffuseIntensity",i);
-		m_pointLightsLocation[i].DiffuseIntensity	=	GetUniformLocation(Name);
+		out <<"PointLights["<< i <<"].Atten.Constant";
+		m_pointLightsLocation[i].Atten.Constant		=	GetUniformLocation(out.str());
+		out.str("");
 		
-		snprintf(Name,sizeof(Name),"PointLights[%d].Atten.Constant",i);
-		m_pointLightsLocation[i].Atten.Constant		=	GetUniformLocation(Name);
+		out <<"PointLights["<< i <<"].Atten.Linear";
+		m_pointLightsLocation[i].Atten.Linear		=	GetUniformLocation(out.str());
+		out.str("");
 		
-		snprintf(Name,sizeof(Name),"PointLights[%d].Atten.Linear",i);
-		m_pointLightsLocation[i].Atten.Linear		=	GetUniformLocation(Name);
-		
-		snprintf(Name,sizeof(Name),"PointLights[%d].Atten.Exp",i);
-		m_pointLightsLocation[i].Atten.Exp			=	GetUniformLocation(Name);
+		out <<"PointLights["<< i <<"].Atten.Exp";
+		m_pointLightsLocation[i].Atten.Exp			=	GetUniformLocation(out.str());
 	}
 
 }

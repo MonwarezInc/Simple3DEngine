@@ -75,10 +75,9 @@ void	Mesh::Draw(unsigned int  elapsed_time,std::shared_ptr<Shader> const &shader
 	for (unsigned int i=0; i < transforms.size(); ++i)
 	{
 		// we have to send unform matrix
-		char Name[128];
-		memset(Name, 0, sizeof(Name));
-		snprintf(Name, sizeof(Name), "Bones[%d]", i);
-		GLuint location	=	shader->GetUniformLocation(Name);
+		std::stringstream	out;
+		out << "Bones[" << i << "]";
+		GLuint location	=	shader->GetUniformLocation(out.str().c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*) glm::value_ptr(transforms[i]));
 	}
 	for (unsigned int i=0; i < m_Entries.size(); ++i)
@@ -310,7 +309,9 @@ void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 		}
 	}
 	// if we have more than NUM_BONES_PER_VERTEX
-	assert(0);
+	std::stringstream out;
+	out << "Error we have more than " << NUM_BONES_PER_VERTEX << " Bones";
+	throw out.str();
 }
 void	Mesh::BoneTransform(float TimeInSec, std::vector<glm::mat4> & Transforms, unsigned int idAnimation)
 {

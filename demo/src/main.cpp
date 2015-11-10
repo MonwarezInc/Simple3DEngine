@@ -20,12 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 #include <cstdio>
 #include <cmath>
+#include <sstream>
 #include "utils/MemoryManager.hpp"
 #include "utils/Interpolate.hpp"
 #include "utils/Loader.h"
 #include <S3DE/Camera.h>
 
 #define MAX_LIGHT 6 	// define this for now
+struct IdMesh
+{
+	IdMesh()
+	{
+		id		=	0;
+		isGood	=	false;
+	}
+	unsigned	int	id;
+	bool			isGood;
+};
 using namespace std;
 int main (int argc, char **argv)
 {
@@ -60,7 +71,7 @@ int main (int argc, char **argv)
 	{
 		std::cerr << a << std::endl;
 	}
-	std::vector<unsigned int>			vIDMesh;
+	std::vector<IdMesh>			vIDMesh;
 	try
 	{
 		config	=	loader.GetConfigData();
@@ -79,12 +90,26 @@ int main (int argc, char **argv)
 		{
 			unsigned int	id	=	0;
 			auto mesh_ptr	=	mesh.GetVectPtr(i);
-			mesh_ptr->LoadFromFile(pmeshdata[i].filename);
-			engine.AddMeshNode(mesh_ptr, id);
-			vIDMesh[i]		=	id;
+			try
+			{
+				mesh_ptr->LoadFromFile(pmeshdata[i].filename);
+				engine.AddMeshNode(mesh_ptr, id);
+				vIDMesh[i].id		=	id;
+				vIDMesh[i].isGood	=	true;
 
-			engine.SetNodePosRot(vIDMesh[i], pmeshdata[i].position, pmeshdata[i].pitch);
-			engine.SetNodeScale(vIDMesh[i], pmeshdata[i].scale);
+				engine.SetNodePosRot(vIDMesh[i].id, pmeshdata[i].position, pmeshdata[i].pitch);
+				engine.SetNodeScale(vIDMesh[i].id, pmeshdata[i].scale);
+			}
+			catch(std::string const & a)
+			{
+				std::stringstream out;
+				out << "Exception caught when loading: " << pmeshdata[i].filename ;
+				std::cerr << out.str() << std::endl << a << std::endl;
+			}
+			catch (...)
+			{
+				throw;
+			}
 		}
 		Camera	camera(config.position,config.target,config.up);
 		// maybe we should encapsulate timer 
@@ -176,7 +201,7 @@ int main (int argc, char **argv)
 	}
 	catch(string const &a)
 	{
-		std::cerr << "erreur " << a << std::endl;
+		std::cerr << "Error"<<std::endl << a << std::endl;
 	}
 	catch(...)
 	{
