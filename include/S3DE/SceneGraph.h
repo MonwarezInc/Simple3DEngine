@@ -17,10 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #ifndef SCENE_GRAPH_INCLUED
 #define SCENE_GRAPH_INCLUED
 #include "Mesh.h"
+
 #include <vector>
-#ifndef GLM_FORCE_RADIANS
-	#define GLM_FORCE_RADIANS
-#endif
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
