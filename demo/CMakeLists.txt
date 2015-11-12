@@ -7,8 +7,8 @@ project(TestEngine)
 set(EXECUTABLE_OUTPUT_PATH ../bin/${CMAKE_BUILD_TYPE})
 
 #Include and Library filepath
-include_directories(../include)
-link_directories(../lib/${CMAKE_BUILD_TYPE})
+include_directories(${include_s3de})
+link_directories(${lib_s3de})
 include_directories(${lib_include})
 link_directories(${lib_lib})
 

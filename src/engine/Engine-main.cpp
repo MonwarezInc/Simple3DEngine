@@ -117,13 +117,13 @@ void	CEngine::Draw(unsigned int elapsed)
 
 		glUniformMatrix4fv(projectionl, 1, GL_FALSE, glm::value_ptr(m_projection));
 		// end light
-		for (unsigned int i=0; i < m_vObjectNode.size(); ++i)
+		for (auto &objectNode : m_vObjectNode)
 		{
 			// do transformation stuff
 			// ...
 			//glm::mat4		mvp			=	m_modelview;	// load camera pos
 			glm::mat4	mvp;
-			m_vObjectNode[i].DoTransformation(mvp);
+			objectNode.DoTransformation(mvp);
 			// Send to OpenGL the modelview before apply camera transformation and after object transformation
 			glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(mvp));
 			mvp	=	m_projection * m_modelview * mvp;
@@ -133,12 +133,12 @@ void	CEngine::Draw(unsigned int elapsed)
 			m_pShader->SetMatSpecularIntensity(1.0);
 			m_pShader->SetMatSpecularPower(2);
 			// then draw it
-			m_vObjectNode[i].object->Draw(elapsed, m_pShader,m_vObjectNode[i].animation);
+			objectNode.object->Draw(elapsed, m_pShader,objectNode.animation);
 		}
 	m_pShader->Disable();
 	m_pGraphics->SwapWindow();
 }
-void	CEngine::ObjectNode::DoTransformation(glm::mat4 & mdv)
+void	CEngine::ObjectNode::DoTransformation(glm::mat4 & mdv) const
 {
 	// Translate to position
 	mdv	=	glm::translate(mdv, position);

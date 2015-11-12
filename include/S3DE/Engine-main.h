@@ -64,7 +64,7 @@ namespace S3DE
 				glm::vec3	position;
 				float		pitch[3];
 				float		scale;
-				void	DoTransformation(glm::mat4 & modelview);
+				void	DoTransformation(glm::mat4 & modelview)const;
 				std::string	animation;
 			};
 
