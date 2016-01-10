@@ -16,7 +16,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #ifndef ENGINE_MAIN_INCLUED
 #define ENGINE_MAIN_INCLUED
-
+/**
+*	\file 	Engine-main.h
+*	\brief 	Main class for the Simple 3D Engine
+*
+*	This class is an interface with the engine. Almost all  the command for interacting with the engine are here.
+*	\author	Payet Thibault
+*
+*/
 #include "Graphics.h"
 #include "Mesh.h"
 #include "Shader.h"
@@ -29,17 +36,52 @@ namespace S3DE
 		public:
 			CEngine();
 			virtual	~CEngine();
-
+			
+			/**	\brief Create a window with the specified OpenGL version (Limited to one window for now)
+			*	
+			*	@param[in] width		Width of the window
+			*	@param[in] height		Height of the window
+			*	@param[in] fullscreen	Boolean for fullscreen mode
+			*	@param[in] title		Set the title of the window
+			*	@param[in] bpp			Set the bit per pixel parameter
+			*	@param[in] aa			Set antialiasing multiplier
+			*	@param[in] major		Set OpenGL major version
+			*	@param[in] minor		Set OpenGL minor version
+			*/
 			virtual	void	CreateWindow(GLuint width=320, GLuint height=240, bool fullscreen=false,
 											const std::string & title="CEngine window", GLuint bpp=32,
 											GLuint aa=2, GLuint major=3, GLuint minor=0);
+			/** \brief 	Delete the specifided window (Not Implemented)
+			*	@param[in]	indice		Id of the window
+			*/
 			virtual void	DeleteWindow(GLuint indice);
+			/** \brief 	Set the active window (Not Implemented)
+			*	@param[in]	indice		Id of the window
+			*/
 			virtual	void	SetActive(GLuint indice);
-
+			/**
+			* 	\brief Add an object to the scene
+			*
+			*	@param[in] object 		A pointer to the object mesh
+			*	@param[in] id 			The returned id for managing position etc...
+			*
+			*/
 			virtual void	AddMeshNode(Mesh * object, GLuint & id);
+			/**
+			* 	\brief	Set/Update the light information
+			*	@param[in]	pointlight	A vector of PointLight data	
+			*/
 			virtual	void	AttachLight(std::vector<PointLight> const & pointlight);
+			/**
+			*	\brief Delete an object from the scene (Not Implemented)
+			*	@param[in]	id	Id of the object
+			*/
 			virtual	void	DeleteObject(GLuint id);
-			
+			/**	\brief	Set the position and rotation of an object of the scene
+			*	@param[in] 	id		The id of the object
+			*	@param[in] 	pos		The new position
+			*	@param[in]	pitch	The pitch rotation X,Y,Z
+			*/
 			virtual	void	SetNodePosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch);
 			virtual	void	SetNodeScale(GLuint id, float scale);
 			virtual	void	SetNodeAnimation(GLuint id, std::string const & animation);

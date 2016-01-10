@@ -40,7 +40,9 @@ void	Mesh::LoadFromFile(std::string const & filename)
 	
 	Assimp::Importer importer;
 	m_pScene	=	m_Importer.ReadFile(filename.c_str(), aiProcess_Triangulate |
-									aiProcess_GenSmoothNormals	|	aiProcess_FlipUVs);
+										aiProcess_GenSmoothNormals	|	aiProcess_FlipUVs |
+										aiProcess_LimitBoneWeights | aiProcess_SplitByBoneCount |
+										aiProcess_SplitLargeMeshes);
 	if (m_pScene != nullptr)
 	{
 		m_GlobalInverseTransform	=	aiMatrixToMat4(m_pScene->mRootNode->mTransformation);
@@ -433,7 +435,8 @@ void	Mesh::CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const 
 											pNodeAnim->mScalingKeys[ScalingIndex].mTime);
 	float			Factor				=	AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime/DeltaTime;
 	
-	assert(Factor >= 0.0f && Factor <= 1.0f);
+	if (Factor < 0.0f || Factor > 1.0f)
+		throw std::string("Error interpolated factor not in the good range");
 
 	const aiVector3D & 	Start			=	pNodeAnim->mScalingKeys[ScalingIndex].mValue;
 	const aiVector3D & 	End				=	pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
@@ -457,7 +460,8 @@ void	Mesh::CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, con
 											pNodeAnim->mRotationKeys[RotationIndex].mTime);
 	float			Factor				=	AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime/DeltaTime;
 	
-	assert(Factor >= 0.0f && Factor <= 1.0f);
+	if (Factor < 0.0f || Factor > 1.0f)
+		throw std::string("Error interpolated factor not in the good range");
 
 	const aiQuaternion&	Start			=	pNodeAnim->mRotationKeys[RotationIndex].mValue;
 	const aiQuaternion&	End				=	pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
@@ -481,7 +485,8 @@ void	Mesh::CalcInterpolatedPosition(aiVector3D & Out, float AnimationTime, const
 											pNodeAnim->mPositionKeys[PositionIndex].mTime);
 	float			Factor				=	AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime/DeltaTime;
 	
-	assert(Factor >= 0.0f && Factor <= 1.0f);
+	if (Factor < 0.0f || Factor > 1.0f)
+		throw std::string("Error interpolated factor not in the good range");
 
 	const aiVector3D & 	Start			=	pNodeAnim->mPositionKeys[PositionIndex].mValue;
 	const aiVector3D & 	End				=	pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
