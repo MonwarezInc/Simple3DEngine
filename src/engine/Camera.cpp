@@ -18,21 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 #include <iostream>
 
 using namespace glm;
-Camera::Camera():m_phi(0.0),m_theta(0.0),m_orientation(), m_axeVertical(0,0,1), m_deplacementLateral(), m_position(), m_pointCible(), m_sensitive(0.5),
+using namespace S3DE;
+Camera::Camera():m_phi(0.0),m_theta(0.0),m_orientation(), m_up(0,0,1), m_lateralMove(), m_position(), m_target(), m_sensitive(0.5),
                 m_speed(10)
 {
 	this->CommonConstructor();
 }
-Camera::Camera(vec3 position, vec3 pointCible, vec3 axeVertical):
-                m_phi(0.0),m_theta(0.0),m_orientation(), m_axeVertical(axeVertical),
-                m_deplacementLateral(), m_position(position), m_pointCible(pointCible), m_sensitive(0.5),m_speed(0.1)
+Camera::Camera(vec3 position, vec3 target, vec3 up):
+                m_phi(0.0),m_theta(0.0),m_orientation(), m_up(up),
+                m_lateralMove(), m_position(position), m_target(target), m_sensitive(0.5),m_speed(0.1)
 {
 	this->CommonConstructor();
 }
 void Camera::CommonConstructor()
 {
 
-    this->setPointCible(m_pointCible);
+    this->SetTarget(m_target);
 
     // Keyboard configuation
     // Key	init
@@ -48,7 +49,7 @@ void Camera::CommonConstructor()
 
 
 }
-void Camera::orienter(int xRel, int yRel)
+void Camera::Orient(int xRel, int yRel)
 {
     m_phi               +=  -yRel * m_sensitive;
     m_theta             +=  -xRel * m_sensitive;
@@ -65,13 +66,13 @@ void Camera::orienter(int xRel, int yRel)
     float   phiRad      = m_phi * M_PI / 180.0;
     float   thetaRad    = m_theta*M_PI / 180.0;
 
-    if (m_axeVertical.x == 1.0)
+    if (m_up.x == 1.0)
     {
         m_orientation.x         =   sin(phiRad);
         m_orientation.y         =   cos(phiRad)*cos(thetaRad);
         m_orientation.z         =   cos(phiRad)*sin(thetaRad);
     }
-    else if (m_axeVertical.y == 1.0)
+    else if (m_up.y == 1.0)
     {
         m_orientation.x         =   cos(phiRad) * sin (thetaRad);
         m_orientation.y         =   sin(phiRad);
@@ -84,31 +85,17 @@ void Camera::orienter(int xRel, int yRel)
         m_orientation.z         =   sin(phiRad);
     }
 
-    m_deplacementLateral        =   cross(m_axeVertical, m_orientation);
-    m_deplacementLateral        =   normalize(m_deplacementLateral);
+    m_lateralMove		        =   cross(m_up, m_orientation);
+    m_lateralMove		        =   normalize(m_lateralMove);
 
-    m_pointCible                =   m_position  +   m_orientation;
+    m_target                =   m_position  +   m_orientation;
 }
-void Camera::keyBoardEvent(const CInput &event)
+void Camera::KeyBoardEvent(const CInput &event)
 {
     for (KeyStates::iterator it = m_keystat.begin(); it != m_keystat.end(); it++)
-    {
         it->second  =   event.GetTouche(it->first);
-        /*
-        if (event.type == sf::Event::KeyPressed)
-        {
-            if (it->first == event.key.code)
-                it->second = true;
-        }
-        else if (event.type  == sf::Event::KeyReleased)
-        {
-            if (it->first == event.key.code)
-                it->second = false;
-        }
-        */
-    }
 }
-void Camera::deplacer(const CInput   &event,  Uint32 elapsed)
+void Camera::Move(const CInput   &event,  Uint32 elapsed)
 {
     float time = elapsed;
     (void) time;
@@ -116,40 +103,37 @@ void Camera::deplacer(const CInput   &event,  Uint32 elapsed)
     if (m_keystat[m_keyconf["forward"]])
     {
         m_position      +=  m_orientation * m_speed*time;
-        m_pointCible    =   m_position + m_orientation;
+        m_target	    =   m_position + m_orientation;
     }
 
     if (m_keystat[m_keyconf["left"]])
     {
-        m_position      +=  m_deplacementLateral*m_speed*time;
-        m_pointCible    =   m_position + m_orientation;
+        m_position      +=  m_lateralMove*m_speed*time;
+        m_target	    =   m_position + m_orientation;
     }
     if (m_keystat[m_keyconf["backward"]])
     {
         m_position      -=  m_orientation * m_speed*time;
-        m_pointCible    =   m_position + m_orientation;
+        m_target	    =   m_position + m_orientation;
     }
     if (m_keystat[m_keyconf["right"]])
     {
-        m_position      -=  m_deplacementLateral*m_speed*time;
-        m_pointCible    =   m_position + m_orientation;
+        m_position      -=  m_lateralMove*m_speed*time;
+        m_target	    =   m_position + m_orientation;
     }
 
     if (event.MotionMouse())
     {
-
-        orienter(event.GetXRel(), event.GetYRel());
-
+       this->Orient(event.GetXRel(), event.GetYRel());
     }
 
 }
-void Camera::setPointCible(const vec3& cible)
+void Camera::SetTarget(const vec3& target)
 {
-    //m_orientation           =   m_pointCible - m_position;
-    m_orientation           =   cible - m_position;
+    m_orientation           =   target - m_position;
     m_orientation           =   normalize(m_orientation);
 
-    if (m_axeVertical.x == 1.0)
+    if (m_up.x == 1.0)
     {
         m_phi               =   asin(m_orientation.x);
         m_theta             =   acos((m_orientation.y / cos(m_phi)));
@@ -158,7 +142,7 @@ void Camera::setPointCible(const vec3& cible)
             m_theta *= -1;
 
     }
-    else if (m_axeVertical.y == 1.0)
+    else if (m_up.y == 1.0)
     {
         m_phi               =   asin(m_orientation.y);
         m_theta             =   acos((m_orientation.z / cos(m_phi)));
@@ -178,23 +162,23 @@ void Camera::setPointCible(const vec3& cible)
     m_phi                   *=  180.0 / M_PI ;
     m_theta                 *=  180.0 / M_PI ;
 }
-void Camera::lookAt(mat4 &modelview)
+void Camera::LookAt(mat4 &modelview)
 {
-    modelview               =   glm::lookAt(m_position, m_pointCible, m_axeVertical);
+    modelview               =   glm::lookAt(m_position, m_target, m_up);
 }
-float Camera::getSensitive() const
+float Camera::GetSensitive() const
 {
     return m_sensitive;
 }
-float Camera::getSpeed() const
+float Camera::GetSpeed() const
 {
     return m_speed;
 }
-void Camera::setSensitive(float sensitive)
+void Camera::SetSensitive(float sensitive)
 {
     m_sensitive             =   sensitive;
 }
-void Camera::setSpeed(float speed)
+void Camera::SetSpeed(float speed)
 {
     m_speed                 =   speed;
 }

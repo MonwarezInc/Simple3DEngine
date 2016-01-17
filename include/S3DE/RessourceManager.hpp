@@ -14,25 +14,33 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef RC_MANAGER_H
-#define RC_MANAGER_H
-
-/*
-	I dont really want use singleton pattern (maybe in future)
-	So RcManager will not be a singleton
-	but I will have only one RcManager (for graphical stuff)
+#ifndef RESSOURCEMANAGER_HPP_INCLUED
+#define RESSOURCEMANAGER_HPP_INCLUED
+/** \file RessourceManager.hpp
+*	\brief	Interface for managing Ressource
+*
+*	This class is an abstract class, you have to derivate it
+*
 */
-
+#include <string>
+#include <vector>
+#include <map>
 namespace S3DE
 {
-	// use template class
-	class RcManager
+	template<class T>
+	class IRessourceManager
 	{
 		public:
-
-			RcManager();
-	};
+			IRessourceManager();
+			virtual ~IressourceManager();
+			/** \brief pure virtual load function
+			*	@param[in]	filename filename of the ressource to load
+			*/
+			virtual	T	Load(std::string const &filename)=0;
+			/** \brief pure virtual release function
+			*	@param[in,out]	object decrease the count of the ressource for object
+			*/
+			virtual void 	Release(T &object)=0;
+	}
 }
-	
-
 #endif
