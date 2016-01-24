@@ -8,9 +8,6 @@ set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 
 #Include and Library filepath
 include_directories(include)
-include_directories(${lib_include})
-link_directories(${lib_lib})
-
 #Generate source file list
 file(
 	GLOB_RECURSE
@@ -18,11 +15,7 @@ file(
 	src/*
 	include/*
 )
-set(GLib GL)
 set(Extra_CXX_Flags "-Wall -std=c++1y")
-if (win)
-	set(GLib opengl32)
-endif (win)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 #Declaration of executable
@@ -31,4 +24,20 @@ add_library(
 	STATIC
 	${source_file}
 )
+if(UNIX)
+	include(FindPkgConfig)
+	PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+	PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image >=2.0.0)
+	include_directories(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
+	target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
+else ()
+	# Use new module to find SDL2
+endif ()
 
+find_package(GLEW)
+if (GLEW_FOUND)
+	target_include_directories(${PROJECT_NAME} PUBLIC ${GLEW_INCLUDE_DIR})
+	target_link_libraries(${PROJECT_NAME} ${GLEW_LIBRARY})
+else ()
+	message(FATAL_ERROR "libGLEW not found")
+endif ()

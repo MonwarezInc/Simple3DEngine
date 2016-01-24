@@ -27,8 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef WINDOW_H_INCLUED
 #define WINDOW_H_INCLUED
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_main.h>
+#include <SDL.h>
+#include <SDL_main.h>
 #include <string>
 #include <vector>
 
