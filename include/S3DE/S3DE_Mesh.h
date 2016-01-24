@@ -26,8 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #ifndef MESH_INCLUED
 #define MESH_INCLUED
-#include "Texture.h"
-#include "Shader.h"
+#include "S3DE_Texture.h"
+#include "S3DE_Shader.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

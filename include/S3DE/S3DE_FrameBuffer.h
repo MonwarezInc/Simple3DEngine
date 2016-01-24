@@ -24,38 +24,39 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef GRAPHICS_H_INCLUDED
-#define GRAPHICS_H_INCLUDED
-#include "Window.h"
+#ifndef FRAMEBUFFER_H
+#define FRAMEBUFFER_H
+
 // GLEW for all platform
 #include <GL/glew.h>
-
-#include <iostream>
-#include "DebugGL.h"
-#include <stdlib.h>
-#include <memory>
-
+#include <vector>
+#include "S3DE_Texture.h"
+// for exception - use string for beginning
+#include <string>
 namespace S3DE
 {
-
-	class CGraphics
+	class FrameBuffer
 	{
     	public:
-        	CGraphics(GLuint width=320, GLuint height=240, bool fullscreen=false, const std::string &title="default",
-                  GLuint bpp=32, GLuint aa=2, GLuint major=4, GLuint minor=4 );
+        	FrameBuffer();
+        	FrameBuffer(int largeur, int hauteur);
+        	void    CreerRenderBuffer(GLuint &id, GLenum formatInterne);
+        	void    Load(); // can launch an exception
+         	~FrameBuffer();
+        	GLuint  GetID()const;
+        	GLuint  GetColorBufferID(unsigned int index) const;
 
-        	virtual         ~CGraphics();
-        	virtual void    SwapWindow();
-			virtual void	ClearColor(float r, float g, float b, float a);
-			virtual	void	Clear(); // next step is to encapsulate glClear flag
-
+        	int     GetLargeur() const;
+        	int     GetHauteur() const;
     	protected:
-        	std::shared_ptr<Window>	m_pWindow;
-        	SDL_GLContext   		m_glContext;
-        	//OpenGL specifics
-        	GLuint          		m_bpp;
-        	GLuint          		m_aa;
-	
+        	GLuint                  m_id;
+
+        	int                     m_largeur;
+        	int                     m_hauteur;
+
+        	std::vector <Texture>   m_colorBuffers;
+        	GLuint                  m_depthBufferID;
+    	private:
 	};
 }
-#endif // GRAPHICS_H_INCLUDED
+#endif // FRAMEBUFFER_H

@@ -24,61 +24,38 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef SCENE_GRAPH_INCLUED
-#define SCENE_GRAPH_INCLUED
-#include "Mesh.h"
+#ifndef GRAPHICS_H_INCLUDED
+#define GRAPHICS_H_INCLUDED
+#include "S3DE_Window.h"
+// GLEW for all platform
+#include <GL/glew.h>
 
-#include <vector>
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include "S3DE_DebugGL.h"
+#include <stdlib.h>
+#include <memory>
 
-
-namespace	S3DE
+namespace S3DE
 {
-	struct	Transformation
-	{
-		glm::vec3	translate;
-		glm::vec3	scale;
-		glm::quat	rotate;
-	};
 
-	class	SceneGraph
+	class CGraphics
 	{
-		public:
-			SceneGraph();
-			~SceneGraph();
-			// for beginning we just use mat4 transformation , after we will get quaternion transformation
-			unsigned int	AddMesh(Mesh* obj,glm::mat4 const & transf, unsigned int parent=0, 
-										bool hide= false, bool trans = false);	
-			bool			DeleteObject(unsigned int id);
-			Mesh*		ChainTransformation(unsigned int id, glm::mat4 & transf);
-		protected:
-			struct NodeInfo
-			{
-				Mesh*			obj;
-				bool			hide;
-				bool			transparent;
-				Transformation	transformation;
-				unsigned int 	id;
-			};
-			struct	Node
-			{
-				NodeInfo			nodeInfo;
-				Node*				previous;
-				std::vector<Node*>	next;
-			};
-			class	Tree
-			{
-				public:
-					Tree();
-					virtual	~Tree();
-					virtual	unsigned	int		AddNodeInfo(NodeInfo const & nodeInfo, unsigned int parent);
-				protected:
-					virtual	Node*				Detach(unsigned int id);
-					virtual	bool				Attach(Node const * node, unsigned int parent);
-					Node						m_root;
-			};
-	};	
+    	public:
+        	CGraphics(GLuint width=320, GLuint height=240, bool fullscreen=false, const std::string &title="default",
+                  GLuint bpp=32, GLuint aa=2, GLuint major=4, GLuint minor=4 );
+
+        	virtual         ~CGraphics();
+        	virtual void    SwapWindow();
+			virtual void	ClearColor(float r, float g, float b, float a);
+			virtual	void	Clear(); // next step is to encapsulate glClear flag
+
+    	protected:
+        	std::shared_ptr<Window>	m_pWindow;
+        	SDL_GLContext   		m_glContext;
+        	//OpenGL specifics
+        	GLuint          		m_bpp;
+        	GLuint          		m_aa;
+	
+	};
 }
-#endif
+#endif // GRAPHICS_H_INCLUDED

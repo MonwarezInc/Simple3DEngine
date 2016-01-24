@@ -24,39 +24,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
+#ifndef INPUT_H_INCLUDED
+#define INPUT_H_INCLUDED
+#include <SDL.h>
 
-// GLEW for all platform
-#include <GL/glew.h>
-#include <vector>
-#include "Texture.h"
-// for exception - use string for beginning
-#include <string>
-namespace S3DE
+class CInput
 {
-	class FrameBuffer
-	{
-    	public:
-        	FrameBuffer();
-        	FrameBuffer(int largeur, int hauteur);
-        	void    CreerRenderBuffer(GLuint &id, GLenum formatInterne);
-        	void    Load(); // can launch an exception
-         	~FrameBuffer();
-        	GLuint  GetID()const;
-        	GLuint  GetColorBufferID(unsigned int index) const;
+    public:
+        CInput();
+        virtual             ~CInput();
+        virtual void        UpdateEvent();
+        virtual bool        terminer() const;
+        virtual bool        GetTouche(const SDL_Scancode touche) const;
+        virtual bool        GetBoutonSouris(const Uint8 bouton) const;
+        virtual bool        MotionMouse() const;
+        virtual int         GetX() const;
+        virtual int         GetY() const;
+        virtual int         GetXRel() const;
+        virtual int         GetYRel() const;
+        virtual void        ShowCursor(bool reponse) const;
+        virtual void        GrabCursor(bool reponse) const;
 
-        	int     GetLargeur() const;
-        	int     GetHauteur() const;
-    	protected:
-        	GLuint                  m_id;
+    protected:
+        SDL_Event       m_event;
+        bool            m_touches[SDL_NUM_SCANCODES];
+        bool            m_boutonSouris[8];
 
-        	int                     m_largeur;
-        	int                     m_hauteur;
+        int             m_x;
+        int             m_y;
+        int             m_xRel;
+        int             m_yRel;
 
-        	std::vector <Texture>   m_colorBuffers;
-        	GLuint                  m_depthBufferID;
-    	private:
-	};
-}
-#endif // FRAMEBUFFER_H
+        bool            m_terminer;
+
+};
+
+
+#endif // INPUT_H_INCLUDED

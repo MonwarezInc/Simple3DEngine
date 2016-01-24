@@ -7,7 +7,7 @@ project(Simple3DEngine)
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 
 #Include and Library filepath
-include_directories(include)
+include_directories(include/S3DE)
 #Generate source file list
 file(
 	GLOB_RECURSE

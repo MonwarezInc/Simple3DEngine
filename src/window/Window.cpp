@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <S3DE/Window.h>
+#include <S3DE_Window.h>
 using namespace S3DE;
 Window::Window(const std::string &title, unsigned int width, unsigned int height, bool fullscreen)
 {

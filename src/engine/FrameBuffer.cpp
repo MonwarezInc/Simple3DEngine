@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <S3DE/FrameBuffer.h>
+#include <S3DE_FrameBuffer.h>
 using namespace S3DE;
 FrameBuffer::FrameBuffer():m_id(0), m_largeur(0), m_hauteur(0), m_colorBuffers(0), m_depthBufferID(0)
 {

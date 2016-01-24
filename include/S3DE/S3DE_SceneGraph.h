@@ -24,40 +24,61 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef INPUT_H_INCLUDED
-#define INPUT_H_INCLUDED
-#include <SDL2/SDL.h>
+#ifndef SCENE_GRAPH_INCLUED
+#define SCENE_GRAPH_INCLUED
+#include "S3DE_Mesh.h"
 
-class CInput
+#include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
+namespace	S3DE
 {
-    public:
-        CInput();
-        virtual             ~CInput();
-        virtual void        UpdateEvent();
-        virtual bool        terminer() const;
-        virtual bool        GetTouche(const SDL_Scancode touche) const;
-        virtual bool        GetBoutonSouris(const Uint8 bouton) const;
-        virtual bool        MotionMouse() const;
-        virtual int         GetX() const;
-        virtual int         GetY() const;
-        virtual int         GetXRel() const;
-        virtual int         GetYRel() const;
-        virtual void        ShowCursor(bool reponse) const;
-        virtual void        GrabCursor(bool reponse) const;
+	struct	Transformation
+	{
+		glm::vec3	translate;
+		glm::vec3	scale;
+		glm::quat	rotate;
+	};
 
-    protected:
-        SDL_Event       m_event;
-        bool            m_touches[SDL_NUM_SCANCODES];
-        bool            m_boutonSouris[8];
-
-        int             m_x;
-        int             m_y;
-        int             m_xRel;
-        int             m_yRel;
-
-        bool            m_terminer;
-
-};
-
-
-#endif // INPUT_H_INCLUDED
+	class	SceneGraph
+	{
+		public:
+			SceneGraph();
+			~SceneGraph();
+			// for beginning we just use mat4 transformation , after we will get quaternion transformation
+			unsigned int	AddMesh(Mesh* obj,glm::mat4 const & transf, unsigned int parent=0, 
+										bool hide= false, bool trans = false);	
+			bool			DeleteObject(unsigned int id);
+			Mesh*		ChainTransformation(unsigned int id, glm::mat4 & transf);
+		protected:
+			struct NodeInfo
+			{
+				Mesh*			obj;
+				bool			hide;
+				bool			transparent;
+				Transformation	transformation;
+				unsigned int 	id;
+			};
+			struct	Node
+			{
+				NodeInfo			nodeInfo;
+				Node*				previous;
+				std::vector<Node*>	next;
+			};
+			class	Tree
+			{
+				public:
+					Tree();
+					virtual	~Tree();
+					virtual	unsigned	int		AddNodeInfo(NodeInfo const & nodeInfo, unsigned int parent);
+				protected:
+					virtual	Node*				Detach(unsigned int id);
+					virtual	bool				Attach(Node const * node, unsigned int parent);
+					Node						m_root;
+			};
+	};	
+}
+#endif

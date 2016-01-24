@@ -27,17 +27,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ENGINE_MAIN_INCLUED
 #define ENGINE_MAIN_INCLUED
 /**
-*	\file 	Engine-main.h
+*	\file 	S3DE_Engine-main.h
 *	\brief 	Main class for the Simple 3D Engine
 *
 *	This class is an interface with the engine. Almost all  the command for interacting with the engine are here.
 *	\author	Payet Thibault
 *
 */
-#include "Graphics.h"
-#include "Mesh.h"
-#include "Shader.h"
-#include "Light.h"
+#include "S3DE_Graphics.h"
+#include "S3DE_Mesh.h"
+#include "S3DE_Shader.h"
+#include "S3DE_Light.h"
 #include <vector>
 namespace S3DE
 {
