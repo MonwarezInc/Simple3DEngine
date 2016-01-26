@@ -33,14 +33,14 @@ CEngine::~CEngine()
 {
 	// for the list of object, we didn't manage the object memory , so just delete the list , and not the content
 }
-void	CEngine::CreateWindow(GLuint width, GLuint height, bool fullscreen, const std::string & title,
-								GLuint bpp, GLuint aa, GLuint major, GLuint minor)
+void	CEngine::CreateWindow(EngineWindow const & engine)
 {
 	if (!m_pGraphics)
-		m_pGraphics	=	std::make_shared<CGraphics>(width,height,fullscreen,title,bpp,aa,major,minor);
+		m_pGraphics	=	std::make_shared<CGraphics>(engine.width,engine.height,
+													engine.fullscreen,engine.title,engine.bpp,
+													engine.aa,engine.major,engine.minor);
 	// load shader
-	if (!m_pShader)
-		m_pShader	=	std::make_shared<Light>("./Shader/texture.vert","./Shader/texture.frag");
+	m_pShader.SetFile(engine.shader.lightV,engine.shader.lightF);
 }
 void	CEngine::DeleteWindow(GLuint indice)
 {
@@ -113,17 +113,17 @@ void	CEngine::Init()
 }
 void	CEngine::Draw(unsigned int elapsed)
 {
-	m_pShader->Enable();
+	m_pShader.Enable();
 		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
-		GLuint		mvpLocation	=	m_pShader->GetUniformLocation("MVP");
-		GLuint		modelviewloc=	m_pShader->GetUniformLocation("modelview");
-		GLuint		projectionl	=	m_pShader->GetUniformLocation("projection");
+		GLuint		mvpLocation	=	m_pShader.GetUniformLocation("MVP");
+		GLuint		modelviewloc=	m_pShader.GetUniformLocation("modelview");
+		GLuint		projectionl	=	m_pShader.GetUniformLocation("projection");
 		
 		//Light
-		m_pShader->Init();
+		m_pShader.Init();
 		//m_light->Show();
-		m_pShader->SetPointLights(m_PointLight);
-		m_pShader->SetEyeWorldPos(m_CameraPosition);
+		m_pShader.SetPointLights(m_PointLight);
+		m_pShader.SetEyeWorldPos(m_CameraPosition);
 
 		glUniformMatrix4fv(projectionl, 1, GL_FALSE, glm::value_ptr(m_projection));
 		// end light
@@ -140,12 +140,12 @@ void	CEngine::Draw(unsigned int elapsed)
 			// send to OpenGL
 			glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
 			// send material
-			m_pShader->SetMatSpecularIntensity(1.0);
-			m_pShader->SetMatSpecularPower(2);
+			m_pShader.SetMatSpecularIntensity(1.0);
+			m_pShader.SetMatSpecularPower(2);
 			// then draw it
-			objectNode.object->Draw(elapsed, m_pShader,objectNode.animation);
+			objectNode.object->Draw(elapsed,m_pShader,objectNode.animation);
 		}
-	m_pShader->Disable();
+	m_pShader.Disable();
 	m_pGraphics->SwapWindow();
 }
 void	CEngine::ObjectNode::DoTransformation(glm::mat4 & mdv) const

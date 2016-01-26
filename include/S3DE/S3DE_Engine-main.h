@@ -41,6 +41,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 namespace S3DE
 {
+	struct	EngineShader
+	{
+		std::string	lightV;			/**< light vertex shader filename*/
+		std::string	lightF;			/**< light fragment shader filename*/
+		std::string	guiV;			/**< gui vertex shader filename*/
+		std::string	guiF;			/**< gui fragment shader filename*/
+	};
+	struct	EngineWindow
+	{	
+		uint32_t		width;		/**< width of the window */
+		uint32_t		height;		/**< height of the window */
+		bool			fullscreen;	/**< boolean for fulscreen state*/
+		std::string		title;		/**< title of the window*/
+		uint32_t		bpp;		/**< bit per pixel parameter*/
+		uint32_t		aa;			/**< antialiasing parameter*/
+		uint32_t		major;		/**< OpenGL major version*/
+		uint32_t		minor;		/**< OpenGL minor version*/
+		EngineShader	shader;		/**< @see EngineShadeer*/
+	};
 	class CEngine
 	{
 		public:
@@ -48,19 +67,9 @@ namespace S3DE
 			virtual	~CEngine();
 			
 			/**	\brief Create a window with the specified OpenGL version (Limited to one window for now)
-			*	
-			*	@param[in] width		Width of the window
-			*	@param[in] height		Height of the window
-			*	@param[in] fullscreen	Boolean for fullscreen mode
-			*	@param[in] title		Set the title of the window
-			*	@param[in] bpp			Set the bit per pixel parameter
-			*	@param[in] aa			Set antialiasing multiplier
-			*	@param[in] major		Set OpenGL major version
-			*	@param[in] minor		Set OpenGL minor version
+			*	@param	engineWindow	Structure that contain all information needed to create the window
 			*/
-			virtual	void	CreateWindow(GLuint width=320, GLuint height=240, bool fullscreen=false,
-											const std::string & title="CEngine window", GLuint bpp=32,
-											GLuint aa=2, GLuint major=3, GLuint minor=0);
+			virtual	void	CreateWindow(const EngineWindow & engineWindow);
 			/** \brief 	Delete the specifided window (Not Implemented)
 			*	@param[in]	indice		Id of the window
 			*/
@@ -122,7 +131,7 @@ namespace S3DE
 
 			std::vector< ObjectNode>				m_vObjectNode;	
 			// Light is a shader 
-			std::shared_ptr<Light>					m_pShader;
+			Light									m_pShader;
 			// Here is the different light 
 			std::vector<PointLight>					m_PointLight;
 			// Save some camera settings

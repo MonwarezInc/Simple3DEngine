@@ -68,7 +68,7 @@ namespace S3DE
 			Mesh();
 			virtual	~Mesh();
 			virtual	void	LoadFromFile(std::string const & filename);
-			virtual	void	Draw(unsigned int  elapsed_time, std::shared_ptr<Shader> const & shader,std::string const & animation);
+			virtual	void	Draw(unsigned int  elapsed_time, Shader const & shader,std::string const & animation);
 		private:
 			#define NUM_BONES_PER_VERTEX 4
 			#define INVALID_MATERIAL	0xFFFFFFFF

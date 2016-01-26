@@ -80,7 +80,7 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 
 	return	InitMaterials(pScene, filename);
 }		
-void	Mesh::Draw(unsigned int  elapsed_time,std::shared_ptr<Shader> const &shader, std::string const & animation)
+void	Mesh::Draw(unsigned int  elapsed_time,const Shader &shader, std::string const & animation)
 {
 	std::vector<glm::mat4>	transforms;
 	this->BoneTransform(((float)elapsed_time)/(float)1000.0, transforms, GetAnimationIndex(animation));
@@ -89,14 +89,14 @@ void	Mesh::Draw(unsigned int  elapsed_time,std::shared_ptr<Shader> const &shader
 		// we have to send unform matrix
 		std::stringstream	out;
 		out << "Bones[" << i << "]";
-		GLuint location	=	shader->GetUniformLocation(out.str().c_str());
+		GLuint location	=	shader.GetUniformLocation(out.str().c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*) glm::value_ptr(transforms[i]));
 	}
 	for (unsigned int i=0; i < m_Entries.size(); ++i)
 	{
 		glBindVertexArray(m_Entries[i].VAO);
 			const unsigned int materialIndex	=	m_Entries[i].MaterialIndex;
-			glUniform1i(shader->GetUniformLocation("skinned"),m_Entries[i].skinned);
+			glUniform1i(shader.GetUniformLocation("skinned"),m_Entries[i].skinned);
 			if (materialIndex < m_Textures.size())
 			{
 				glBindTexture(GL_TEXTURE_2D, m_Textures[materialIndex].GetID());

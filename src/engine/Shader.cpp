@@ -54,7 +54,6 @@ Shader::Shader(std::string const &vertexSource, std::string const &fragmentSourc
 	this->Load();
 }
 
-
 Shader::~Shader()
 {
     // Delete shader
@@ -80,8 +79,13 @@ Shader& Shader::operator=(Shader const &shaderToCopy)
 
     return *this;
 }
-
-
+void Shader::SetFile(std::string const &vertexSource, std::string const &fragmentSource)
+{	
+	m_vertexSource		=	vertexSource;
+	m_fragmentSource	=	fragmentSource;
+	
+	this->Load();
+}
 void Shader::Load()
 {
     // Destroy old  shader
@@ -94,7 +98,6 @@ void Shader::Load()
 
     if(glIsProgram(m_programID) == GL_TRUE)
         glDeleteProgram(m_programID);
-
 
     // Build Shader
 
@@ -115,14 +118,14 @@ void Shader::Load()
 
 
     // Verrouillage des entrées shader
-
+	/*
     glBindAttribLocation(m_programID, 0, "in_Vertex");
     glBindAttribLocation(m_programID, 1, "in_Color");
     glBindAttribLocation(m_programID, 2, "in_TexCoord0");
 	glBindAttribLocation(m_programID, 3, "in_Normal");
 	glBindAttribLocation(m_programID, 4, "in_BoneID");
 	glBindAttribLocation(m_programID, 5, "in_BoneW");
-
+	*/
     // Link  program
 
     glLinkProgram(m_programID);
