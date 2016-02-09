@@ -102,8 +102,8 @@ void Camera::Orient(int xRel, int yRel)
 }
 void Camera::KeyBoardEvent(const CInput &event)
 {
-    for (KeyStates::iterator it = m_keystat.begin(); it != m_keystat.end(); it++)
-        it->second  =   event.GetTouche(it->first);
+    for (auto& key : m_keystat)
+        key.second  =   event.GetTouche(key.first);
 }
 void Camera::Move(const CInput   &event,  Uint32 elapsed)
 {

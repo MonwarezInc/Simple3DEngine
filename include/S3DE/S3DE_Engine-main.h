@@ -52,13 +52,13 @@ namespace S3DE
 	{	
 		uint32_t		width;		/**< width of the window */
 		uint32_t		height;		/**< height of the window */
-		bool			fullscreen;	/**< boolean for fulscreen state*/
+		bool			fullscreen;	/**< boolean for fullscreen state*/
 		std::string		title;		/**< title of the window*/
 		uint32_t		bpp;		/**< bit per pixel parameter*/
 		uint32_t		aa;			/**< antialiasing parameter*/
 		uint32_t		major;		/**< OpenGL major version*/
 		uint32_t		minor;		/**< OpenGL minor version*/
-		EngineShader	shader;		/**< @see EngineShadeer*/
+		EngineShader	shader;		/**< @see EngineShader*/
 	};
 	class CEngine
 	{
