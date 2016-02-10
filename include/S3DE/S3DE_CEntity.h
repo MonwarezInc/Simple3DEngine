@@ -28,6 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define S3DE_CENTITY_INCLUED
 #include "S3DE_Mesh.h"
 #include <boost/signals2/signal.hpp>
+/**
+*	\brief	namespace of the engine
+*/
 namespace S3DE
 {
 	struct	RcField
@@ -35,14 +38,14 @@ namespace S3DE
 		std::string		filename;
 		unsigned int	id;
 	};
-	typedef boost::signals2::signal<RcField&& (std::string)>	RcRequest; ///< signals used for request the load of a ressource
-	typedef boost::signals2::signal< void (RcField const &)>	RcRelease; ///< signals used for request the release of a ressource
+	typedef boost::signals2::signal<RcField&& (std::string)>	RcRequest; ///< signals used for request the load of a resource
+	typedef boost::signals2::signal< void (RcField const &)>	RcRelease; ///< signals used for request the release of a resource
 	class CEntity
 	{
 		public:
 			/** \brief Construct a new entity and connect it to the RcManager with RcRequest signals
-			*	\param request the RcRequest signals to attach for request ressource
-			*	\param release the RcRelease signals to attach for release ressource
+			*	\param request the RcRequest signals to attach for request resource
+			*	\param release the RcRelease signals to attach for release resource
 			*/	
 			CEntity(RcRequest const &request, RcRelease const &release);
 			/**	\brief Destructor of a entity, it will send a RcRelease signals to the RcManager
@@ -53,10 +56,10 @@ namespace S3DE
 			*/
 			virtual void LoadEntity(std::string const &filename);
 			/** \brief Attach the entity to a new RcManager with RcRequest and RcRelease signals
-			*	\param request the RcRequest signals to attach for request ressource
-			*	\param release the RcRelease signals to attach for release ressource
+			*	\param request the RcRequest signals to attach for request resource
+			*	\param release the RcRelease signals to attach for release resource
 			*/	
-			virtual void AttachRessourceManager(RcRequest const &request,RcRelease const &release);
+			virtual void AttachResourceManager(RcRequest const &request,RcRelease const &release);
 		protected:
 			RcRequest		m_requestSig;
 			RcRelease		m_releaseSig;
