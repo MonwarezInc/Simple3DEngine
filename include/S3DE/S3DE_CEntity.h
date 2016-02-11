@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef S3DE_CENTITY_INCLUED
 #define S3DE_CENTITY_INCLUED
 #include "S3DE_Mesh.h"
-#include <boost/signals2/signal.hpp>
+#include "S3DE_ResourceManager.hpp"
 /**
 *	\brief	namespace of the engine
 */
@@ -38,32 +38,26 @@ namespace S3DE
 		std::string		filename;
 		unsigned int	id;
 	};
-	typedef boost::signals2::signal<RcField&& (std::string)>	RcRequest; ///< signals used for request the load of a resource
-	typedef boost::signals2::signal< void (RcField const &)>	RcRelease; ///< signals used for request the release of a resource
 	class CEntity
 	{
 		public:
-			/** \brief Construct a new entity and connect it to the RcManager with RcRequest signals
-			*	\param request the RcRequest signals to attach for request resource
-			*	\param release the RcRelease signals to attach for release resource
+			/** \brief Construct a new entity and associate with a rcmanager
+			*	\param rcmanager a pointer to a derived class of IResourceManager
 			*/	
-			CEntity(RcRequest const &request, RcRelease const &release);
-			/**	\brief Destructor of a entity, it will send a RcRelease signals to the RcManager
+			CEntity(IResourceManager<RcField> *rcmanager);
+			/**	\brief Destructor of a entity, it will decrease the counter associated to the resource
 			*/
 			virtual	~CEntity();
 			/** \brief	Request loading a ressource 
 			*	\param	the filename of the ressource to load
 			*/
-			virtual void LoadEntity(std::string const &filename);
-			/** \brief Attach the entity to a new RcManager with RcRequest and RcRelease signals
-			*	\param request the RcRequest signals to attach for request resource
-			*	\param release the RcRelease signals to attach for release resource
-			*/	
-			virtual void AttachResourceManager(RcRequest const &request,RcRelease const &release);
+			virtual void Load(std::string const &filename);
+			/** \brief	Clear the current resource*/
+			virtual	void		Clear();
 		protected:
-			RcRequest		m_requestSig;
-			RcRelease		m_releaseSig;
-			RcField			m_rcField;
+			IResourceManager<RcField>*	m_rcmanager;	///< pointer to a derived class of IResourceManager
+			RcField						m_rcField;		///< keep informative data of the resource
+		
 
 	};
 }

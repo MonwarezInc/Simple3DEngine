@@ -26,3 +26,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_CEntity.h>
 using namespace S3DE;
+#define NULL_ENTITY	0
+CEntity::CEntity(IResourceManager<RcField>	*rcmanager)
+{
+		if (nullptr	==	rcmanager)
+			throw std::string("rcmanager could not be nullptr");
+		m_rcmanager			=	rcmanager;
+		m_rcField.id		=	NULL_ENTITY;
+}
+CEntity::~CEntity()
+{
+		this->Clear();
+}
+void	CEntity::Load(std::string const &filename)
+{
+		if (nullptr	==	m_rcmanager)
+			throw std::string("m_rcmanager could not be nullptr");
+
+		m_rcField			=	m_rcmanager->Load(filename);
+}
+void	CEntity::Clear()
+{
+		if (nullptr	==	m_rcmanager)
+			throw std::string("m_rcmanager could not be nullptr");
+
+		m_rcmanager->Release(m_rcField);
+}

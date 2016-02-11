@@ -24,10 +24,10 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef RESSOURCEMANAGER_HPP_INCLUED
-#define RESSOURCEMANAGER_HPP_INCLUED
-/** \file RessourceManager.hpp
-*	\brief	Interface for managing Ressource
+#ifndef RESOURCEMANAGER_HPP_INCLUED
+#define RESOURCEMANAGER_HPP_INCLUED
+/** \file ResourceManager.hpp
+*	\brief	Interface for managing Resource
 *
 *	This class is an abstract class, you have to derivate it
 *
@@ -38,19 +38,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace S3DE
 {
 	template<class T>
-	class IRessourceManager
+	class IResourceManager
 	{
 		public:
-			IRessourceManager();
-			virtual ~IressourceManager();
+			IResourceManager();
+			virtual ~IResourceManager();
 			/** \brief pure virtual load function
-			*	@param[in]	filename filename of the ressource to load
+			*	@param[in]	filename filename of the resource to load
 			*/
 			virtual	T	Load(std::string const &filename)=0;
 			/** \brief pure virtual release function
 			*	@param[in,out]	object decrease the count of the ressource for object
 			*/
 			virtual void 	Release(T &object)=0;
-	}
+	};
 }
 #endif
