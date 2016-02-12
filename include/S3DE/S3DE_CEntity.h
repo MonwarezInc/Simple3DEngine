@@ -33,10 +33,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 namespace S3DE
 {
+	/** \brief Structure that contain all useful information about the resource*/
 	struct	RcField
 	{
-		std::string		filename;
-		unsigned int	id;
+		std::string		filename;	///< the filename of the resource
+		unsigned int	id;			///< an id to select an entity in particular
 	};
 	class CEntity
 	{
@@ -49,14 +50,14 @@ namespace S3DE
 			*/
 			virtual	~CEntity();
 			/** \brief	Request loading a ressource 
-			*	\param	the filename of the ressource to load
+			*	\param	filename the filename of the ressource to load
 			*/
 			virtual void Load(std::string const &filename);
 			/** \brief	Clear the current resource*/
 			virtual	void		Clear();
 		protected:
 			IResourceManager<RcField>*	m_rcmanager;	///< pointer to a derived class of IResourceManager
-			RcField						m_rcField;		///< keep informative data of the resource
+			RcField						m_rcField;		///< keep informative data of the resource \see RcField
 		
 
 	};
