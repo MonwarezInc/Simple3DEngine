@@ -54,7 +54,7 @@ void            Window::SwapWindow(unsigned int numWindow)
 }
 Window::~Window()
 {
-    for (auto vsWindow:  m_vsWindow)
+    for (auto &vsWindow:  m_vsWindow)
         SDL_DestroyWindow(vsWindow.pWindow);
     m_vsWindow.clear();
 
