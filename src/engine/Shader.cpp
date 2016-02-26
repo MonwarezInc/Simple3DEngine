@@ -132,39 +132,39 @@ void Shader::Load()
 
     // Vérification du linkage
 
-    GLint erreurLink(0);
-    glGetProgramiv(m_programID, GL_LINK_STATUS, &erreurLink);
+    GLint errorLink(0);
+    glGetProgramiv(m_programID, GL_LINK_STATUS, &errorLink);
 
 
     // S'il y a eu une erreur
 
-    if(erreurLink != GL_TRUE)
+    if(errorLink != GL_TRUE)
     {
         // Récupération de la taille de l'erreur
 
-        GLint tailleErreur(0);
-        glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &tailleErreur);
+        GLint errorSize(0);
+        glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &errorSize);
 
 
         // Allocation de mémoire
 
-        char *erreur = new char[tailleErreur + 1];
+        auto	perror = new char[errorSize + 1];
 
 
         // Récupération de l'erreur
 
-        glGetShaderInfoLog(m_programID, tailleErreur, &tailleErreur, erreur);
-        erreur[tailleErreur] = '\0';
+        glGetShaderInfoLog(m_programID, errorSize, &errorSize, perror);
+        perror[errorSize] = '\0';
 
 
 
 
         // Libération de la mémoire et retour du booléen false
 
-        delete[] erreur;
+        delete[] perror;
         glDeleteProgram(m_programID);
 
-        throw std::string(std::string("Linking error ") + std::string(erreur));
+        throw std::string(std::string("Linking error ") + std::string(perror));
     }
 
 
@@ -234,7 +234,7 @@ bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &source)
 
     // Récupération de la chaine C du code source
 
-    const GLchar* chaineCodeSource = codeSource.c_str();
+    const auto chaineCodeSource = codeSource.c_str();
 
 
     // Envoi du code source au shader
@@ -259,29 +259,29 @@ bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &source)
     {
         // Récupération de la taille de l'erreur
 
-        GLint tailleErreur(0);
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &tailleErreur);
+        GLint errorSize(0);
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &errorSize);
 
 
         // Allocation de mémoire
 
-        char *erreur = new char[tailleErreur + 1];
+        auto	perror = new char[errorSize + 1];
 
 
         // Récupération de l'erreur
 
-        glGetShaderInfoLog(shader, tailleErreur, &tailleErreur, erreur);
-        erreur[tailleErreur] = '\0';
+        glGetShaderInfoLog(shader, errorSize, &errorSize, perror);
+        perror[errorSize] = '\0';
 
 
         // Affichage de l'erreur
 
-        std::cerr << "Error during building shader "<< erreur << std::endl;
+        std::cerr << "Error during building shader "<< perror << std::endl;
 
 
         // Libération de la mémoire et retour du booléen false
 
-        delete[] erreur;
+        delete[] perror;
         glDeleteShader(shader);
 
         return false;

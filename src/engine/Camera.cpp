@@ -107,8 +107,7 @@ void Camera::KeyBoardEvent(const CInput &event)
 }
 void Camera::Move(const CInput   &event,  Uint32 elapsed)
 {
-    float time = elapsed;
-    (void) time;
+    auto time = static_cast<float>(elapsed);
 
     if (m_keystat[m_keyconf["forward"]])
     {

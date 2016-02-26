@@ -39,26 +39,18 @@ unsigned int	SceneGraph::AddMesh(Mesh* obj, glm::mat4 const & transf, unsigned i
 										bool hide, bool trans)
 {
 	// not implemented yet
-	(void)obj;
-	(void)transf;
-	(void)parent;
-	(void)hide;
-	(void)trans;
 	
 	return 0;
 }
 bool			SceneGraph::DeleteObject(unsigned int id)
 {
 	// not implemented yet
-	(void)id;
 	return false;
 }
 Mesh*		SceneGraph::ChainTransformation(unsigned int id, glm::mat4 & transf)
 {
 	// not implemented yet
-	(void)id;
-	(void)transf;
-	return NULL;
+	return nullptr;
 }
 // Tree algorithm
 SceneGraph::Tree::Tree()

@@ -56,7 +56,7 @@ CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::str
         GLenum  initialisationGLEW(glewInit());
 
         if (initialisationGLEW != GLEW_OK)
-            throw std::string((char*)glewGetErrorString(initialisationGLEW));
+            throw std::string(reinterpret_cast<const char *>(glewGetErrorString(initialisationGLEW)));
 
 
     }

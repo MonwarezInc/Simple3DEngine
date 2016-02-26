@@ -34,6 +34,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define NORMAL_LOCATION			3
 #define BONE_ID_LOCATION		4
 #define BONE_WEIGHT_LOCATION	5
+
+// Defining it in a general header
+#define BUFFER_OFFSET(i)	reinterpret_cast<char *>(i)
+
 using namespace S3DE;
 Mesh::Mesh()
 {
@@ -74,7 +78,7 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 	// Initialize the meshes in the scene one by one
 	for (unsigned int i = 0; i < m_Entries.size(); ++i)
 	{
-		const aiMesh*	paiMesh	=	pScene->mMeshes[i];
+		auto paiMesh	=	pScene->mMeshes[i];
 		this->InitMesh(i, paiMesh, 0, 0); // 0 because it's one VAO by meshEntrie
 	}
 
@@ -83,7 +87,7 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 void	Mesh::Draw(unsigned int  elapsed_time,const Shader &shader, std::string const & animation)
 {
 	std::vector<glm::mat4>	transforms;
-	this->BoneTransform(((float)elapsed_time)/(float)1000.0, transforms, GetAnimationIndex(animation));
+	this->BoneTransform((static_cast<float>(elapsed_time))/1000.0f, transforms, GetAnimationIndex(animation));
 	for (unsigned int i=0; i < transforms.size(); ++i)
 	{
 		// we have to send unform matrix
@@ -92,16 +96,16 @@ void	Mesh::Draw(unsigned int  elapsed_time,const Shader &shader, std::string con
 		GLuint location	=	shader.GetUniformLocation(out.str().c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, (const GLfloat*) glm::value_ptr(transforms[i]));
 	}
-	for (unsigned int i=0; i < m_Entries.size(); ++i)
+	for (auto &entries:  m_Entries)
 	{
-		glBindVertexArray(m_Entries[i].VAO);
-			const unsigned int materialIndex	=	m_Entries[i].MaterialIndex;
-			glUniform1i(shader.GetUniformLocation("skinned"),m_Entries[i].skinned);
+		glBindVertexArray(entries.VAO);
+			auto 	materialIndex	=	entries.MaterialIndex;
+			glUniform1i(shader.GetUniformLocation("skinned"),entries.skinned);
 			if (materialIndex < m_Textures.size())
 			{
 				glBindTexture(GL_TEXTURE_2D, m_Textures[materialIndex].GetID());
 			}
-			glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, entries.NumIndices, GL_UNSIGNED_INT, 0);
 			
 	}
 	glBindVertexArray(0); // OpenGL state machine
@@ -141,9 +145,9 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int Base
 	for (unsigned int i = 0; i < paiMesh->mNumVertices; ++i)
 	{
 		// set vertex information
-		const 	aiVector3D*	pPos		=	&(paiMesh->mVertices[i]);
-		const	aiVector3D*	pNormal		=	&(paiMesh->mNormals[i]);
-		const	aiVector3D*	pTexCoord	=	paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]):
+		auto	pPos		=	&(paiMesh->mVertices[i]);
+		auto	pNormal		=	&(paiMesh->mNormals[i]);
+		auto	pTexCoord	=	paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]):
 													&zero3D;
 		Vertex	v(glm::vec3(pPos->x, pPos->y,pPos->z),glm::vec2(pTexCoord->x,pTexCoord->y),
 					glm::vec3(pNormal->x,pNormal->y,pNormal->z));
@@ -153,7 +157,7 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int Base
 	for (unsigned int i = 0; i < paiMesh->mNumFaces; ++i)
 	{
 		// set indice information
-		const	aiFace& face	=	paiMesh->mFaces[i];
+		auto	face	=	paiMesh->mFaces[i];
 		assert(face.mNumIndices	==	3);
 		indices.push_back(face.mIndices[0]);
 		indices.push_back(face.mIndices[1]);
@@ -182,7 +186,7 @@ bool	Mesh::InitMaterials(const aiScene* pScene, std::string const & filename)
 	// initialize the materials
 	for (unsigned int i = 0; i < pScene->mNumMaterials; ++i)
 	{
-		const	aiMaterial*	pMaterial	=	pScene->mMaterials[i];
+		auto	pMaterial	=	pScene->mMaterials[i];
 		
 		
 		if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
@@ -251,8 +255,8 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 			glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 			
 			glVertexAttribPointer(POSITION_LOCATION,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), 0);
-			glVertexAttribPointer(TEX_COORD_LOCATION,2,GL_FLOAT, GL_FALSE,sizeof(Vertex), (const GLvoid*)12);
-			glVertexAttribPointer(NORMAL_LOCATION,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), (const GLvoid*)20);
+			glVertexAttribPointer(TEX_COORD_LOCATION,2,GL_FLOAT, GL_FALSE,sizeof(Vertex), BUFFER_OFFSET(12));
+			glVertexAttribPointer(NORMAL_LOCATION,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), BUFFER_OFFSET(20));
 
 			glEnableVertexAttribArray(POSITION_LOCATION);
 			glEnableVertexAttribArray(TEX_COORD_LOCATION);
@@ -265,8 +269,8 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 			glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
 
 			
-			glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
-			glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4 , GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+			glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_INT, sizeof(VertexBoneData), BUFFER_OFFSET(0));
+			glVertexAttribPointer(BONE_WEIGHT_LOCATION, 4 , GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), BUFFER_OFFSET(16));
 
 			glEnableVertexAttribArray(BONE_ID_LOCATION);
 			glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
@@ -330,11 +334,11 @@ void	Mesh::BoneTransform(float TimeInSec, std::vector<glm::mat4> & Transforms, u
 	if (!m_pScene->HasAnimations()) // if we have no animation quit the boneTransform
 		return;
 	glm::mat4	Identity		=	glm::mat4();
-	float		TicksPerSec		=	(m_pScene->mAnimations[idAnimation] != nullptr )? 
-									m_pScene->mAnimations[idAnimation]->mTicksPerSecond : 25.0f;
+	auto	TicksPerSec		=	(m_pScene->mAnimations[idAnimation] != nullptr )? 
+									m_pScene->mAnimations[idAnimation]->mTicksPerSecond : static_cast<float>(25.0);
 	
-	float		TimeInTicks		=	TimeInSec * TicksPerSec;
-	float		AnimationTime	=	fmod(TimeInTicks, m_pScene->mAnimations[idAnimation]->mDuration);
+	auto	TimeInTicks		=	TimeInSec * TicksPerSec;
+	auto	AnimationTime	=	fmod(TimeInTicks, m_pScene->mAnimations[idAnimation]->mDuration);
 
 	this->ReadNodeHiearchy(AnimationTime, m_pScene->mRootNode, Identity, idAnimation);
 
@@ -348,11 +352,11 @@ void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 
 {
 	std::string 		NodeName(pNode->mName.data);
 	
-	const aiAnimation*	pAnimation			=	m_pScene->mAnimations[idAnimation];
+	auto	pAnimation			=	m_pScene->mAnimations[idAnimation];
 	glm::mat4			NodeTransformation;
 	NodeTransformation						=	aiMatrixToMat4(pNode->mTransformation);
 	
-	const aiNodeAnim*	pNodeAnim			=	this->FindNodeAnim(pAnimation, NodeName);
+	auto	pNodeAnim			=	this->FindNodeAnim(pAnimation, NodeName);
 	
 	if (pNodeAnim != nullptr)
 	{
@@ -395,7 +399,7 @@ unsigned int 		Mesh::FindScaling(float AnimationTime, const aiNodeAnim* pNodeAni
 	assert(pNodeAnim->mNumScalingKeys > 0);
 	for (unsigned int i = 0; i < pNodeAnim->mNumScalingKeys -1 ; ++i)
 	{
-		if (AnimationTime < (float) pNodeAnim->mScalingKeys[i+1].mTime)
+		if (AnimationTime < static_cast<float> (pNodeAnim->mScalingKeys[i+1].mTime))
 		{
 			return i;
 		}
@@ -410,7 +414,7 @@ unsigned int	Mesh::FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim
 	assert(pNodeAnim->mNumRotationKeys > 0);
 	for (unsigned int i = 0; i < pNodeAnim->mNumRotationKeys - 1; ++i)
 	{
-		if (AnimationTime < (float) pNodeAnim->mRotationKeys[i+1].mTime)
+		if (AnimationTime < static_cast<float> (pNodeAnim->mRotationKeys[i+1].mTime))
 			return i;
 	}
 	
@@ -422,7 +426,7 @@ unsigned int	Mesh::FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim
 	assert(pNodeAnim->mNumPositionKeys > 0);
 	for (unsigned int i=0; i < pNodeAnim->mNumPositionKeys -1; ++i)
 	{
-		if (AnimationTime < (float) pNodeAnim->mPositionKeys[i+1].mTime)
+		if (AnimationTime < static_cast<float> (pNodeAnim->mPositionKeys[i+1].mTime))
 			return i;
 	}
 	assert(0);
@@ -436,21 +440,21 @@ void	Mesh::CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const 
 		return;
 	}
 	
-	unsigned int 	ScalingIndex		=	this->FindScaling(AnimationTime,pNodeAnim);
-	unsigned int 	NextScalingIndex	=	ScalingIndex + 1;
+	auto	ScalingIndex		=	this->FindScaling(AnimationTime,pNodeAnim);
+	auto	NextScalingIndex	=	ScalingIndex + 1;
 
 	assert(NextScalingIndex < pNodeAnim->mNumScalingKeys);
 
-	float			DeltaTime			=	(float) (pNodeAnim->mScalingKeys[NextScalingIndex].mTime - 
+	auto	DeltaTime			=	static_cast<float> (pNodeAnim->mScalingKeys[NextScalingIndex].mTime - 
 											pNodeAnim->mScalingKeys[ScalingIndex].mTime);
-	float			Factor				=	AnimationTime - (float)pNodeAnim->mScalingKeys[ScalingIndex].mTime/DeltaTime;
+	auto	Factor				=	AnimationTime - static_cast<float>(pNodeAnim->mScalingKeys[ScalingIndex].mTime/DeltaTime);
 	
 	if (Factor < 0.0f || Factor > 1.0f)
 		throw std::string("Error interpolated factor not in the good range");
 
-	const aiVector3D & 	Start			=	pNodeAnim->mScalingKeys[ScalingIndex].mValue;
-	const aiVector3D & 	End				=	pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
-	aiVector3D			Delta			=	End - Start;
+	const auto&	Start			=	pNodeAnim->mScalingKeys[ScalingIndex].mValue;
+	const auto&	End				=	pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
+	auto	Delta			=	End - Start;
 	Out 								=	Start + Factor * Delta;	
 }
 void	Mesh::CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
@@ -461,20 +465,20 @@ void	Mesh::CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, con
 		return;
 	}
 	
-	unsigned int 	RotationIndex		=	this->FindRotation(AnimationTime,pNodeAnim);
-	unsigned int 	NextRotationIndex	=	RotationIndex + 1;
+	auto	RotationIndex		=	this->FindRotation(AnimationTime,pNodeAnim);
+	auto	NextRotationIndex	=	RotationIndex + 1;
 
 	assert(NextRotationIndex < pNodeAnim->mNumRotationKeys);
 
-	float			DeltaTime			=	(float) (pNodeAnim->mRotationKeys[NextRotationIndex].mTime - 
+	auto	DeltaTime			=	static_cast<float>(pNodeAnim->mRotationKeys[NextRotationIndex].mTime - 
 											pNodeAnim->mRotationKeys[RotationIndex].mTime);
-	float			Factor				=	AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime/DeltaTime;
+	auto	Factor				=	AnimationTime - static_cast<float>(pNodeAnim->mRotationKeys[RotationIndex].mTime/DeltaTime);
 	
 	if (Factor < 0.0f || Factor > 1.0f)
 		throw std::string("Error interpolated factor not in the good range");
 
-	const aiQuaternion&	Start			=	pNodeAnim->mRotationKeys[RotationIndex].mValue;
-	const aiQuaternion&	End				=	pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
+	const auto&	Start			=	pNodeAnim->mRotationKeys[RotationIndex].mValue;
+	const auto&	End				=	pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
 	aiQuaternion::Interpolate(Out, Start, End, Factor);
 	Out.Normalize();
 }
@@ -486,20 +490,20 @@ void	Mesh::CalcInterpolatedPosition(aiVector3D & Out, float AnimationTime, const
 		return;
 	}
 	
-	unsigned int 	PositionIndex		=	this->FindPosition(AnimationTime,pNodeAnim);
-	unsigned int 	NextPositionIndex	=	PositionIndex + 1;
+	auto	PositionIndex		=	this->FindPosition(AnimationTime,pNodeAnim);
+	auto	NextPositionIndex	=	PositionIndex + 1;
 
 	assert(NextPositionIndex < pNodeAnim->mNumPositionKeys);
 
-	float			DeltaTime			=	(float) (pNodeAnim->mPositionKeys[NextPositionIndex].mTime - 
+	auto	DeltaTime			=	static_cast<float>(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - 
 											pNodeAnim->mPositionKeys[PositionIndex].mTime);
-	float			Factor				=	AnimationTime - (float)pNodeAnim->mPositionKeys[PositionIndex].mTime/DeltaTime;
+	auto	Factor				=	AnimationTime - static_cast<float>(pNodeAnim->mPositionKeys[PositionIndex].mTime/DeltaTime);
 	
 	if (Factor < 0.0f || Factor > 1.0f)
 		throw std::string("Error interpolated factor not in the good range");
 
-	const aiVector3D & 	Start			=	pNodeAnim->mPositionKeys[PositionIndex].mValue;
-	const aiVector3D & 	End				=	pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
+	const auto& 	Start			=	pNodeAnim->mPositionKeys[PositionIndex].mValue;
+	const auto& 	End				=	pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
 	aiVector3D			Delta			=	End - Start;
 	Out 								=	Start + Factor * Delta;	
 }
@@ -507,7 +511,7 @@ const aiNodeAnim*	Mesh::FindNodeAnim(const aiAnimation* pAnimation, std::string 
 {
 	for (unsigned int i=0; i < pAnimation->mNumChannels; ++i)
 	{
-		const aiNodeAnim*	pNodeAnim	=	pAnimation->mChannels[i];
+		const auto	pNodeAnim	=	pAnimation->mChannels[i];
 		if (pNodeAnim != nullptr)
 		{
 			if (std::string(pNodeAnim->mNodeName.data) == NodeName)

@@ -92,8 +92,8 @@ void Texture::LoadEmptyTexture()
 }
 bool Texture::Load()
 {
-    SDL_Surface     *imgSDL =   IMG_Load(m_filename.c_str());
-    if (0 == imgSDL)
+    auto	imgSDL =   IMG_Load(m_filename.c_str());
+    if (nullptr == imgSDL)
         throw string(SDL_GetError());
 
     if (glIsTexture(m_id) == GL_TRUE)
