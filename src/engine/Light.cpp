@@ -52,10 +52,6 @@ void	Light::SetMatSpecularPower(GLfloat	power)
 {
 	m_specularPower	=	power;
 }
-void	Light::SetDirectionalLight(const DirectionalLight &light)
-{
-	m_dlight	=	light;
-}
 void	Light::SetLights(std::vector<PointLight> const & lights)
 {
 	// truncate with MAX_POINT_LIGHTS
@@ -92,15 +88,15 @@ void	Light::SetLights(std::vector<SpotLight> const & lights)
 		glUniform1f(m_spotLightsLocation[i].Cutoff,lights[i].Cutoff);
 	}
 }
-void	Light::Show()
+void	Light::SetLights(DirectionalLight const & light)
 {
 	// sending light information
-	glUniform3f(m_dirLightColorLocation, m_dlight.Color.x, m_dlight.Color.y, m_dlight.Color.z);
-	glUniform1f(m_dirLightAmbientIntensityLocation, m_dlight.AmbientIntensity);
-	glm::vec3 	direction	=	m_dlight.Direction;
+	glUniform3f(m_dirLightColorLocation, light.Color.x, light.Color.y, light.Color.z);
+	glUniform1f(m_dirLightAmbientIntensityLocation, light.AmbientIntensity);
+	glm::vec3 	direction	=	light.Direction;
 	direction				=	glm::normalize(direction);
 	glUniform3f(m_dirLightDirectionLocation,direction.x,direction.y,direction.z);
-	glUniform1f(m_dirLightDiffuseIntensityLocation, m_dlight.DiffuseIntensity);
+	glUniform1f(m_dirLightDiffuseIntensityLocation, light.DiffuseIntensity);
 	glUniform3f(m_eyeWorldPosLocation,m_eyeWorldPos.x,m_eyeWorldPos.y,m_eyeWorldPos.z);
 	glUniform1f(m_matSpecularIntensityLocation, m_specularIntensity);
 	glUniform1f(m_matSpecularPowerLocation, m_specularPower);

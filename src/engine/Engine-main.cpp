@@ -70,6 +70,10 @@ void	CEngine::AttachLight(std::vector<SpotLight> const & spotlight)
 {
 	m_SpotLight		=	spotlight;
 }
+void	CEngine::AttachLight(DirectionalLight const & dlight)
+{
+	m_Directional	=	dlight;
+}
 void	CEngine::DeleteObject(GLuint id)
 {
 	//not implemented yet
@@ -125,9 +129,10 @@ void	CEngine::Draw(unsigned int elapsed)
 		
 		//Light
 		m_pShader.Init();
-		//m_light->Show();
+		m_pShader.SetLights(m_Directional);
 		m_pShader.SetLights(m_PointLight);
 		m_pShader.SetLights(m_SpotLight);
+
 		m_pShader.SetEyeWorldPos(m_CameraPosition);
 
 		glUniformMatrix4fv(projectionl, 1, GL_FALSE, glm::value_ptr(m_projection));

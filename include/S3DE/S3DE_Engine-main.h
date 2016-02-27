@@ -97,6 +97,11 @@ namespace S3DE
 			*/
 			virtual	void	AttachLight(std::vector<SpotLight> const & spotlight);
 			/**
+			*	\brief Set/update the Directional light information
+			*	@param	dlight 	a DirectionalLight 
+			*/
+			virtual	void	AttachLight(DirectionalLight const & dlight);
+			/**
 			*	\brief Delete an object from the scene (Not Implemented)
 			*	@param[in]	id	Id of the object
 			*/
@@ -138,6 +143,7 @@ namespace S3DE
 			// Light is a shader 
 			Light									m_pShader;
 			// Here is the different light 
+			DirectionalLight						m_Directional;
 			std::vector<PointLight>					m_PointLight;
 			std::vector<SpotLight>					m_SpotLight;
 			// Save some camera settings

@@ -74,17 +74,15 @@ namespace S3DE
 			Light(Light const &);
 		
 			~Light();
-			virtual	void	Show();
-			virtual void 	SetDirectionalLight(const DirectionalLight &light);
 			virtual	void	SetEyeWorldPos(const glm::vec3 &eyeWorldPos);
 			virtual	void	SetMatSpecularIntensity(GLfloat intensity);
 			virtual	void	SetMatSpecularPower(GLfloat power);
 			virtual	void	SetLights(std::vector<PointLight> const &  lights);
 			virtual	void	SetLights(std::vector<SpotLight> const & lights);
+			virtual	void	SetLights(DirectionalLight	const &light);
 			virtual	void	Init();
 
 		protected:
-			DirectionalLight	m_dlight;
 			glm::vec3			m_eyeWorldPos;
 			GLfloat				m_specularIntensity;
 			GLfloat				m_specularPower;
