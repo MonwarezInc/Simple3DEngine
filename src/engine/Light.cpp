@@ -30,7 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace S3DE;
 Light::Light():Shader()
 {
-	
 }
 Light::Light(Light const &shaderToCopy):Shader(shaderToCopy)
 {
@@ -57,7 +56,7 @@ void	Light::SetDirectionalLight(const DirectionalLight &light)
 {
 	m_dlight	=	light;
 }
-void	Light::SetPointLights(std::vector<PointLight> const & lights)
+void	Light::SetLights(std::vector<PointLight> const & lights)
 {
 	// truncate with MAX_POINT_LIGHTS
 	int	numPointLight	=	lights.size();
@@ -72,6 +71,25 @@ void	Light::SetPointLights(std::vector<PointLight> const & lights)
 		glUniform1f(m_pointLightsLocation[i].Atten.Constant,lights[i].Attenuation.Constant);
 		glUniform1f(m_pointLightsLocation[i].Atten.Linear,lights[i].Attenuation.Linear);
 		glUniform1f(m_pointLightsLocation[i].Atten.Exp,lights[i].Attenuation.Exp);
+	}
+}
+void	Light::SetLights(std::vector<SpotLight> const & lights)
+{
+	// truncate with MAX_POINT_LIGHTS
+	int	numSpotLight	=	lights.size();
+	numSpotLight	=	(numSpotLight > MAX_SPOT_LIGHTS)? MAX_SPOT_LIGHTS:numSpotLight;
+	glUniform1i(m_numSpotLightsLocation,numSpotLight);
+	for (int i= 0; i < numSpotLight; ++i)
+	{
+		glUniform3f(m_spotLightsLocation[i].Color, lights[i].Color.x,lights[i].Color.y,lights[i].Color.z);
+		glUniform1f(m_spotLightsLocation[i].AmbientIntensity,lights[i].AmbientIntensity);
+		glUniform1f(m_spotLightsLocation[i].DiffuseIntensity,lights[i].DiffuseIntensity);
+		glUniform3f(m_spotLightsLocation[i].Position, lights[i].Position.x,lights[i].Position.y,lights[i].Position.z);
+		glUniform1f(m_spotLightsLocation[i].Atten.Constant,lights[i].Attenuation.Constant);
+		glUniform1f(m_spotLightsLocation[i].Atten.Linear,lights[i].Attenuation.Linear);
+		glUniform1f(m_spotLightsLocation[i].Atten.Exp,lights[i].Attenuation.Exp);
+		glUniform3f(m_spotLightsLocation[i].Direction, lights[i].Direction.x,lights[i].Direction.y,lights[i].Direction.z);
+		glUniform1f(m_spotLightsLocation[i].Cutoff,lights[i].Cutoff);
 	}
 }
 void	Light::Show()
@@ -99,6 +117,7 @@ void	Light::Init()
 	m_matSpecularPowerLocation			=	GetUniformLocation("matSpecularPower");
 	
 	m_numPointLightsLocation			=	GetUniformLocation("NumPointLights");
+	m_numSpotLightsLocation				=	GetUniformLocation("NumSpotLights");
 	for (unsigned int i=0; i < MAX_POINT_LIGHTS;++i)
 	{
 		std::stringstream	out;
@@ -129,6 +148,45 @@ void	Light::Init()
 		
 		out <<"PointLights["<< i <<"].Atten.Exp";
 		m_pointLightsLocation[i].Atten.Exp			=	GetUniformLocation(out.str());
+	}
+	for (unsigned int i=0; i < MAX_SPOT_LIGHTS;++i)
+	{
+		std::stringstream	out;
+
+		out <<"SpotLights["<< i <<"].Base.Base.Color";
+		m_spotLightsLocation[i].Color				=	GetUniformLocation(out.str());
+		out.str("");
+
+		out <<"SpotLights["<< i <<"].Base.Base.AmbientIntensity";
+		m_spotLightsLocation[i].AmbientIntensity	=	GetUniformLocation(out.str());
+		out.str("");
+		
+		out <<"SpotLights["<< i <<"].Base.Position";
+		m_spotLightsLocation[i].Position			=	GetUniformLocation(out.str());
+		out.str("");
+		
+		out <<"SpotLights["<< i <<"].Base.Base.DiffuseIntensity";
+		m_spotLightsLocation[i].DiffuseIntensity	=	GetUniformLocation(out.str());
+		out.str("");
+		
+		out <<"SpotLights["<< i <<"].Base.Atten.Constant";
+		m_spotLightsLocation[i].Atten.Constant		=	GetUniformLocation(out.str());
+		out.str("");
+		
+		out <<"SpotLights["<< i <<"].Base.Atten.Linear";
+		m_spotLightsLocation[i].Atten.Linear		=	GetUniformLocation(out.str());
+		out.str("");
+		
+		out <<"SpotLights["<< i <<"].Base.Atten.Exp";
+		m_spotLightsLocation[i].Atten.Exp			=	GetUniformLocation(out.str());
+		out.str("");
+		
+		out <<"SpotLights["<<i<<"].Direction";
+		m_spotLightsLocation[i].Direction			=	GetUniformLocation(out.str());
+		out.str("");
+		
+		out <<"SpotLights["<<i<<"].Cutoff";
+		m_spotLightsLocation[i].Cutoff				=	GetUniformLocation(out.str());
 	}
 
 }

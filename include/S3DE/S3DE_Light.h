@@ -58,11 +58,17 @@ namespace S3DE
 			GLfloat		Exp;
 		} Attenuation;
 	};
+	struct	SpotLight	:	public PointLight
+	{
+		glm::vec3	Direction;
+		float		Cutoff;
+	};
 
 	class Light : public Shader
 	{
 		public:
 			static 	const	unsigned	int	MAX_POINT_LIGHTS	=	6;
+			static	const	unsigned	int	MAX_SPOT_LIGHTS		=	2;
 			Light();
 			Light(std::string const &vertexSource , std::string const &fragmentSource);
 			Light(Light const &);
@@ -73,7 +79,8 @@ namespace S3DE
 			virtual	void	SetEyeWorldPos(const glm::vec3 &eyeWorldPos);
 			virtual	void	SetMatSpecularIntensity(GLfloat intensity);
 			virtual	void	SetMatSpecularPower(GLfloat power);
-			virtual	void	SetPointLights(std::vector<PointLight> const &  lights);
+			virtual	void	SetLights(std::vector<PointLight> const &  lights);
+			virtual	void	SetLights(std::vector<SpotLight> const & lights);
 			virtual	void	Init();
 
 		protected:
@@ -100,7 +107,13 @@ namespace S3DE
 					GLuint		Linear;
 					GLuint		Exp;
 				} Atten;
-			}m_pointLightsLocation[MAX_POINT_LIGHTS]; 
+			}m_pointLightsLocation[MAX_POINT_LIGHTS];
+			struct	SpotLightLocation	:	public	PointLightLocation
+			{
+				GLuint			Direction;
+				GLuint			Cutoff;
+			}m_spotLightsLocation[MAX_SPOT_LIGHTS]; 
 			GLuint				m_numPointLightsLocation;
+			GLuint				m_numSpotLightsLocation;
 	};
 }

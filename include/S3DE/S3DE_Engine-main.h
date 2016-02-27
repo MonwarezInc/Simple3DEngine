@@ -92,6 +92,11 @@ namespace S3DE
 			*/
 			virtual	void	AttachLight(std::vector<PointLight> const & pointlight);
 			/**
+			*	\brief Set/update the spot light information
+			*	@param	spotlight 	a vector of SpotLight data
+			*/
+			virtual	void	AttachLight(std::vector<SpotLight> const & spotlight);
+			/**
 			*	\brief Delete an object from the scene (Not Implemented)
 			*	@param[in]	id	Id of the object
 			*/
@@ -134,6 +139,7 @@ namespace S3DE
 			Light									m_pShader;
 			// Here is the different light 
 			std::vector<PointLight>					m_PointLight;
+			std::vector<SpotLight>					m_SpotLight;
 			// Save some camera settings
 			glm::vec3								m_CameraPosition;
 			glm::vec3								m_CameraCenter;
