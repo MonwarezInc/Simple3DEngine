@@ -33,8 +33,8 @@ namespace S3DE
 	enum class MeshExceptFlag {FATAL, RELEASE};
 	struct	ResourceExcept
 	{
-			size_t			id;	//< the id of the resource
-			MeshExceptFlag	flag;	//< the flag to set the severity of the exception
+			size_t			id;		///< the id of the resource
+			MeshExceptFlag	flag;	///< the flag to set the severity of the exception
 	};
 	class	MeshException : public std::exception
 	{
@@ -58,8 +58,8 @@ namespace S3DE
 			*/
 			virtual ResourceExcept GetResourceExcept()const;
 		protected:
-			ResourceExcept		m_rc;	//< the resource exception information
-			std::string			m_msg;  //< the description of the error
+			ResourceExcept		m_rc;	///< the resource exception information
+			std::string			m_msg;  ///< the description of the error
 	};
 }
 #endif
