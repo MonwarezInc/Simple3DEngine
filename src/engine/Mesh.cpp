@@ -139,7 +139,7 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int Base
 	
 	vertices.reserve(NumVertices);
 	bones.resize(NumVertices);
-	indices.resize(NumIndices);
+	indices.reserve(NumIndices);
 	aiVector3D	const			zero3D(0.0f,0.0f,0.0f);
 	
 	for (unsigned int i = 0; i < paiMesh->mNumVertices; ++i)
