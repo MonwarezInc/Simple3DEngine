@@ -50,7 +50,7 @@ void	CEngine::SetActive(GLuint indice)
 {
 	// not implemented yet
 }
-void	CEngine::AddMeshNode(Mesh* object,GLuint & id)
+void	CEngine::AddMeshNode(Mesh* object,GLuint & id, bool isVisible)
 {
 	ObjectNode	objectNode;
 	objectNode.object	=	object;
@@ -59,8 +59,19 @@ void	CEngine::AddMeshNode(Mesh* object,GLuint & id)
 	for (unsigned int i=0; i < 3; ++i)
 		objectNode.pitch[i]	=	0.0;
 	objectNode.animation	=	"idle"; // idle by default
+	objectNode.id			=	m_vObjectNode.size();
+	objectNode.isVisible	=	isVisible;
 	m_vObjectNode.push_back(objectNode);
-	id	=	m_vObjectNode.size() - 1;
+	id	=	objectNode.id;
+}
+void	CEngine::DelMeshNode(size_t id)
+{
+	// If succeed does not launch an exception
+	// it's not manage the memory of the mesh itself
+	if (id >= m_vObjectNode.size())
+		throw std::string ("Error the id is to high for DelMeshNode");
+	m_vObjectNode[id].isVisible	=	false;	// Set to false so that we didn't show it
+	m_vObjectNode[id].object	=	nullptr;	
 }
 void	CEngine::AttachLight(std::vector<PointLight> const & pointlight)
 {
@@ -142,18 +153,32 @@ void	CEngine::Draw(unsigned int elapsed)
 			// do transformation stuff
 			// ...
 			//glm::mat4		mvp			=	m_modelview;	// load camera pos
-			glm::mat4	mvp;
-			objectNode.DoTransformation(mvp);
-			// Send to OpenGL the modelview before apply camera transformation and after object transformation
-			glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(mvp));
-			mvp	=	m_projection * m_modelview * mvp;
-			// send to OpenGL
-			glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
-			// send material
-			m_pShader.SetMatSpecularIntensity(1.0);
-			m_pShader.SetMatSpecularPower(2);
-			// then draw it
-			objectNode.object->Draw(elapsed,m_pShader,objectNode.animation);
+			if (objectNode.isVisible)
+			{
+				glm::mat4	mvp;
+				objectNode.DoTransformation(mvp);
+				// Send to OpenGL the modelview before apply camera transformation and after object transformation
+				glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(mvp));
+				mvp	=	m_projection * m_modelview * mvp;
+				// send to OpenGL
+				glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
+				// send material
+				m_pShader.SetMatSpecularIntensity(1.0);
+				m_pShader.SetMatSpecularPower(2);
+				// then draw it
+				try
+				{
+					objectNode.object->Draw(elapsed,m_pShader,objectNode.animation);
+				}
+				catch (std::string &a)
+				{
+					ResourceExcept	re = { objectNode.id , MeshExceptFlag::RELEASE};
+					MeshException	me;
+					me.SetResource(re);
+					me.SetMsg(a);
+					throw me;	
+				}
+			}	
 		}
 	m_pShader.Disable();
 	m_pGraphics->SwapWindow();

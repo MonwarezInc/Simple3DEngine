@@ -38,6 +38,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "S3DE_Mesh.h"
 #include "S3DE_Shader.h"
 #include "S3DE_Light.h"
+#include "S3DE_MeshException.h"
+
 #include <vector>
 namespace S3DE
 {
@@ -85,7 +87,11 @@ namespace S3DE
 			*	@param[in] id 			The returned id for managing position etc...
 			*
 			*/
-			virtual void	AddMeshNode(Mesh * object, GLuint & id);
+			virtual void	AddMeshNode(Mesh * object, GLuint & id, bool isVisible=true);
+			/**	\brief	Delete the node with id
+			*	\param	id the id of the mesh node
+			*/
+			virtual	void	DelMeshNode(size_t	id);
 			/**
 			* 	\brief	Set/Update the light information
 			*	@param[in]	pointlight	A vector of PointLight data	
@@ -137,6 +143,8 @@ namespace S3DE
 				float		scale;
 				void	DoTransformation(glm::mat4 & modelview)const;
 				std::string	animation;
+				size_t		id;	//< the id of the Mesh
+				bool		isVisible;	//< Do the node is visible
 			};
 
 			std::vector< ObjectNode>				m_vObjectNode;	
