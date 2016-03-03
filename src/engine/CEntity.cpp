@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <S3DE_CEntity.h>
 using namespace S3DE;
 #define NULL_ENTITY	0
-CEntity::CEntity(IResourceManager<RcField>	*rcmanager)
+CEntity::CEntity(MeshManager	*rcmanager)
 {
 		if (nullptr	==	rcmanager)
 			throw std::string("rcmanager could not be nullptr");

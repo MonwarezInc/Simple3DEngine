@@ -24,36 +24,33 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef S3DE_CENTITY_INCLUED
-#define S3DE_CENTITY_INCLUED
-#include "S3DE_Mesh.h"
-#include "S3DE_MeshManager.h"
-/**
-*	\brief	namespace of the engine
-*/
+#ifndef MESH_MANAGER_INCLUED
+#define MESH_MANAGER_INCLUED
+#include "S3DE_IResourceManager.hpp"
 namespace S3DE
 {
-	class CEntity
+	/** \brief Structure that contain all useful information about the resource*/
+	struct  RcField
 	{
-		public:
-			/** \brief Construct a new entity and associate with a rcmanager
-			*	\param rcmanager a pointer to a derived class of IResourceManager
-			*/	
-			CEntity(MeshManager *rcmanager);
-			/**	\brief Destructor of a entity, it will decrease the counter associated to the resource
-			*/
-			virtual	~CEntity();
-			/** \brief	Request loading a ressource 
-			*	\param	filename the filename of the ressource to load
-			*/
-			virtual void Load(std::string const &filename);
-			/** \brief	Clear the current resource*/
-			virtual	void		Clear();
-		protected:
-			MeshManager*				m_rcmanager;	///< pointer to a derived class of MeshManager
-			RcField						m_rcField;		///< keep informative data of the resource \see RcField
-		
+		std::string     filename;   ///< the filename of the resource
+		size_t          id;         ///< an id to select an entity in particular
+	};
 
+	class	MeshManager	:	public	IResourceManager<RcField>
+	{
+		public:	
+			MeshManager();
+			~MeshManager();
+			/** \brief load function for mesh
+			*	@param	filename filename of the resource to load
+			*/
+			RcField		Load(std::string const &filename);
+			/** \brief release function
+			*	@param	object decrease the count of the ressource for object
+			*/
+			void		Release(RcField &object);
+		protected:
+			std::vector<size_t>		m_count;
 	};
 }
 #endif

@@ -24,36 +24,33 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef S3DE_CENTITY_INCLUED
-#define S3DE_CENTITY_INCLUED
-#include "S3DE_Mesh.h"
-#include "S3DE_MeshManager.h"
-/**
-*	\brief	namespace of the engine
-*/
-namespace S3DE
-{
-	class CEntity
-	{
-		public:
-			/** \brief Construct a new entity and associate with a rcmanager
-			*	\param rcmanager a pointer to a derived class of IResourceManager
-			*/	
-			CEntity(MeshManager *rcmanager);
-			/**	\brief Destructor of a entity, it will decrease the counter associated to the resource
-			*/
-			virtual	~CEntity();
-			/** \brief	Request loading a ressource 
-			*	\param	filename the filename of the ressource to load
-			*/
-			virtual void Load(std::string const &filename);
-			/** \brief	Clear the current resource*/
-			virtual	void		Clear();
-		protected:
-			MeshManager*				m_rcmanager;	///< pointer to a derived class of MeshManager
-			RcField						m_rcField;		///< keep informative data of the resource \see RcField
-		
+#include <S3DE_MeshManager.h>
 
-	};
+using namespace S3DE;
+
+MeshManager::MeshManager()
+{
+
 }
-#endif
+MeshManager::~MeshManager()
+{
+
+}
+RcField	MeshManager::Load(std::string const &filename)
+{
+}
+void	MeshManager::Release(RcField	&rc)
+{
+	if (!(rc.id >= m_count.size()))
+	{
+		// Release if count == 1
+		if (1	==	m_count[rc.id])
+		{
+			// release the mesh
+		}
+		if (m_count[rc.id] > 1)
+			m_count[rc.id]--;
+	}
+	rc.filename=	std::string("");
+	rc.id	=	0;
+}
