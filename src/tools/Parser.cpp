@@ -24,41 +24,41 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef INPUT_H_INCLUDED
-#define INPUT_H_INCLUDED
-#include <SDL.h>
-namespace S3DE
+#include <S3DE_Parser.h>
+
+void S3DE::Parser::Find3uple(std::string buf, float &x, float &y, float &z, std::string const &sep)
 {
-	class CInput
-	{
-    	public:
-        	CInput();
-        	virtual             ~CInput();
-        	virtual void        UpdateEvent();
-        	virtual bool        terminer() const;
-        	virtual bool        GetTouche(const SDL_Scancode touche) const;
-        	virtual bool        GetBoutonSouris(const Uint8 bouton) const;
-        	virtual bool        MotionMouse() const;
-        	virtual int         GetX() const;
-        	virtual int         GetY() const;
-        	virtual int         GetXRel() const;
-        	virtual int         GetYRel() const;
-        	virtual void        ShowCursor(bool reponse) const;
-        	virtual void        GrabCursor(bool reponse) const;
-
-    	protected:
-        	SDL_Event       m_event;
-        	bool            m_touches[SDL_NUM_SCANCODES];
-        	bool            m_boutonSouris[8];
-
-        	int             m_x;
-        	int             m_y;
-        	int             m_xRel;
-        	int             m_yRel;
-
-        	bool            m_terminer;
-
-	};
+	auto i1 =   buf.find(sep);
+	if ((i1 == std::string::npos) || (i1 == 0))
+		throw std::string ("Error could not get the first parameter of 3-uple");
+	auto    substr1 =   buf.substr(0,i1);
+	buf = buf.substr(i1+1);
+	x   =   std::stof(substr1);
+	i1  =   buf.find(sep);
+	if ((i1 == std::string::npos) || (i1 == 0))
+		throw std::string ("Error could not get the second parameter of 3-uple");
+	substr1 =   buf.substr(0,i1);
+	y   =   std::stof(substr1);
+	buf = buf.substr(i1+1);
+	z   =   std::stof(buf);
 }
+void S3DE::Parser::FindCouple(std::string buf, unsigned long &a, unsigned long &b, std::string const &sep)
+{
+	auto i1 =   buf.find(sep);
+	if ((i1 == std::string::npos) || (i1 == 0))
+		throw std::string ("Error could not get the first parameter of 3-uple");
+	auto    substr1 =   buf.substr(0,i1);
+	buf = buf.substr(i1+1);
+	a   =   std::stoul(substr1);
+	b   =   std::stoul(buf);
+}
+size_t S3DE::Parser::ExtractMatch(std::string const &in, std::string &out, std::string const &start, std::string const &end)
+{
 
-#endif // INPUT_H_INCLUDED
+	auto    i1  =   in.find(start);
+	auto i2 =   in.find(end);
+	if ((i1 == std::string::npos) || (i2 == std::string::npos) || i1 > i2)
+		throw std::string("Error , ") + start + std::string(" or") + end + std::string("  are not match");
+	out =   in.substr(i1+1,i2-i1-1);
+	return  i2;
+}

@@ -24,41 +24,70 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef INPUT_H_INCLUDED
-#define INPUT_H_INCLUDED
-#include <SDL.h>
+#ifndef S3DE_LOADER_HEADER_INCLUED_H
+#define S3DE_LOADER_HEADER_INCLUED_H
+#include <glm/glm.hpp>
+#include <string>
+#include <fstream>
+#include <vector>
 namespace S3DE
 {
-	class CInput
+	enum class LoaderType: char
+	{ CONFIG, MESH, LIGHT, DYNAMICS };
+	struct 	ConfigData
 	{
-    	public:
-        	CInput();
-        	virtual             ~CInput();
-        	virtual void        UpdateEvent();
-        	virtual bool        terminer() const;
-        	virtual bool        GetTouche(const SDL_Scancode touche) const;
-        	virtual bool        GetBoutonSouris(const Uint8 bouton) const;
-        	virtual bool        MotionMouse() const;
-        	virtual int         GetX() const;
-        	virtual int         GetY() const;
-        	virtual int         GetXRel() const;
-        	virtual int         GetYRel() const;
-        	virtual void        ShowCursor(bool reponse) const;
-        	virtual void        GrabCursor(bool reponse) const;
+		glm::vec3		position;
+		glm::vec3		target;
+		glm::vec3		up;
+	
+		unsigned	int	width;
+		unsigned	int	height;
+		bool			fullscreen;
+	};
+	// MeshData is for one mesh
+	struct 	MeshData
+	{
+		std::string 	filename;
+		glm::vec3		position;
+		glm::vec3		pitch;
+		float			scale;
+	};
+	struct	ControlPoint
+	{
+		glm::vec3					position;
+		float						time;	
+	};
+	struct 	LightData
+	{
+		glm::vec3					color;
+		float						ambient;
+		float						diffuse;
+		float						linear;
+		float						constant;
+		float						exp;
+		std::string					controltype;
+		std::vector<ControlPoint>	vControlPoint;
+	};
+	class	Loader
+	{
+		public:
+			Loader ();
+			void					Load(std::string const &filename, LoaderType type);
+			ConfigData				GetConfigData();
+			std::vector<MeshData>	GetMeshData();
+			std::vector<LightData> 	GetLightData();
+		protected:
+			void	LoadConfig();
+			void	LoadMesh();
+			void 	LoadLight();
+			void	LoadDynamics();
+			void	ClearState(unsigned char mask);
 
-    	protected:
-        	SDL_Event       m_event;
-        	bool            m_touches[SDL_NUM_SCANCODES];
-        	bool            m_boutonSouris[8];
-
-        	int             m_x;
-        	int             m_y;
-        	int             m_xRel;
-        	int             m_yRel;
-
-        	bool            m_terminer;
-
+			std::string				m_lastfilename;
+			unsigned char			m_state;
+			ConfigData				m_config;
+			std::vector<MeshData>	m_pMesh;
+			std::vector<LightData>	m_vLight;	
 	};
 }
-
-#endif // INPUT_H_INCLUDED
+#endif

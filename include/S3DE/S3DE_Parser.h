@@ -24,41 +24,19 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef INPUT_H_INCLUDED
-#define INPUT_H_INCLUDED
-#include <SDL.h>
+#ifndef S3DE_PARSER_INCLUED
+#define S3DE_PARSER_INCLUED
+
+#include <string>
+
 namespace S3DE
 {
-	class CInput
+	namespace Parser
 	{
-    	public:
-        	CInput();
-        	virtual             ~CInput();
-        	virtual void        UpdateEvent();
-        	virtual bool        terminer() const;
-        	virtual bool        GetTouche(const SDL_Scancode touche) const;
-        	virtual bool        GetBoutonSouris(const Uint8 bouton) const;
-        	virtual bool        MotionMouse() const;
-        	virtual int         GetX() const;
-        	virtual int         GetY() const;
-        	virtual int         GetXRel() const;
-        	virtual int         GetYRel() const;
-        	virtual void        ShowCursor(bool reponse) const;
-        	virtual void        GrabCursor(bool reponse) const;
-
-    	protected:
-        	SDL_Event       m_event;
-        	bool            m_touches[SDL_NUM_SCANCODES];
-        	bool            m_boutonSouris[8];
-
-        	int             m_x;
-        	int             m_y;
-        	int             m_xRel;
-        	int             m_yRel;
-
-        	bool            m_terminer;
-
-	};
+		void    Find3uple(std::string str, float &x, float &y, float &z, std::string const &sep=",");
+		void    FindCouple(std::string str, unsigned long &a, unsigned long &b, std::string const &sep=",");
+		size_t  ExtractMatch(std::string const &in, std::string &out, std::string const &start="(", std::string const &end=")");
+	
+	}
 }
-
-#endif // INPUT_H_INCLUDED
+#endif

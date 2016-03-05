@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Input.h>
-
+using namespace S3DE;
 CInput::CInput():m_x(0),m_y(0),m_xRel(0),m_yRel(0),m_terminer(false)
 {
     for (unsigned i =0; i < SDL_NUM_SCANCODES; ++i)
