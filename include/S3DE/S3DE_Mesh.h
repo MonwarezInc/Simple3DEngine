@@ -29,10 +29,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "S3DE_Texture.h"
 #include "S3DE_Shader.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/mesh.h>
-#include <assimp/postprocess.h>
+#include <Importer.hpp>
+#include <scene.h>
+#include <mesh.h>
+#include <postprocess.h>
 #include <vector>
 #include <map>
 #ifndef GLM_FORCE_RADIANS
