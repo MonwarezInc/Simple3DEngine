@@ -1,0 +1,13 @@
+language: cpp
+sudo: required
+
+compiler:
+	- clang
+
+before_install:
+	- sudo apt-get update -qq
+	- sudo apt-get install -qq -y libglm-dev libglew-dev libassimp-dev libsdl2-dev libsdl2-image-dev 
+
+script:
+	- bundle exec cmake . && bundle exec make
+
