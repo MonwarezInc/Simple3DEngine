@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
 cd ~/
-git clone -q --depth=1 --branch v3.2 https://github.com/assimp/assimp assimp
+git clone --depth=1 --branch v3.2 https://github.com/assimp/assimp.git assimp
 cd assimp
 cmake .
-make -s -j2 
-sudo make -s install 
+make -j2 
+sudo make install 
 cd ..
