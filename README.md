@@ -11,7 +11,7 @@ You can build it with cmake commands<br/>
 Libraries depends are: GLEW, SDL2,SDL2_image, Assimp <br/>
 
 Feature: skinned animation works. <br/>
-
+In `include/bundle`, this is glm with licence described in `include/bundle/copying.txt` <br/>
 Copyright (c) 2016, Payet Thibault<br/>
 All rights reserved.<br/>
 

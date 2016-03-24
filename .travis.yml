@@ -13,14 +13,13 @@ before_install:
   - sudo apt-get update -qq
   - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq -y g++-4.8; fi
   - if [ "$CXX" == "g++" ]; then export CXX="g++-4.8"; fi
-  - sudo apt-get install -qq -y libglm-dev 
   - sudo apt-get install -qq -y libglew-dev 
   - sudo apt-get install -qq -y libsdl2-dev 
   - sudo apt-get install -qq -y libsdl2-image-dev 
   - sudo apt-get install -qq -y libassimp-dev
 
 script:
-  - cmake . && make
+  - cmake . -DUSE_GLM_BUNDLE=TRUE && make
 branches:
   only:
   - master
