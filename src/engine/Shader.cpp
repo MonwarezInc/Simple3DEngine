@@ -239,7 +239,7 @@ bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &source)
 
     // Envoi du code source au shader
 
-    glShaderSource(shader, 1, &chaineCodeSource, 0);
+    glShaderSource(shader, 1, reinterpret_cast<const GLchar **>(&chaineCodeSource), 0);
 
 
     // Compilation du shader
