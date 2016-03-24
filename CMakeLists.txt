@@ -14,7 +14,7 @@ file(
 	GLOB_RECURSE
 	source_file
 	src/*
-	include/*
+	include/S3DE/*
 )
 set(Extra_CXX_Flags "-Wall -std=c++1y")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
