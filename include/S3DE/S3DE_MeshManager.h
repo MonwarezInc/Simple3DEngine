@@ -27,6 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MESH_MANAGER_INCLUED
 #define MESH_MANAGER_INCLUED
 #include "S3DE_IResourceManager.hpp"
+#include "S3DE_Mesh.h"
+
 namespace S3DE
 {
 	/** \brief Structure that contain all useful information about the resource*/
@@ -50,7 +52,9 @@ namespace S3DE
 			*/
 			void		Release(RcField &object);
 		protected:
-			std::vector<size_t>		m_count;
+			std::vector<RcField>	m_rcfield; 	///< A vector of the rcfield 
+			std::vector<size_t>		m_count; 	///< A vector of counter of ressource
+			std::vector<Mesh*>		m_pmesh; 	///< A vector of *Mesh
 	};
 }
 #endif
