@@ -37,7 +37,7 @@ namespace S3DE
 		std::string     filename;   ///< the filename of the resource
 		size_t          id;         ///< an id to select an entity in particular
 	};
-	/**	\brief Meshmanager class. WIP , do not use it , not SIGSEGV free
+	/**	\brief MeshManager class. WIP , do not use it , not SIGSEGV free
 	*
 	*	Some SIGSEGV may come during Release , do not use it
 	*	Need to be rewritten with some std::unique_ptr stuff
