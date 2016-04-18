@@ -52,3 +52,9 @@ void	CEntity::Clear()
 
 		m_rcmanager->Release(m_rcField);
 }
+void	CEntity::Draw(unsigned int elapsed_time, Shader const & shader, std::string const & animation)
+{
+		if (nullptr	==	m_rcmanager)
+			throw std::string("m_rcmanager could not be nullptr");
+		m_rcmanager->Draw(m_rcField, elapsed_time, shader, animation);	
+}

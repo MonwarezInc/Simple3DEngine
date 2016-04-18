@@ -37,20 +37,37 @@ namespace S3DE
 		std::string     filename;   ///< the filename of the resource
 		size_t          id;         ///< an id to select an entity in particular
 	};
-
+	/**	\brief Mesh manager class. WIP , do not use it , not SIGSEGV free
+	*	Some SIGSEGV may come during Release , do not use it
+	*	Need to be rewritten with some std::unique_ptr stuff
+	*/
 	class	MeshManager	:	public	IResourceManager<RcField>
 	{
 		public:	
 			MeshManager();
 			~MeshManager();
 			/** \brief load function for mesh
-			*	@param	filename filename of the resource to load
+			*	This has to be rewritten with std::unique_ptr
+			*	Indeed they have some issue that lead to SIGSEGV
+			*
+			*	\param	filename filename of the resource to load
 			*/
 			RcField		Load(std::string const &filename);
 			/** \brief release function
-			*	@param	object decrease the count of the ressource for object
+			*	Really buggy , need to be rewritten with std::unique_ptr
+			*	Indeed they have some issue that lead to SIGSEGV
+			*
+			*	\param	object decrease the count of the ressource for object
 			*/
 			void		Release(RcField &object);
+			/**	\brief	Wrapper to the mesh->Draw(...)
+			*	\param	rcfield			The RcField so that more verification could be done
+			*	\param	elapsed_time	The	elapsed time since the beginning , so that animation could works
+			*	\param	shader			A reference to the shader to use
+			*	\param	animation		The name of the animation to play
+			*/
+			void		Draw(RcField const & rcfield, unsigned int elapsed_time, Shader const & shader,
+								std::string const & animation);
 		protected:
 			std::vector<RcField>	m_rcfield; 	///< A vector of the rcfield 
 			std::vector<size_t>		m_count; 	///< A vector of counter of ressource

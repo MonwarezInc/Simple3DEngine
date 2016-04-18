@@ -92,7 +92,7 @@ void	MeshManager::Release(RcField	&rc)
 		{
 			// release the mesh
 			m_count[rc.id]	=	0;
-			delete	m_pmesh[rc.id];
+			delete	m_pmesh[rc.id - 1];
 			m_pmesh[rc.id - 1]	=	nullptr;
 			m_rcfield[rc.id].filename	=	"";
 			m_rcfield[rc.id].id			=	NULL_RC;
@@ -102,4 +102,10 @@ void	MeshManager::Release(RcField	&rc)
 	}
 	rc.filename=	std::string("");
 	rc.id	=	0;
+}
+void	MeshManager::Draw(RcField const & rc, unsigned int elapsed_time, Shader const & shader, std::string const & animation)
+{
+	if ((rc.id < m_count.size()) && (rc.id > 0))
+		m_pmesh[rc.id - 1]->Draw(elapsed_time, shader, animation);
+	// Else silently discard the draw 
 }

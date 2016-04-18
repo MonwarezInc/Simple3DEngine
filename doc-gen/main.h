@@ -9,5 +9,7 @@
 *#	Supported Platform	
 *	* FreeBSD 
 *	* Linux
-*
+*# 	Know Issue
+*	* MeshManager is not ready , it may crash during Release (SIGSEGV)
+*	It need to be rewritten with std::maque_unique stuff
 */

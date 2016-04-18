@@ -41,8 +41,8 @@ namespace S3DE
 	class IResourceManager
 	{
 		public:
-			IResourceManager();
-			virtual ~IResourceManager();
+			IResourceManager(){};
+			virtual ~IResourceManager(){};
 			/** \brief pure virtual load function
 			*	@param[in]	filename filename of the resource to load
 			*/

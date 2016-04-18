@@ -49,6 +49,12 @@ namespace S3DE
 			virtual void Load(std::string const &filename);
 			/** \brief	Clear the current resource*/
 			virtual	void		Clear();
+			/** \brief	Draw the Entity, just a wrapper to MeshManager->Draw(...)
+			*	\param	elapsed_time	The elapsed time since the beginning, so that animation works
+			*	\param	shader			A reference to the shader to use
+			*	\param	animation		The name of the animation to play
+			*/
+			virtual	void		Draw(unsigned int elapsed_time, Shader const & shader, std::string const & animation);
 		protected:
 			MeshManager*				m_rcmanager;	///< pointer to a derived class of MeshManager
 			RcField						m_rcField;		///< keep informative data of the resource \see RcField
