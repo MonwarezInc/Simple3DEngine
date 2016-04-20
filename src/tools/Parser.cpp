@@ -40,15 +40,21 @@ void S3DE::Parser::Find3uple(std::string buf, float &x, float &y, float &z, std:
 	substr1 =   buf.substr(0,i1);
 	y   =   std::stof(substr1);
 	buf = buf.substr(i1+1);
+	if (buf.length() == 0)
+		throw std::string("Error could not get the third parameter of 3-uple");
+
 	z   =   std::stof(buf);
 }
 void S3DE::Parser::FindCouple(std::string buf, unsigned long &a, unsigned long &b, std::string const &sep)
 {
 	auto i1 =   buf.find(sep);
 	if ((i1 == std::string::npos) || (i1 == 0))
-		throw std::string ("Error could not get the first parameter of 3-uple");
+		throw std::string ("Error could not get the first parameter of couple");
 	auto    substr1 =   buf.substr(0,i1);
 	buf = buf.substr(i1+1);
+	if (buf.length() == 0)
+		throw std::string("Error could not get the second parameter of couple");
+
 	a   =   std::stoul(substr1);
 	b   =   std::stoul(buf);
 }
