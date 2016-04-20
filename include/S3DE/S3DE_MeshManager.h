@@ -28,7 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MESH_MANAGER_INCLUED
 #include "S3DE_IResourceManager.hpp"
 #include "S3DE_Mesh.h"
-#include <memory>
 
 namespace S3DE
 {
@@ -73,9 +72,9 @@ namespace S3DE
 			void		Draw(RcField const & rcfield, unsigned int elapsed_time, Shader const & shader,
 								std::string const & animation);
 		protected:
-			std::vector<RcField>				m_rcfield; 	///< A vector of the rcfield 
-			std::vector<size_t>					m_count; 	///< A vector of counter of ressource
-			std::vector<std::unique_ptr<Mesh>>	m_vmesh; 	///< A vector of uniqu_ptr<Mesh>, to manage destroy without pointer
+			std::vector<RcField>	m_rcfield; 	///< A vector of the rcfield 
+			std::vector<size_t>		m_count; 	///< A vector of counter of ressource
+			std::vector<Mesh*>		m_pmesh; 	///< A vector of *Mesh
 	};
 }
 #endif

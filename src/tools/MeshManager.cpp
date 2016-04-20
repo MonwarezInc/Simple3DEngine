@@ -37,7 +37,11 @@ MeshManager::MeshManager()
 }
 MeshManager::~MeshManager()
 {
-	//Vector will do the job
+	for (auto &v: m_pmesh)
+	{
+		if (v != nullptr)
+			delete	v;
+	}
 }
 RcField	MeshManager::Load(std::string const &filename)
 {
@@ -59,10 +63,14 @@ RcField	MeshManager::Load(std::string const &filename)
 			break;
 	}
 	// This is a new Mesh
-	if ( i == n )
+	if ( i == n)
 	{
-		m_vmesh.push_back(std::make_unique<Mesh>());
-		m_vmesh.back()->LoadFromFile(filename);
+		Mesh	*mesh	=	nullptr;
+		mesh	=	new	Mesh;
+		if (mesh == nullptr)
+			throw std::string ("Error cannot allocate memory");
+		mesh->LoadFromFile(filename);
+		m_pmesh.push_back(mesh);
 		m_count.push_back(1);
 		rc.id	=	m_count.size() - 1;
 		m_rcfield.push_back(rc);
@@ -84,7 +92,9 @@ void	MeshManager::Release(RcField	&rc)
 		{
 			// release the mesh
 			m_count[rc.id]	=	0;
-			
+			delete	m_pmesh[rc.id - 1];
+			m_pmesh[rc.id - 1]	=	nullptr;
+			m_rcfield[rc.id].filename	=	"";
 			m_rcfield[rc.id].id			=	NULL_RC;
 		}
 		if (m_count[rc.id] > 1)
@@ -96,6 +106,6 @@ void	MeshManager::Release(RcField	&rc)
 void	MeshManager::Draw(RcField const & rc, unsigned int elapsed_time, Shader const & shader, std::string const & animation)
 {
 	if ((rc.id < m_count.size()) && (rc.id > 0))
-		m_vmesh[rc.id - 1]->Draw(elapsed_time, shader, animation);
+		m_pmesh[rc.id - 1]->Draw(elapsed_time, shader, animation);
 	// Else silently discard the draw 
 }
