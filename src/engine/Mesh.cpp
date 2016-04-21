@@ -278,8 +278,11 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 }
 void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<VertexBoneData> & bones)
 {
+	assert(pMesh != nullptr);
 	for (unsigned int i=0; i < pMesh->mNumBones; ++i)
 	{
+		// Assert
+		assert(pMesh->mBones[i]	!=	nullptr);
 		unsigned int 	BoneIndex	=	0;
 		std::string		BoneName(pMesh->mBones[i]->mName.data);
 		
@@ -295,6 +298,14 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 			BoneIndex	=	m_BoneMapping[BoneName];
 		}
 		m_BoneMapping[BoneName]				=	BoneIndex;
+		// We need to check if BoneIndex is < m_BoneInfo.size()
+		// Which can occur some times
+		if (BoneIndex	>= m_BoneInfo.size())
+		{
+			std::stringstream out;
+			out << "Error BoneIndex is: " << BoneIndex << " but m_BoneInfo have " << m_BoneInfo.size() << " elements";
+			throw out.str();
+		}
 		m_BoneInfo[BoneIndex].BoneOffset	=	aiMatrixToMat4(pMesh->mBones[i]->mOffsetMatrix);
 
 		for (unsigned int j=0; j < pMesh->mBones[i]->mNumWeights; ++j)

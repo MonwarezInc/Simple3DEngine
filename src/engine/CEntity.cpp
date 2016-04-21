@@ -27,10 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <S3DE_CEntity.h>
 using namespace S3DE;
 #define NULL_RC	0
-CEntity::CEntity(MeshManager	*rcmanager)
+CEntity::CEntity(std::shared_ptr<MeshManager> const & rcmanager)
 {
-		if (nullptr	==	rcmanager)
-			throw std::string("rcmanager could not be nullptr");
 		m_rcmanager			=	rcmanager;
 		m_rcField.id		=	NULL_RC;
 }
@@ -40,21 +38,13 @@ CEntity::~CEntity()
 }
 void	CEntity::Load(std::string const &filename)
 {
-		if (nullptr	==	m_rcmanager)
-			throw std::string("m_rcmanager could not be nullptr");
-
 		m_rcField			=	m_rcmanager->Load(filename);
 }
 void	CEntity::Clear()
 {
-		if (nullptr	==	m_rcmanager)
-			throw std::string("m_rcmanager could not be nullptr");
-
 		m_rcmanager->Release(m_rcField);
 }
 void	CEntity::Draw(unsigned int elapsed_time, Shader const & shader, std::string const & animation)
 {
-		if (nullptr	==	m_rcmanager)
-			throw std::string("m_rcmanager could not be nullptr");
 		m_rcmanager->Draw(m_rcField, elapsed_time, shader, animation);	
 }

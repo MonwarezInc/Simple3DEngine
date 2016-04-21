@@ -20,6 +20,7 @@ set(Extra_CXX_Flags "-Wall -std=c++1y")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(USE_GLM_BUNDLE "FALSE" CACHE BOOL "use bundle glm")
+set(WITH_ASSERT "TRUE" CACHE BOOL "Enable Assert")
 #Declaration of executable
 add_library(
 	Simple3DEngine
@@ -48,3 +49,9 @@ target_link_libraries(${PROJECT_NAME} ${GLEW_LIBRARIES})
 if (USE_GLM_BUNDLE)
 	include_directories(include/bundle)
 endif(USE_GLM_BUNDLE)
+if (WITH_ASSERT)
+	message("Enable Assert")
+else (WITH_ASSERT)
+	message("Disable Assert")
+	add_definitions(-DNDEBUG)
+endif()

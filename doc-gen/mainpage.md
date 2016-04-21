@@ -7,10 +7,6 @@ It use OpenGL version 3.2 + and GLSL 1.50 + in core profile.
 	* FreeBSD 
 	* Linux
 
-##	Know Issue
-	* MeshManager is not ready , it may crash during Release() (SIGSEGV). <br/>
-	Need to do some test with only MeshManager loading Mesh resource. I have only tested with the old loading mesh system <br/>
-	and the MeshManager loader system. Since I get error from Assimp destructor , it seems that it is like I can't load twice <br/>
-	the same resource.
-	It need to be rewritten with std::unique_ptr stuff, but need to see why Travis fails with c++14 <br/>
-
+##	Fixed Bugs
+	* MeshManager should work now, the error come from S3DE::Mesh::LoadBones ,some BoneIndex that having really hight value cause the issue. <br/>
+	 So now a check is performed , and if it is the case , LoadBones will launch an exception.

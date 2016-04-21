@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define S3DE_CENTITY_INCLUED
 #include "S3DE_Mesh.h"
 #include "S3DE_MeshManager.h"
+#include <memory>
 /**
 *	\brief	namespace of the engine
 */
@@ -39,7 +40,7 @@ namespace S3DE
 			/** \brief Construct a new entity and associate with a rcmanager
 			*	\param rcmanager a pointer to a derived class of IResourceManager
 			*/	
-			CEntity(MeshManager *rcmanager);
+			CEntity(std::shared_ptr<MeshManager> const &rcmanager);
 			/**	\brief Destructor of a entity, it will decrease the counter associated to the resource
 			*/
 			virtual	~CEntity();
@@ -56,8 +57,8 @@ namespace S3DE
 			*/
 			virtual	void		Draw(unsigned int elapsed_time, Shader const & shader, std::string const & animation);
 		protected:
-			MeshManager*				m_rcmanager;	///< pointer to a derived class of MeshManager
-			RcField						m_rcField;		///< keep informative data of the resource \see RcField
+			std::shared_ptr<MeshManager>	m_rcmanager;	///< pointer to a derived class of MeshManager
+			RcField							m_rcField;		///< keep informative data of the resource \see RcField
 		
 
 	};
