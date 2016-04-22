@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MESH_MANAGER_INCLUED
 #include "S3DE_IResourceManager.hpp"
 #include "S3DE_Mesh.h"
+#include <memory>
 
 namespace S3DE
 {
@@ -40,6 +41,7 @@ namespace S3DE
 	/**	\brief MeshManager class. 
 	*	
 	*/
+	typedef std::vector < std::vector < std::shared_ptr < Mesh > > > Mesh2DArr; ///< A little trick to delete one element of an array
 	class	MeshManager	:	public	IResourceManager<RcField>
 	{
 		public:	
@@ -64,7 +66,7 @@ namespace S3DE
 		protected:
 			std::vector<RcField>	m_rcfield; 	///< A vector of the rcfield 
 			std::vector<size_t>		m_count; 	///< A vector of counter of ressource
-			std::vector<Mesh*>		m_pmesh; 	///< A vector of *Mesh
+			Mesh2DArr				m_pmesh; 	///< A 2D vector of shared_ptr Mesh
 	};
 }
 #endif

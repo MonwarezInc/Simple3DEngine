@@ -37,11 +37,6 @@ MeshManager::MeshManager()
 }
 MeshManager::~MeshManager()
 {
-	for (auto &v: m_pmesh)
-	{
-		if (v != nullptr)
-			delete	v;
-	}
 }
 RcField	MeshManager::Load(std::string const &filename)
 {
@@ -56,24 +51,44 @@ RcField	MeshManager::Load(std::string const &filename)
 		throw std::string ("Can't load a Mesh with empty name");
 
 	auto	n	=	m_rcfield.size();
+	bool	foundempty	=	false;
+	size_t	emptyind	=	0;
+
 	size_t	i	=	0;
 	for (i = 1; i < n; ++i)
 	{
 		if (filename == m_rcfield[i].filename)
 			break;
+		if (!foundempty)
+		{
+			if (m_count[i]	==	0)
+			{
+				foundempty	=	true;
+				emptyind	=	i;
+			}
+		}
 	}
 	// This is a new Mesh
 	if ( i == n)
 	{
-		Mesh	*mesh	=	nullptr;
-		mesh	=	new	Mesh;
-		if (mesh == nullptr)
-			throw std::string ("Error cannot allocate memory");
+		auto	mesh	=	std::make_shared<Mesh>();
 		mesh->LoadFromFile(filename);
-		m_pmesh.push_back(mesh);
-		m_count.push_back(1);
-		rc.id	=	m_count.size() - 1;
-		m_rcfield.push_back(rc);
+		if (foundempty)
+		{
+			m_pmesh[emptyind - 1].push_back(mesh);
+			m_count[emptyind]	=	1;
+			rc.id	=	emptyind;
+			m_rcfield[emptyind]	=	rc;
+		}
+		else
+		{
+			std::vector<std::shared_ptr<Mesh> >	mesharray;
+			mesharray.push_back(mesh);
+			m_pmesh.push_back(mesharray);
+			m_count.push_back(1);
+			rc.id	=	m_count.size() - 1;
+			m_rcfield.push_back(rc);
+		}
 	}
 	else 
 	{
@@ -92,8 +107,7 @@ void	MeshManager::Release(RcField	&rc)
 		{
 			// release the mesh
 			m_count[rc.id]	=	0;
-			delete	m_pmesh[rc.id - 1];
-			m_pmesh[rc.id - 1]	=	nullptr;
+			m_pmesh[rc.id - 1].clear();
 			m_rcfield[rc.id].filename	=	"";
 			m_rcfield[rc.id].id			=	NULL_RC;
 		}
@@ -106,6 +120,6 @@ void	MeshManager::Release(RcField	&rc)
 void	MeshManager::Draw(RcField const & rc, unsigned int elapsed_time, Shader const & shader, std::string const & animation)
 {
 	if ((rc.id < m_count.size()) && (rc.id > 0))
-		m_pmesh[rc.id - 1]->Draw(elapsed_time, shader, animation);
+		m_pmesh[rc.id - 1][0]->Draw(elapsed_time, shader, animation);
 	// Else silently discard the draw 
 }
