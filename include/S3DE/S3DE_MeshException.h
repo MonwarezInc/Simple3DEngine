@@ -43,19 +43,16 @@ namespace S3DE
 			{
 				return	m_msg.c_str();
 			}
-			/**	\brief	Set the resource except settings
-			*	\param	rc	a structure filled with id of the resource and the severity of the exception
-			*/
+			///	\brief	Set the resource except settings
+			///	\param	rc	a structure filled with id of the resource and the severity of the exception
 			virtual void 	SetResource(ResourceExcept const & rc);
-			/**	\brief	Set the message of the exception
-			*	\param	msg the message of the exception
-			*/
+			///	\brief	Set the message of the exception
+			///	\param	msg the message of the exception
 			virtual	void	SetMsg(std::string const &msg)
 			{
 				m_msg	=	msg;
 			}
-			/**	\brief	Return the structure that contain the id of the resource and the severity of the exception
-			*/
+			///	\brief	Return the structure that contain the id of the resource and the severity of the exception
 			virtual ResourceExcept GetResourceExcept()const;
 		protected:
 			ResourceExcept		m_rc;	///< the resource exception information

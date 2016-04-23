@@ -67,7 +67,19 @@ namespace S3DE
 	
 			Mesh();
 			virtual	~Mesh();
+			///	\brief	Load a mesh from a file
+			///
+			///	This function can launch exception and assertion, the loader are really strict. <br/>
+			///	Loading a resource that is actually loaded may lead to unbehavior issue.
+			///	\param	filename	filename of the Mesh to load
 			virtual	void	LoadFromFile(std::string const & filename);
+			///	\brief	Draw the mesh with the animation specified WIP
+			///	
+			///	For the moment only the first animation is supported, need some resource with multiple animation <br/>
+			///	which can be loaded, and need to implement a correct search animation id by name function
+			///	\param	elapsed_time	The elapsed time since the beginning of the application
+			///	\param	shader			A reference to set some information to the shader (like bone information etc...)
+			///	\param	animation		The name of the animation to play
 			virtual	void	Draw(unsigned int  elapsed_time, Shader const & shader,std::string const & animation);
 		private:
 			#define NUM_BONES_PER_VERTEX 4

@@ -26,14 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #ifndef ENGINE_MAIN_INCLUED
 #define ENGINE_MAIN_INCLUED
-/**
-*	\file 	S3DE_Engine-main.h
-*	\brief 	Main class for the Simple 3D Engine
-*
-*	This class is an interface with the engine. Almost all  the command for interacting with the engine are here.
-*	\author	Payet Thibault
-*
-*/
 #include "S3DE_Graphics.h"
 #include "S3DE_Mesh.h"
 #include "S3DE_Shader.h"
@@ -45,23 +37,27 @@ namespace S3DE
 {
 	struct	EngineShader
 	{
-		std::string	lightV;			/**< light vertex shader filename*/
-		std::string	lightF;			/**< light fragment shader filename*/
-		std::string	guiV;			/**< gui vertex shader filename*/
-		std::string	guiF;			/**< gui fragment shader filename*/
+		std::string	lightV;			///< light vertex shader filename*/
+		std::string	lightF;			///< light fragment shader filename*/
+		std::string	guiV;			///< gui vertex shader filename*/
+		std::string	guiF;			///< gui fragment shader filename*/
 	};
 	struct	EngineWindow
 	{	
-		uint32_t		width;		/**< width of the window */
-		uint32_t		height;		/**< height of the window */
-		bool			fullscreen;	/**< boolean for fullscreen state*/
-		std::string		title;		/**< title of the window*/
-		uint32_t		bpp;		/**< bit per pixel parameter*/
-		uint32_t		aa;			/**< antialiasing parameter*/
-		uint32_t		major;		/**< OpenGL major version*/
-		uint32_t		minor;		/**< OpenGL minor version*/
-		EngineShader	shader;		/**< @see EngineShader*/
+		uint32_t		width;		///< width of the window */
+		uint32_t		height;		///< height of the window */
+		bool			fullscreen;	///< boolean for fullscreen state*/
+		std::string		title;		///< title of the window*/
+		uint32_t		bpp;		///< bit per pixel parameter*/
+		uint32_t		aa;			///< antialiasing parameter*/
+		uint32_t		major;		///< OpenGL major version*/
+		uint32_t		minor;		///< OpenGL minor version*/
+		EngineShader	shader;		///< @see EngineShader*/
 	};
+	///	\brief 	Main class for the Simple 3D Engine
+	///
+	///	This class is an interface with the engine. Almost all  the command for interacting with the engine are here.
+	///	\author	Payet Thibault
 	class CEngine
 	{
 		public:
@@ -72,51 +68,39 @@ namespace S3DE
 			*	@param	engineWindow	Structure that contain all information needed to create the window
 			*/
 			virtual	void	CreateWindow(const EngineWindow & engineWindow);
-			/** \brief 	Delete the specifided window (Not Implemented)
-			*	@param[in]	indice		Id of the window
-			*/
+			///	\brief 	Delete the specifided window (Not Implemented)
+			///	@param[in]	indice		Id of the window
 			virtual void	DeleteWindow(GLuint indice);
-			/** \brief 	Set the active window (Not Implemented)
-			*	@param[in]	indice		Id of the window
-			*/
+			///	\brief 	Set the active window (Not Implemented)
+			///	@param[in]	indice		Id of the window
 			virtual	void	SetActive(GLuint indice);
-			/**
-			* 	\brief Add an object to the scene
-			*
-			*	@param[in] object 		A pointer to the object mesh
-			*	@param[in] id 			The returned id for managing position etc...
-			*
-			*/
+			///	\brief Add an object to the scene
+			///	
+			///	\param[in] object 		A pointer to the object mesh
+			///	\param[in] id 			The returned id for managing position etc...
+			
+			
 			virtual void	AddMeshNode(Mesh * object, GLuint & id, bool isVisible=true);
-			/**	\brief	Delete the node with id
-			*	\param	id the id of the mesh node
-			*/
+			///	\brief	Delete the node with id
+			///	\param	id the id of the mesh node
+			
 			virtual	void	DelMeshNode(size_t	id);
-			/**
-			* 	\brief	Set/Update the light information
-			*	@param[in]	pointlight	A vector of PointLight data	
-			*/
+			///	\brief	Set/Update the light information
+			///	\param[in]	pointlight	A vector of PointLight data	
 			virtual	void	AttachLight(std::vector<PointLight> const & pointlight);
-			/**
-			*	\brief Set/update the spot light information
-			*	@param	spotlight 	a vector of SpotLight data
-			*/
+			///	\brief Set/update the spot light information
+			///	\param	spotlight 	a vector of SpotLight data
 			virtual	void	AttachLight(std::vector<SpotLight> const & spotlight);
-			/**
-			*	\brief Set/update the Directional light information
-			*	@param	dlight 	a DirectionalLight 
-			*/
+			///	\brief Set/update the Directional light information
+			///	\param	dlight 	a DirectionalLight 
 			virtual	void	AttachLight(DirectionalLight const & dlight);
-			/**
-			*	\brief Delete an object from the scene (Not Implemented)
-			*	@param[in]	id	Id of the object
-			*/
+			///	\brief Delete an object from the scene (Not Implemented)
+			///	\param[in]	id	Id of the object
 			virtual	void	DeleteObject(GLuint id);
-			/**	\brief	Set the position and rotation of an object of the scene
-			*	@param[in] 	id		The id of the object
-			*	@param[in] 	pos		The new position
-			*	@param[in]	pitch	The pitch rotation X,Y,Z
-			*/
+			///	\brief	Set the position and rotation of an object of the scene
+			///	\param[in] 	id		The id of the object
+			///	\param[in] 	pos		The new position
+			///	\param[in]	pitch	The pitch rotation X,Y,Z
 			virtual	void	SetNodePosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch);
 			virtual	void	SetNodeScale(GLuint id, float scale);
 			virtual	void	SetNodeAnimation(GLuint id, std::string const & animation);
@@ -143,8 +127,8 @@ namespace S3DE
 				float		scale;
 				void	DoTransformation(glm::mat4 & modelview)const;
 				std::string	animation;
-				size_t		id;	//< the id of the Mesh
-				bool		isVisible;	//< Do the node is visible
+				size_t		id;	///< the id of the Mesh
+				bool		isVisible;	///< Do the node is visible
 			};
 
 			std::vector< ObjectNode>				m_vObjectNode;	

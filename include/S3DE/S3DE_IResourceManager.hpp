@@ -26,30 +26,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #ifndef RESOURCEMANAGER_HPP_INCLUED
 #define RESOURCEMANAGER_HPP_INCLUED
-/** \file ResourceManager.hpp
-*	\brief	Interface for managing Resource
-*
-*	This class is an abstract class, you have to derivate it
-*
-*/
 #include <string>
 #include <vector>
 #include <map>
 namespace S3DE
 {
+	///	\brief	Interface for managing Resource
+	///
+	///	This class is an abstract class, you have to derivate it
 	template<class T>
 	class IResourceManager
 	{
 		public:
 			IResourceManager(){};
 			virtual ~IResourceManager(){};
-			/** \brief pure virtual load function
-			*	@param[in]	filename filename of the resource to load
-			*/
+			/// \brief pure virtual load function
+			///	\param[in]	filename filename of the resource to load
 			virtual	T	Load(std::string const &filename)=0;
-			/** \brief pure virtual release function
-			*	@param[in,out]	object decrease the count of the ressource for object
-			*/
+			/// \brief pure virtual release function
+			///	\param[in,out]	object decrease the count of the ressource for object
 			virtual void 	Release(T &object)=0;
 	};
 }

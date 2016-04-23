@@ -29,35 +29,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "S3DE_Mesh.h"
 #include "S3DE_MeshManager.h"
 #include <memory>
-/**
-*	\brief	namespace of the engine
-*/
+///
+///	\brief	namespace of the engine
 namespace S3DE
 {
 	class CEntity
 	{
 		public:
-			/** \brief Construct a new entity and associate with a rcmanager
-			*	\param rcmanager a pointer to a derived class of IResourceManager
-			*/	
+			/// \brief Construct a new entity and associate with a rcmanager
+			///	\param rcmanager a pointer to a derived class of IResourceManager
 			CEntity(std::shared_ptr<MeshManager> const &rcmanager);
-			/**	\brief Destructor of a entity, it will decrease the counter associated to the resource
-			*/
+			///	\brief Destructor of a entity, it will decrease the counter associated to the resource
 			virtual	~CEntity();
-			/** \brief	Request loading a ressource 
-			*	\param	filename the filename of the ressource to load
-			*/
+			/// \brief	Request loading a ressource 
+			///	\param	filename the filename of the ressource to load
 			virtual void Load(std::string const &filename);
-			/** \brief	Clear the current resource*/
+			/// \brief	Clear the current resource
 			virtual	void		Clear();
-			/** \brief	Draw the Entity, just a wrapper to MeshManager->Draw(...)
-			*	\param	elapsed_time	The elapsed time since the beginning, so that animation works
-			*	\param	shader			A reference to the shader to use
-			*	\param	animation		The name of the animation to play
-			*/
+			/// \brief	Draw the Entity, just a wrapper to MeshManager->Draw(...)
+			///	\param	elapsed_time	The elapsed time since the beginning, so that animation works
+			///	\param	shader			A reference to the shader to use
+			///	\param	animation		The name of the animation to play
 			virtual	void		Draw(unsigned int elapsed_time, Shader const & shader, std::string const & animation);
 		protected:
-			std::shared_ptr<MeshManager>	m_rcmanager;	///< pointer to a derived class of MeshManager
+			std::shared_ptr<MeshManager>	m_rcmanager;	///< shared_ptr of MeshManager
 			RcField							m_rcField;		///< keep informative data of the resource \see RcField
 		
 

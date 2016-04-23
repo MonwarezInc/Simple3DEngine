@@ -26,9 +26,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Camera.h>
 #include <iostream>
+#include <cmath>
 
-using namespace glm;
 using namespace S3DE;
+using glm::vec3;
+using glm::mat4;
 Camera::Camera():m_phi(0.0),m_theta(0.0),m_orientation(), m_up(0,0,1), m_lateralMove(), m_position(), m_target(), m_sensitive(0.5),
                 m_speed(10)
 {
@@ -100,12 +102,12 @@ void Camera::Orient(int xRel, int yRel)
 
     m_target                =   m_position  +   m_orientation;
 }
-void Camera::KeyBoardEvent(const CInput &event)
+void Camera::KeyBoardEvent(CInput const &event)
 {
     for (auto& key : m_keystat)
         key.second  =   event.GetTouche(key.first);
 }
-void Camera::Move(const CInput   &event,  Uint32 elapsed)
+void Camera::Move(CInput const &event,  Uint32 elapsed)
 {
     auto time = static_cast<float>(elapsed);
 
@@ -137,7 +139,7 @@ void Camera::Move(const CInput   &event,  Uint32 elapsed)
     }
 
 }
-void Camera::SetTarget(const vec3& target)
+void Camera::SetTarget(vec3	const & target)
 {
     m_orientation           =   target - m_position;
     m_orientation           =   normalize(m_orientation);
@@ -171,6 +173,10 @@ void Camera::SetTarget(const vec3& target)
     m_phi                   *=  180.0 / M_PI ;
     m_theta                 *=  180.0 / M_PI ;
 }
+void Camera::SetPosition(vec3 const & position)
+{
+	m_position	=	position;
+}
 void Camera::LookAt(mat4 &modelview)
 {
     modelview               =   glm::lookAt(m_position, m_target, m_up);
@@ -185,11 +191,11 @@ float Camera::GetSpeed() const
 }
 void Camera::SetSensitive(float sensitive)
 {
-    m_sensitive             =   sensitive;
+    m_sensitive             =   std::fabs(sensitive);
 }
 void Camera::SetSpeed(float speed)
 {
-    m_speed                 =   speed;
+    m_speed                 =   std::fabs(speed);
 }
 Camera::~Camera()
 {
