@@ -34,45 +34,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace S3DE
 {
-	class	ShadowMapFBO
-	{
-		public:
-			ShadowMapFBO();
-			~ShadowMapFBO();
-			/** \brief initialize a shadow map with the given size
-			*	\param width	width of the FBO
-			*	\param height	height of the FBO
-			*/
-			void	Init(unsigned int width, unsigned int height); // can launch an exception
-			/** \brief bind the Shadow map FBO to the current state in writing mode*/
-			void	BindForWriting();
-			/** \brief bind the shadow map for reading 
-			*	\param	TexrureUnit	the type of the texture to be attached
-			*/
-			void	BindForReading(GLenum	TextureUnit);
-		private:
-			GLuint		m_fbo;	//< identifier for the fbo
-			GLuint		m_shadowMap; //< identifier for the shadow map
+class	ShadowMapFBO
+{
+	public:
+		ShadowMapFBO();
+		~ShadowMapFBO();
+		/** \brief initialize a shadow map with the given size
+		*	\param width	width of the FBO
+		*	\param height	height of the FBO
+		*/
+		void	Init(unsigned int width, unsigned int height); // can launch an exception
+		/** \brief bind the Shadow map FBO to the current state in writing mode*/
+		void	BindForWriting();
+		/** \brief bind the shadow map for reading 
+		*	\param	TexrureUnit	the type of the texture to be attached
+		*/
+		void	BindForReading(GLenum	TextureUnit);
+	private:
+		GLuint		m_fbo;	//< identifier for the fbo
+		GLuint		m_shadowMap; //< identifier for the shadow map
 
-	};
-	class	ShadowMapShader : public Shader
-	{
-		public:
-			ShadowMapShader();
-			/** \brief	Init the shader for uniform location*/
-			void	Init();
-			/** \brief Set the world view projection matrix to use
-			* \param wvp the world view projection matrix
-			*/
-			void	SetWVP(glm::mat4 const & wvp);
-			/** \brief	Set the texture unit to use
-			*	\param	TextureUnit the texture unit to use
-			*/
-			void	SetTextureUnit(unsigned int TextureUnit);
-		private:
-			GLuint	m_wvpLocation;
-			GLuint	m_textureLocation;
-	};
+};
+class	ShadowMapShader : public Shader
+{
+	public:
+		ShadowMapShader();
+		/** \brief	Init the shader for uniform location*/
+		void	Init();
+		/** \brief Set the world view projection matrix to use
+		* \param wvp the world view projection matrix
+		*/
+		void	SetWVP(glm::mat4 const & wvp);
+		/** \brief	Set the texture unit to use
+		*	\param	TextureUnit the texture unit to use
+		*/
+		void	SetTextureUnit(unsigned int TextureUnit);
+	private:
+		GLuint	m_wvpLocation;
+		GLuint	m_textureLocation;
+};
 
-}
+}  // end of S3DE namespace
 #endif

@@ -31,21 +31,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 namespace S3DE
 {
-	///	\brief	Interface for managing Resource
-	///
-	///	This class is an abstract class, you have to derivate it
-	template<class T>
-	class IResourceManager
-	{
-		public:
-			IResourceManager(){};
-			virtual ~IResourceManager(){};
-			/// \brief pure virtual load function
-			///	\param[in]	filename filename of the resource to load
-			virtual	T	Load(std::string const &filename)=0;
-			/// \brief pure virtual release function
-			///	\param[in,out]	object decrease the count of the ressource for object
-			virtual void 	Release(T &object)=0;
-	};
-}
+///	\brief	Interface for managing Resource
+///
+///	This class is an abstract class, you have to derivate it
+template<class T>
+class IResourceManager
+{
+	public:
+		IResourceManager(){};
+		virtual ~IResourceManager(){};
+		/// \brief pure virtual load function
+		///	\param[in]	filename filename of the resource to load
+		virtual	T	Load(std::string const &filename)=0;
+		/// \brief pure virtual release function
+		///	\param[in,out]	object decrease the count of the ressource for object
+		virtual void 	Release(T &object)=0;
+};
+} // end of S3DE namespace
 #endif

@@ -35,24 +35,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace S3DE
 {
 
-	struct SingleWindow
-	{
-		std::string		    title;
-		SDL_Window		    *pWindow;
-		unsigned	int	    width;
-		unsigned	int 	height;
-	};
+struct SingleWindow
+{
+	std::string		    title;
+	SDL_Window		    *pWindow;
+	unsigned	int	    width;
+	unsigned	int 	height;
+};
 
-	class Window
-	{
-		public:
-			Window(const std::string &title, unsigned int width, unsigned int height, bool fullscreen);
-			virtual SDL_GLContext   CreateContext(unsigned int numWindow);
-			virtual void            SwapWindow(unsigned int numWindow);
-			virtual ~Window();
+class Window
+{
+	public:
+		Window(const std::string &title, unsigned int width, unsigned int height, bool fullscreen);
+		virtual SDL_GLContext   CreateContext(unsigned int numWindow);
+		virtual void            SwapWindow(unsigned int numWindow);
+		virtual ~Window();
 
-		protected:
-			std::vector < SingleWindow >	m_vsWindow;
-	};
-}
+	protected:
+		std::vector < SingleWindow >	m_vsWindow;
+};
+}  // end of S3DE namespace
 #endif

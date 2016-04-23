@@ -35,28 +35,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 namespace S3DE
 {
-	class FrameBuffer
-	{
-    	public:
-        	FrameBuffer();
-        	FrameBuffer(int largeur, int hauteur);
-        	void    CreerRenderBuffer(GLuint &id, GLenum formatInterne);
-        	void    Load(); // can launch an exception
-         	~FrameBuffer();
-        	GLuint  GetID()const;
-        	GLuint  GetColorBufferID(unsigned int index) const;
+class FrameBuffer
+{
+	public:
+    	FrameBuffer();
+    	FrameBuffer(int largeur, int hauteur);
+    	void    CreerRenderBuffer(GLuint &id, GLenum formatInterne);
+    	void    Load(); // can launch an exception
+     	~FrameBuffer();
+    	GLuint  GetID()const;
+    	GLuint  GetColorBufferID(unsigned int index) const;
 
-        	int     GetLargeur() const;
-        	int     GetHauteur() const;
-    	protected:
-        	GLuint                  m_id;
+    	int     GetLargeur() const;
+    	int     GetHauteur() const;
+	protected:
+    	GLuint                  m_id;
 
-        	int                     m_largeur;
-        	int                     m_hauteur;
+    	int                     m_largeur;
+    	int                     m_hauteur;
 
-        	std::vector <Texture>   m_colorBuffers;
-        	GLuint                  m_depthBufferID;
-    	private:
-	};
-}
+    	std::vector <Texture>   m_colorBuffers;
+    	GLuint                  m_depthBufferID;
+	private:
+};
+}  // end of S3DE namespace
 #endif // FRAMEBUFFER_H

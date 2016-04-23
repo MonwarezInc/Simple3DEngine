@@ -38,24 +38,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace S3DE
 {
 
-	class CGraphics
-	{
-    	public:
-        	CGraphics(GLuint width=320, GLuint height=240, bool fullscreen=false, const std::string &title="default",
-                  GLuint bpp=32, GLuint aa=2, GLuint major=4, GLuint minor=4 );
+class CGraphics
+{
+	public:
+    	CGraphics(GLuint width=320, GLuint height=240, bool fullscreen=false, const std::string &title="default",
+              GLuint bpp=32, GLuint aa=2, GLuint major=4, GLuint minor=4 );
 
-        	virtual         ~CGraphics();
-        	virtual void    SwapWindow();
-			virtual void	ClearColor(float r, float g, float b, float a);
-			virtual	void	Clear(); // next step is to encapsulate glClear flag
+    	virtual         ~CGraphics();
+    	virtual void    SwapWindow();
+		virtual void	ClearColor(float r, float g, float b, float a);
+		virtual	void	Clear(); // next step is to encapsulate glClear flag
 
-    	protected:
-        	std::shared_ptr<Window>	m_pWindow;
-        	SDL_GLContext   		m_glContext;
-        	//OpenGL specifics
-        	GLuint          		m_bpp;
-        	GLuint          		m_aa;
-	
-	};
-}
+	protected:
+    	std::shared_ptr<Window>	m_pWindow;
+    	SDL_GLContext   		m_glContext;
+    	//OpenGL specifics
+    	GLuint          		m_bpp;
+    	GLuint          		m_aa;
+
+};
+} // end of S3DE namespace 
 #endif // GRAPHICS_H_INCLUDED

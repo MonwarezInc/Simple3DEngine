@@ -37,46 +37,46 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace S3DE
 {
-	// Classe Shader
+// Classe Shader
 
-	class Shader
-	{
-    	public:
+class Shader
+{
+	public:
 
-    		Shader();
-			///	\brief Copy constructor
-			///	\param shaderToCopy 	the shader to copy
-    		Shader(Shader const &shaderToCopy);
-			///	\brief Common constructor used
-			///	\param vertexSource		the filename of the vertex shader
-			///	\param fragmentSource	the filename of the fragment shader
-    		Shader(std::string const &vertexSource, std::string const &fragmentSource);
-    		~Shader();
-			///	\brief Assignation operator
-			///	\param shaderToCopy		the shader to copy
-    		Shader& operator=(Shader const &shaderToCopy);
-			///	\brief	Set or reset the filename of the shaders
-			///	\param vertexSource		the filename of the vertex shader
-			///	\param fragmentSource	the filename of the vertex shader
-			virtual void	SetFile(std::string const &vertexSource, std::string const &fragmentSource);
-			/// \brief 	Just call glUseProgram(shaderID)
-			virtual	void	Enable();
-			/// \brief 	Just call glUseProgram(0)
-			virtual	void	Disable();
-			///	\brief Return the location of a uniform variable in the shader
-			///	\param	name			the name of the uniform variable
-			///	\return					the location which is a GLuint
-			virtual GLuint	GetUniformLocation(std::string const &name) const;
-		private:
-    		virtual void	Load();
-    		bool BuildShader(GLuint &shader, GLenum type, std::string const &source);
+		Shader();
+		///	\brief Copy constructor
+		///	\param shaderToCopy 	the shader to copy
+		Shader(Shader const &shaderToCopy);
+		///	\brief Common constructor used
+		///	\param vertexSource		the filename of the vertex shader
+		///	\param fragmentSource	the filename of the fragment shader
+		Shader(std::string const &vertexSource, std::string const &fragmentSource);
+		~Shader();
+		///	\brief Assignation operator
+		///	\param shaderToCopy		the shader to copy
+		Shader& operator=(Shader const &shaderToCopy);
+		///	\brief	Set or reset the filename of the shaders
+		///	\param vertexSource		the filename of the vertex shader
+		///	\param fragmentSource	the filename of the vertex shader
+		virtual void	SetFile(std::string const &vertexSource, std::string const &fragmentSource);
+		/// \brief 	Just call glUseProgram(shaderID)
+		virtual	void	Enable();
+		/// \brief 	Just call glUseProgram(0)
+		virtual	void	Disable();
+		///	\brief Return the location of a uniform variable in the shader
+		///	\param	name			the name of the uniform variable
+		///	\return					the location which is a GLuint
+		virtual GLuint	GetUniformLocation(std::string const &name) const;
+	private:
+		virtual void	Load();
+		bool BuildShader(GLuint &shader, GLenum type, std::string const &source);
 
-    		GLuint m_vertexID;
-    		GLuint m_fragmentID;
-    		GLuint m_programID;
+		GLuint m_vertexID;
+		GLuint m_fragmentID;
+		GLuint m_programID;
 
-    		std::string m_vertexSource;
-    		std::string m_fragmentSource;
-	};
-}
+		std::string m_vertexSource;
+		std::string m_fragmentSource;
+};
+}  // end of S3DE namespace
 #endif

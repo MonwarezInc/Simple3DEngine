@@ -32,62 +32,62 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 namespace S3DE
 {
-	enum class LoaderType: char
-	{ CONFIG, MESH, LIGHT, DYNAMICS };
-	struct 	ConfigData
-	{
-		glm::vec3		position;
-		glm::vec3		target;
-		glm::vec3		up;
-	
-		unsigned	int	width;
-		unsigned	int	height;
-		bool			fullscreen;
-	};
-	// MeshData is for one mesh
-	struct 	MeshData
-	{
-		std::string 	filename;
-		glm::vec3		position;
-		glm::vec3		pitch;
-		float			scale;
-	};
-	struct	ControlPoint
-	{
-		glm::vec3					position;
-		float						time;	
-	};
-	struct 	LightData
-	{
-		glm::vec3					color;
-		float						ambient;
-		float						diffuse;
-		float						linear;
-		float						constant;
-		float						exp;
-		std::string					controltype;
-		std::vector<ControlPoint>	vControlPoint;
-	};
-	class	Loader
-	{
-		public:
-			Loader ();
-			void					Load(std::string const &filename, LoaderType type);
-			ConfigData				GetConfigData();
-			std::vector<MeshData>	GetMeshData();
-			std::vector<LightData> 	GetLightData();
-		protected:
-			void	LoadConfig();
-			void	LoadMesh();
-			void 	LoadLight();
-			void	LoadDynamics();
-			void	ClearState(unsigned char mask);
+enum class LoaderType: char
+{ CONFIG, MESH, LIGHT, DYNAMICS };
+struct 	ConfigData
+{
+	glm::vec3		position;
+	glm::vec3		target;
+	glm::vec3		up;
 
-			std::string				m_lastfilename;
-			unsigned char			m_state;
-			ConfigData				m_config;
-			std::vector<MeshData>	m_pMesh;
-			std::vector<LightData>	m_vLight;	
-	};
-}
+	unsigned	int	width;
+	unsigned	int	height;
+	bool			fullscreen;
+};
+// MeshData is for one mesh
+struct 	MeshData
+{
+	std::string 	filename;
+	glm::vec3		position;
+	glm::vec3		pitch;
+	float			scale;
+};
+struct	ControlPoint
+{
+	glm::vec3					position;
+	float						time;	
+};
+struct 	LightData
+{
+	glm::vec3					color;
+	float						ambient;
+	float						diffuse;
+	float						linear;
+	float						constant;
+	float						exp;
+	std::string					controltype;
+	std::vector<ControlPoint>	vControlPoint;
+};
+class	Loader
+{
+	public:
+		Loader ();
+		void					Load(std::string const &filename, LoaderType type);
+		ConfigData				GetConfigData();
+		std::vector<MeshData>	GetMeshData();
+		std::vector<LightData> 	GetLightData();
+	protected:
+		void	LoadConfig();
+		void	LoadMesh();
+		void 	LoadLight();
+		void	LoadDynamics();
+		void	ClearState(unsigned char mask);
+
+		std::string				m_lastfilename;
+		unsigned char			m_state;
+		ConfigData				m_config;
+		std::vector<MeshData>	m_pMesh;
+		std::vector<LightData>	m_vLight;	
+};
+}  // end of S3DE namespace
 #endif

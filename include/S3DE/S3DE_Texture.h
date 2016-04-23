@@ -38,30 +38,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace S3DE
 {
 
-	class Texture
-	{
-    	public:
-        	Texture(const std::string &filename = "");
-        	// for FBO
-        	Texture(int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide);
-        	Texture(const Texture &toCopy);
-        	Texture& operator=(const Texture &toCopy);
-        	bool Load();
-        	void LoadEmptyTexture();
+class Texture
+{
+	public:
+    	Texture(const std::string &filename = "");
+    	// for FBO
+    	Texture(int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide);
+    	Texture(const Texture &toCopy);
+    	Texture& operator=(const Texture &toCopy);
+    	bool Load();
+    	void LoadEmptyTexture();
 
-        	GLuint GetID () const;
-        	void    SetFilename(const std::string &filename);
-        	virtual ~Texture();
-    	protected:
-        	GLuint                  m_id;
-        	std::string             m_filename;
-        	// for FBO
-        	int                     m_largeur;
-        	int                     m_hauteur;
-        	GLenum                  m_format;
-        	GLenum                  m_formatInterne;
-        	bool                    m_textureVide;
-    	private:
-	};
-}
+    	GLuint GetID () const;
+    	void    SetFilename(const std::string &filename);
+    	virtual ~Texture();
+	protected:
+    	GLuint                  m_id;
+    	std::string             m_filename;
+    	// for FBO
+    	int                     m_largeur;
+    	int                     m_hauteur;
+    	GLenum                  m_format;
+    	GLenum                  m_formatInterne;
+    	bool                    m_textureVide;
+	private:
+};
+}  // end of S3DE namespace
 #endif // TEXTURE_H

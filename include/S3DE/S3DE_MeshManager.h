@@ -32,36 +32,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace S3DE
 {
-	/// \brief Structure that contain all useful information about the resource
-	struct  RcField
-	{
-		std::string     filename;   ///< the filename of the resource
-		size_t          id;         ///< an id to select an entity in particular
-	};
-	typedef std::vector < std::vector < std::shared_ptr < Mesh > > > Mesh2DArr; ///< A little trick to delete one element of an array
-	///	\brief	Manage the mesh resource
-	class	MeshManager	:	public	IResourceManager<RcField>
-	{
-		public:	
-			MeshManager();
-			~MeshManager();
-			///	\brief Load a mesh only once and return a RcField to manage it
-			///	\param	filename filename of the resource to load
-			RcField		Load(std::string const &filename);
-			///	\brief Decrease the count of the resource of a mesh, and eventually release the resource
-			///	\param	object decrease the count of the ressource for object
-			void		Release(RcField &object);
-			///	\brief	Wrapper to the mesh->Draw(...)
-			///	\param	rcfield			The RcField so that more verification could be done
-			///	\param	elapsed_time	The	elapsed time since the beginning , so that animation could works
-			///	\param	shader			A reference to the shader to use
-			///	\param	animation		The name of the animation to play
-			void		Draw(RcField const & rcfield, unsigned int elapsed_time, Shader const & shader,
-								std::string const & animation);
-		protected:
-			std::vector<RcField>	m_rcfield; 	///< A vector of the rcfield 
-			std::vector<size_t>		m_count; 	///< A vector of counter of ressource
-			Mesh2DArr				m_pmesh; 	///< A 2D vector of shared_ptr Mesh
-	};
-}
+/// \brief Structure that contain all useful information about the resource
+struct  RcField
+{
+	std::string     filename;   ///< the filename of the resource
+	size_t          id;         ///< an id to select an entity in particular
+};
+typedef std::vector < std::vector < std::shared_ptr < Mesh > > > Mesh2DArr; ///< A little trick to delete one element of an array
+///	\brief	Manage the mesh resource
+class	MeshManager	:	public	IResourceManager<RcField>
+{
+	public:	
+		MeshManager();
+		~MeshManager();
+		///	\brief Load a mesh only once and return a RcField to manage it
+		///	\param	filename filename of the resource to load
+		RcField		Load(std::string const &filename);
+		///	\brief Decrease the count of the resource of a mesh, and eventually release the resource
+		///	\param	object decrease the count of the ressource for object
+		void		Release(RcField &object);
+		///	\brief	Wrapper to the mesh->Draw(...)
+		///	\param	rcfield			The RcField so that more verification could be done
+		///	\param	elapsed_time	The	elapsed time since the beginning , so that animation could works
+		///	\param	shader			A reference to the shader to use
+		///	\param	animation		The name of the animation to play
+		void		Draw(RcField const & rcfield, unsigned int elapsed_time, Shader const & shader,
+							std::string const & animation);
+	protected:
+		std::vector<RcField>	m_rcfield; 	///< A vector of the rcfield 
+		std::vector<size_t>		m_count; 	///< A vector of counter of ressource
+		Mesh2DArr				m_pmesh; 	///< A 2D vector of shared_ptr Mesh
+};
+}  // end of S3DE namespace
 #endif

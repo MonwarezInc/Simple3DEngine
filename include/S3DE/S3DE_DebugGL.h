@@ -37,8 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Debug
 {
-    bool glCheck(std::string filename, int line);
-
-}
+bool glCheck(std::string filename, int line);
+} // end of Debug namespace
 
 #endif // DEBUGGL_H_INCLUDED
