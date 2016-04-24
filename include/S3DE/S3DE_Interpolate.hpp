@@ -41,15 +41,7 @@ class CurveInterpolate
 	public:
 		CurveInterpolate(){}
 		virtual	glm::vec3 	GetInterpolated(T totaltime) =0;
-		virtual void			AddPoint(glm::vec3 const & pos, T time)
-		{
-			m_vposition3D.push_back(pos);
-			m_time.push_back(time);
-		}
-	protected:
-	std::vector <glm::vec3>	m_vposition3D;
-	std::vector <T>				m_time;
-	bool						m_looped;
+		virtual void			AddPoint(glm::vec3 const & pos, T time)=0;
 };
 template <class T>
 class LinearInterpolate : public CurveInterpolate<T>
