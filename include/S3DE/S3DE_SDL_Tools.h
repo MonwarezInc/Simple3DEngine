@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <SDL_main.h>
 #include <SDL_image.h>
 #include <string>
-
+#include <memory>
 namespace S3DE
 {
 namespace sdl
