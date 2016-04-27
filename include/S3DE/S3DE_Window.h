@@ -27,18 +27,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef WINDOW_H_INCLUED
 #define WINDOW_H_INCLUED
 
-#include <SDL.h>
-#include <SDL_main.h>
+#include "S3DE_SDL_Tools.h"
 #include <string>
 #include <vector>
+#include <memory.h>
 
 namespace S3DE
 {
-
 struct SingleWindow
 {
 	std::string		    title;
-	SDL_Window		    *pWindow;
+	WindowPtr			pWindow;
 	unsigned	int	    width;
 	unsigned	int 	height;
 };
@@ -53,6 +52,7 @@ class Window
 
 	protected:
 		std::vector < SingleWindow >	m_vsWindow;
+		WindowPtr	CreateWindow(std::string title, int x, int y, int w, int h, Uint32 flags);
 };
 }  // end of S3DE namespace
 #endif

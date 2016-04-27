@@ -35,27 +35,27 @@ Window::Window(const std::string &title, unsigned int width, unsigned int height
 	m_vsWindow.back().width	=	width;
 	m_vsWindow.back().height	=	height;
 	m_vsWindow.back().pWindow =	fullscreen?
-                            SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
+                            this->CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
 							SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL) :
-                            SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
+                            this->CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
 							SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 }
 SDL_GLContext   Window::CreateContext(unsigned int numWindow)
 {
     if (numWindow >= m_vsWindow.size())
         throw std::string("error unknow indice");
-    return SDL_GL_CreateContext(m_vsWindow[numWindow].pWindow);
+    return SDL_GL_CreateContext(m_vsWindow[numWindow].pWindow.get());
 }
 void            Window::SwapWindow(unsigned int numWindow)
 {
     if (numWindow >= m_vsWindow.size())
         throw std::string("error unknow indice");
-    SDL_GL_SwapWindow(m_vsWindow[numWindow].pWindow);
+    SDL_GL_SwapWindow(m_vsWindow[numWindow].pWindow.get());
+}
+WindowPtr	Window::CreateWindow(std::string title, int x, int y, int w, int h, Uint32 flags)
+{
+	return WindowPtr(SDL_CreateWindow(title.c_str(),x,y,w,h,flags), sdl::Deleter());
 }
 Window::~Window()
 {
-    for (auto &vsWindow:  m_vsWindow)
-        SDL_DestroyWindow(vsWindow.pWindow);
-    m_vsWindow.clear();
-
 }

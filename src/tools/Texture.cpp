@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Texture.h>
-
+#include <S3DE_SDL_Tools.h>
 using namespace std;
 using namespace S3DE;
 Texture::Texture(const string &filename): m_id(0), m_filename(filename), m_largeur(0), m_hauteur(0), m_format(0),
@@ -92,16 +92,13 @@ void Texture::LoadEmptyTexture()
 }
 bool Texture::Load()
 {
-    auto	imgSDL =   IMG_Load(m_filename.c_str());
-    if (nullptr == imgSDL)
+    auto	imgSDL =   this->Load_IMG(m_filename);
+    if (nullptr == imgSDL.get())
         throw string(SDL_GetError());
 
     if (glIsTexture(m_id) == GL_TRUE)
         glDeleteTextures(1,&m_id);
 
-    //img.flipVertically();
-
-    //sf::Vector2u taillexy = img.getSize();
 
     glGenTextures(1, &m_id);
     glBindTexture(GL_TEXTURE_2D, m_id);
@@ -135,9 +132,8 @@ bool Texture::Load()
     }
     else
     {
-        // on arrête le chargement
+        //	We stop loading
         std::cerr << "Erreur format interne non reconu" << std::endl;
-        SDL_FreeSurface(imgSDL);
         return false;
     }
 
@@ -150,7 +146,6 @@ bool Texture::Load()
 
     glBindTexture(GL_TEXTURE_2D, 0);
     // on a finis
-    SDL_FreeSurface(imgSDL);
     return true;
 }
 void Texture::SetFilename(const string &filename)
@@ -160,4 +155,8 @@ void Texture::SetFilename(const string &filename)
 GLuint Texture::GetID() const
 {
     return m_id;
+}
+SurfacePtr	Texture::Load_IMG( string const &file)
+{
+	return SurfacePtr(IMG_Load(file.c_str()), sdl::Deleter());
 }

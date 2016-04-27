@@ -24,46 +24,28 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef TEXTURE_H
-#define TEXTURE_H
-#include "S3DE_SDL_Tools.h"
-// GLEW for all platform
-#include <GL/glew.h>
-
-
+#ifndef _S3DE_SDL_TOOLS_H_INCLUED
+#define _S3DE_SDL_TOOLS_H_INCLUED
 #include <SDL.h>
+#include <SDL_main.h>
 #include <SDL_image.h>
 #include <string>
-#include <iostream>
 
 namespace S3DE
 {
-
-class Texture
+namespace sdl
 {
-	public:
-    	Texture(const std::string &filename = "");
-    	// for FBO
-    	Texture(int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide);
-    	Texture(const Texture &toCopy);
-    	Texture& operator=(const Texture &toCopy);
-    	bool Load();
-    	void LoadEmptyTexture();
-
-    	GLuint GetID () const;
-    	void    SetFilename(const std::string &filename);
-    	virtual ~Texture();
-	protected:
-		SurfacePtr	Load_IMG(std::string const &file);
-    	GLuint                  m_id;
-    	std::string             m_filename;
-    	// for FBO
-    	int                     m_largeur;
-    	int                     m_hauteur;
-    	GLenum                  m_format;
-    	GLenum                  m_formatInterne;
-    	bool                    m_textureVide;
-	private:
+///	\brief	Deleter for SDL2 pointer, so that we can use unique_ptr
+struct	Deleter
+{
+	void operator()(SDL_Window *p) const {SDL_DestroyWindow(p);}
+	void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p);}
+	void operator()(SDL_Surface *p) const { SDL_FreeSurface(p);}
 };
-}  // end of S3DE namespace
-#endif // TEXTURE_H
+
+} // end of namespace sdl
+typedef std::unique_ptr<SDL_Window,sdl::Deleter>	WindowPtr;
+typedef std::unique_ptr<SDL_Surface,sdl::Deleter>	SurfacePtr;
+
+} // end of namespace S3DE
+#endif
