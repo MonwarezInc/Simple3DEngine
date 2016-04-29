@@ -27,24 +27,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <S3DE_CEntity.h>
 using namespace S3DE;
 #define NULL_RC	0
-CEntity::CEntity(std::shared_ptr<MeshManager> const & rcmanager)
+CEntity::CEntity()
 {
-		m_rcmanager			=	rcmanager;
-		m_rcField.id		=	NULL_RC;
 }
 CEntity::~CEntity()
 {
-		this->Clear();
+	for ( auto & v: m_rcField)
+		m_rcManager.Release(v);
 }
-void	CEntity::Load(std::string const &filename)
+void	CEntity::Load(std::string const &filename, std::string const &entityName)
 {
-		m_rcField			=	m_rcmanager->Load(filename);
+		m_rcField.push_back(m_rcManager.Load(filename));
+		m_entityKey[entityName]	=	m_rcField.size() - 1;
 }
-void	CEntity::Clear()
+void	CEntity::Clear(std::string const & entityName)
 {
-		m_rcmanager->Release(m_rcField);
+		auto	id	=	m_entityKey[entityName];
+		auto rcField	=	m_rcField[id];
+		m_rcManager.Release(rcField);
+		m_rcField[id]	=	rcField;
 }
 void	CEntity::Draw(unsigned int elapsed_time, Shader const & shader, std::string const & animation)
 {
-		m_rcmanager->Draw(m_rcField, elapsed_time, shader, animation);	
+		for (auto &v: m_rcField)
+			m_rcManager.Draw(v, elapsed_time, shader, animation);	
 }

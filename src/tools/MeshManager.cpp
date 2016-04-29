@@ -71,20 +71,23 @@ RcField	MeshManager::Load(std::string const &filename)
 	// This is a new Mesh
 	if ( i == n)
 	{
-		auto	mesh	=	std::make_shared<Mesh>();
-		mesh->LoadFromFile(filename);
 		if (foundempty)
 		{
-			m_pmesh[emptyind - 1].push_back(mesh);
+			m_pmesh[emptyind - 1].emplace_back();
+			m_pmesh[emptyind - 1].back()	=	std::make_unique<Mesh>();
+			m_pmesh[emptyind - 1].back()->LoadFromFile(filename);
+
 			m_count[emptyind]	=	1;
 			rc.id	=	emptyind;
 			m_rcfield[emptyind]	=	rc;
 		}
 		else
 		{
-			std::vector<std::shared_ptr<Mesh> >	mesharray;
-			mesharray.push_back(mesh);
-			m_pmesh.push_back(mesharray);
+			m_pmesh.emplace_back();
+			m_pmesh.back().emplace_back();
+			m_pmesh.back().back()	=	std::make_unique<Mesh>();
+			m_pmesh.back().back()->LoadFromFile(filename);
+			
 			m_count.push_back(1);
 			rc.id	=	m_count.size() - 1;
 			m_rcfield.push_back(rc);
