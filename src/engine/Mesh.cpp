@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Mesh.h>
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <sstream>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -42,6 +42,7 @@ using namespace S3DE;
 Mesh::Mesh()
 {
 	m_pScene	=	nullptr;
+	m_NumBones	=	0;
 }
 Mesh::~Mesh()
 {
@@ -64,7 +65,11 @@ void	Mesh::LoadFromFile(std::string const & filename)
 		
 		// can launch an except
 		if(!this->InitFromScene(m_pScene,filename))
-			throw std::string("error init from scene");
+		{
+			std::stringstream out;
+			out << "error init from scene at: " << __FILE__ << "( " << __LINE__ << ")";
+			throw out.str();
+		}
 	}
 	else
 		throw std::string("Error parsing" + filename + " : " + m_Importer.GetErrorString() );
@@ -114,6 +119,7 @@ void	Mesh::Draw(unsigned int  elapsed_time,const Shader &shader, std::string con
 void	Mesh::Clear()
 {
 	m_pScene	=	nullptr;
+	m_NumBones	=	0;
 	m_Entries.clear();
 	m_Textures.clear();
 }	
@@ -202,6 +208,7 @@ bool	Mesh::InitMaterials(const aiScene* pScene, std::string const & filename)
 				{
 					// maybe use except mechanism ?
 					std::cerr << "Error loading texture " << fullPath << std::endl;
+					std::cerr << "in file: " <<__FILE__ <<"("<<__LINE__<<")" << std::endl;
 					ret				=	false;
 				}
 			}
@@ -304,6 +311,7 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 		{
 			std::stringstream out;
 			out << "Error BoneIndex is: " << BoneIndex << " but m_BoneInfo have " << m_BoneInfo.size() << " elements";
+			out << "\n" << "Error in "<< __FILE__ << "(" << __LINE__<< ")";
 			throw out.str();
 		}
 		m_BoneInfo[BoneIndex].BoneOffset	=	aiMatrixToMat4(pMesh->mBones[i]->mOffsetMatrix);
@@ -318,6 +326,7 @@ void	Mesh::LoadBones(unsigned int index, const aiMesh* pMesh, std::vector<Vertex
 			{
 				std::stringstream out;
 				out << "Error bones have " << bones.size() << " elements , but VertexID is equal to " << VertexID;
+				out << "\n" << "Error in " << __FILE__ << " (" << __LINE__ << ")" ;
 				throw out.str();
 			}
 		}
