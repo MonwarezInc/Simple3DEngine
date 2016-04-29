@@ -74,7 +74,7 @@ RcField	MeshManager::Load(std::string const &filename)
 		if (foundempty)
 		{
 			m_pmesh[emptyind - 1].emplace_back();
-			m_pmesh[emptyind - 1].back()	=	std::make_unique<Mesh>();
+			m_pmesh[emptyind - 1].back()	=	std::make_shared<Mesh>();
 			m_pmesh[emptyind - 1].back()->LoadFromFile(filename);
 
 			m_count[emptyind]	=	1;
@@ -85,7 +85,7 @@ RcField	MeshManager::Load(std::string const &filename)
 		{
 			m_pmesh.emplace_back();
 			m_pmesh.back().emplace_back();
-			m_pmesh.back().back()	=	std::make_unique<Mesh>();
+			m_pmesh.back().back()	=	std::make_shared<Mesh>();
 			m_pmesh.back().back()->LoadFromFile(filename);
 			
 			m_count.push_back(1);
