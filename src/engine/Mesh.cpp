@@ -469,8 +469,7 @@ void	Mesh::CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const 
 											pNodeAnim->mScalingKeys[ScalingIndex].mTime);
 	auto	Factor				=	AnimationTime - static_cast<float>(pNodeAnim->mScalingKeys[ScalingIndex].mTime/DeltaTime);
 	
-	if (Factor < 0.0f || Factor > 1.0f)
-		throw std::string("Error interpolated factor not in the good range");
+	this->CheckFactor(Factor, __FILE__, __LINE__);
 
 	const auto&	Start			=	pNodeAnim->mScalingKeys[ScalingIndex].mValue;
 	const auto&	End				=	pNodeAnim->mScalingKeys[NextScalingIndex].mValue;
@@ -494,8 +493,7 @@ void	Mesh::CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, con
 											pNodeAnim->mRotationKeys[RotationIndex].mTime);
 	auto	Factor				=	AnimationTime - static_cast<float>(pNodeAnim->mRotationKeys[RotationIndex].mTime/DeltaTime);
 	
-	if (Factor < 0.0f || Factor > 1.0f)
-		throw std::string("Error interpolated factor not in the good range");
+	this->CheckFactor(Factor, __FILE__, __LINE__);
 
 	const auto&	Start			=	pNodeAnim->mRotationKeys[RotationIndex].mValue;
 	const auto&	End				=	pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
@@ -518,9 +516,8 @@ void	Mesh::CalcInterpolatedPosition(aiVector3D & Out, float AnimationTime, const
 	auto	DeltaTime			=	static_cast<float>(pNodeAnim->mPositionKeys[NextPositionIndex].mTime - 
 											pNodeAnim->mPositionKeys[PositionIndex].mTime);
 	auto	Factor				=	AnimationTime - static_cast<float>(pNodeAnim->mPositionKeys[PositionIndex].mTime/DeltaTime);
-	
-	if (Factor < 0.0f || Factor > 1.0f)
-		throw std::string("Error interpolated factor not in the good range");
+		
+	this->CheckFactor(Factor, __FILE__, __LINE__);
 
 	const auto& 	Start			=	pNodeAnim->mPositionKeys[PositionIndex].mValue;
 	const auto& 	End				=	pNodeAnim->mPositionKeys[NextPositionIndex].mValue;
@@ -563,4 +560,14 @@ inline glm::mat4 	S3DE::aiMatrixToMat4(aiMatrix3x3 const & src)
 	dest[2][0]	=	src.a3;	dest[2][1]	=	src.b3;	dest[2][2]	=	src.c3;	dest[2][3]	=	0;	
 	dest[3][0]	=	0	;	dest[3][1]	=	0	;	dest[3][2]	=	0	;	dest[3][3]	=	1;	
 	return 		dest;
+}
+void 				Mesh::CheckFactor(float Factor, std::string const &file, int line)
+{
+	if (Factor < 0.0f || Factor > 1.0f)
+	{
+		std::stringstream out;
+		out << "Error interpolated factor not in the good range , Factor is: " << Factor << " which is not in [0.0, 1.0] \n";
+		out << "This happend in " << file << "(" << line << ")";
+		throw out.str();
+	}
 }

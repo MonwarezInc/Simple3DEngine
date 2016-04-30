@@ -129,7 +129,7 @@ class Mesh
 		unsigned int		FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
 
 		unsigned int		GetAnimationIndex(std::string const & animation);
-
+		void		CheckFactor(float Factor, std::string const & file, int line);
 		struct	MeshEntry
 		{
 			MeshEntry();
