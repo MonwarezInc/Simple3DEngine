@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <S3DE_Parser.h>
 using std::string;
-using std::fscanf;
 using std::vector;
 using namespace S3DE;
 // Some Bits operation define
@@ -140,7 +139,13 @@ void Loader::LoadMesh()
 				auto	substr	=	buf.substr(0,i1);
 				auto	name	=	substr;
 
+				buf	=	buf.substr(i1+1);
+				i1	=	buf.find(" ");
+				if ((i1 == std::string::npos) || (i1 == 0))
+					throw error;
+				auto	entity	=	buf.substr(0,i1);
 				buf	=	buf.substr(i1);
+
 				i1	=	buf.find("position");
 				if (i1 == std::string::npos)
 					throw error;

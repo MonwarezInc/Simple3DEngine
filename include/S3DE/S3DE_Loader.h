@@ -48,6 +48,7 @@ struct 	ConfigData
 struct 	MeshData
 {
 	std::string 	filename;
+	std::string		entityName;
 	glm::vec3		position;
 	glm::vec3		pitch;
 	float			scale;

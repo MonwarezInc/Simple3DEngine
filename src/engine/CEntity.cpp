@@ -42,13 +42,24 @@ void	CEntity::Load(std::string const &filename, std::string const &entityName)
 }
 void	CEntity::Clear(std::string const & entityName)
 {
-		auto	id	=	m_entityKey[entityName];
-		auto rcField	=	m_rcField[id];
-		m_rcManager.Release(rcField);
-		m_rcField[id]	=	rcField;
+		if (m_entityKey.find(entityName) != m_entityKey.end())
+		{
+			auto	id	=	m_entityKey[entityName];
+			auto rcField	=	m_rcField[id];
+			m_rcManager.Release(rcField);
+			m_rcField[id]	=	rcField;
+		}
+		else
+		{
+			// silently discard
+		}
 }
-void	CEntity::Draw(unsigned int elapsed_time, Shader const & shader, std::string const & animation)
+void	CEntity::Draw(std::vector<std::string> const & entity, unsigned int elapsed_time, 
+						Shader const & shader, std::string const & animation)
 {
-		for (auto &v: m_rcField)
-			m_rcManager.Draw(v, elapsed_time, shader, animation);	
+		for (auto &v : entity)
+		{
+			if (m_entityKey.find(v) != m_entityKey.end())
+				m_rcManager.Draw(m_rcField[m_entityKey[v]], elapsed_time, shader, animation);
+		}
 }

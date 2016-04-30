@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "S3DE_MeshManager.h"
 #include <map>
 #include <memory>
+#include <vector>
 ///
 ///	\brief	namespace of the engine
 namespace S3DE
@@ -49,10 +50,12 @@ class CEntity
 		///	\param	entityName	the name of the entity to release
 		virtual	void		Clear(std::string const & entityName);
 		/// \brief	Draw the Entity, just a wrapper to MeshManager->Draw(...)
+		///	\param	entity			Array of the name of the entity to display
 		///	\param	elapsed_time	The elapsed time since the beginning, so that animation works
 		///	\param	shader			A reference to the shader to use
 		///	\param	animation		The name of the animation to play
-		virtual	void		Draw(unsigned int elapsed_time, Shader const & shader, std::string const & animation);
+		virtual	void		Draw(std::vector<std::string> const & entity, unsigned int elapsed_time, 
+									Shader const & shader, std::string const & animation);
 	protected:
 		MeshManager						m_rcManager;////< the resource manager
 		std::map<std::string, size_t>	m_entityKey;///< associate a entityname to a rcField
