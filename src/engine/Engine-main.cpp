@@ -128,7 +128,6 @@ void	CEngine::ClearColor(float r, float g, float b, float a)
 void	CEngine::Init()
 {	
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE);
 }
 void	CEngine::Draw(unsigned int elapsed)
 {
