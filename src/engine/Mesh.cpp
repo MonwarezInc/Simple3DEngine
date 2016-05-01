@@ -259,7 +259,7 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 	glBindVertexArray(VAO);
 	
 		glBindBuffer(GL_ARRAY_BUFFER, VB);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 			
 			glVertexAttribPointer(POSITION_LOCATION,3,GL_FLOAT, GL_FALSE,sizeof(Vertex), 0);
 			glVertexAttribPointer(TEX_COORD_LOCATION,2,GL_FLOAT, GL_FALSE,sizeof(Vertex), BUFFER_OFFSET(12));
@@ -270,10 +270,10 @@ void	Mesh::MeshEntry::Init(std::vector<Vertex> const & vertices, std::vector<uns
 			glEnableVertexAttribArray(NORMAL_LOCATION);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &indices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, indices.data(), GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, BONES);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), bones.data(), GL_STATIC_DRAW);
 
 			
 			glVertexAttribIPointer(BONE_ID_LOCATION, 4, GL_INT, sizeof(VertexBoneData), BUFFER_OFFSET(0));
