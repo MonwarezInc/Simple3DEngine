@@ -70,7 +70,8 @@ class Light : public Shader
 		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	36;
 		static	const	unsigned	int	MAX_SPOT_LIGHTS		=	2;
 		Light();
-		Light(std::string const &vertexSource , std::string const &fragmentSource);
+		Light(std::string const &vertexSource , std::string const &fragmentSource,
+				std::string const &geometrySource);
 		Light(Light const &);
 	
 		~Light();

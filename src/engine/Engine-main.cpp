@@ -40,7 +40,7 @@ void	CEngine::CreateWindow(EngineWindow const & engine)
 													engine.fullscreen,engine.title,engine.bpp,
 													engine.aa,engine.major,engine.minor);
 	// load shader
-	m_pShader.SetFile(engine.shader.lightV,engine.shader.lightF);
+	m_pShader.SetFile(engine.shader.lightV,engine.shader.lightF, engine.shader.lightG);
 }
 void	CEngine::DeleteWindow(GLuint indice)
 {

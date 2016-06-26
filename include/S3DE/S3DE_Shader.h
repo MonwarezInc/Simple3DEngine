@@ -50,15 +50,20 @@ class Shader
 		///	\brief Common constructor used
 		///	\param vertexSource		the filename of the vertex shader
 		///	\param fragmentSource	the filename of the fragment shader
-		Shader(std::string const &vertexSource, std::string const &fragmentSource);
+		///	\param geometrySource	the filename of the geometry shader
+		Shader(std::string const &vertexSource, std::string const &fragmentSource,
+				std::string const &geometrySource);
 		~Shader();
 		///	\brief Assignation operator
 		///	\param shaderToCopy		the shader to copy
 		Shader& operator=(Shader const &shaderToCopy);
 		///	\brief	Set or reset the filename of the shaders
 		///	\param vertexSource		the filename of the vertex shader
-		///	\param fragmentSource	the filename of the vertex shader
-		virtual void	SetFile(std::string const &vertexSource, std::string const &fragmentSource);
+		///	\param fragmentSource	the filename of the fragment shader
+		///	\param geometrySource	the filename of the geometry shader
+		virtual void	SetFile(std::string const &vertexSource, 
+								std::string const &fragmentSource,
+								std::string const &geometrySource);
 		/// \brief 	Just call glUseProgram(shaderID)
 		virtual	void	Enable();
 		/// \brief 	Just call glUseProgram(0)
@@ -73,10 +78,12 @@ class Shader
 
 		GLuint m_vertexID;
 		GLuint m_fragmentID;
+		GLuint m_geometryID;
 		GLuint m_programID;
 
 		std::string m_vertexSource;
 		std::string m_fragmentSource;
+		std::string m_geometrySource;
 };
 }  // end of S3DE namespace
 #endif

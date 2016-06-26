@@ -25,11 +25,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Shader.h>
+#include <vector>
+#include <sstream>
 using namespace S3DE;
 // Constructeurs et Destructeur
 
 Shader::Shader() : 	m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexSource(), 
-					m_fragmentSource()
+					m_fragmentSource(), m_geometrySource()
 {
 }
 
@@ -40,6 +42,7 @@ Shader::Shader(Shader const &shaderToCopy)
 
     m_vertexSource 		= 	shaderToCopy.m_vertexSource;
     m_fragmentSource 	= 	shaderToCopy.m_fragmentSource;
+	m_geometrySource	=	shaderToCopy.m_geometrySource;
 
     // Load the new shader
 
@@ -47,9 +50,12 @@ Shader::Shader(Shader const &shaderToCopy)
 }
 
 
-Shader::Shader(std::string const &vertexSource, std::string const &fragmentSource): m_vertexID(0),
-													 	m_fragmentID(0), m_programID(0),
-                                                     	m_vertexSource(vertexSource), m_fragmentSource(fragmentSource)
+Shader::Shader(std::string const &vertexSource, std::string const &fragmentSource,
+				std::string const &geometrySource): m_vertexID(0),
+												 	m_fragmentID(0), m_programID(0),
+                                                   	m_vertexSource(vertexSource), 
+													m_fragmentSource(fragmentSource),
+													m_geometrySource(geometrySource)
 {
 	this->Load();
 }
@@ -58,8 +64,6 @@ Shader::~Shader()
 {
     // Delete shader
 
-    glDeleteShader(m_vertexID);
-    glDeleteShader(m_fragmentID);
     glDeleteProgram(m_programID);
 }
 
@@ -72,17 +76,19 @@ Shader& Shader::operator=(Shader const &shaderToCopy)
 
     m_vertexSource 		= 	shaderToCopy.m_vertexSource;
     m_fragmentSource 	= 	shaderToCopy.m_fragmentSource;
-
+	m_geometrySource	=	shaderToCopy.m_geometrySource;
     // Load new shader
 
     this->Load();
 
     return *this;
 }
-void Shader::SetFile(std::string const &vertexSource, std::string const &fragmentSource)
+void Shader::SetFile(std::string const &vertexSource, std::string const &fragmentSource,
+					std::string const &geometrySource)
 {	
 	m_vertexSource		=	vertexSource;
 	m_fragmentSource	=	fragmentSource;
+	m_geometrySource	=	geometrySource;
 	
 	this->Load();
 }
@@ -93,6 +99,9 @@ void Shader::Load()
     if(glIsShader(m_vertexID) == GL_TRUE)
         glDeleteShader(m_vertexID);
 
+	if(glIsShader(m_geometryID) == GL_TRUE)
+		glDeleteShader(m_geometryID);
+
     if(glIsShader(m_fragmentID) == GL_TRUE)
         glDeleteShader(m_fragmentID);
 
@@ -100,9 +109,10 @@ void Shader::Load()
         glDeleteProgram(m_programID);
 
     // Build Shader
-
-    if(!( (this->BuildShader(m_vertexID, GL_VERTEX_SHADER, m_vertexSource)) && 
-			(this->BuildShader(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource)) ) )
+	auto retV	=	this->BuildShader(m_vertexID, GL_VERTEX_SHADER, m_vertexSource);
+	auto retG	=	this->BuildShader(m_geometryID, GL_GEOMETRY_SHADER, m_geometrySource);
+	auto retF	=	this->BuildShader(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentSource);
+    if(!( retV &&  retG && retF))
         throw std::string("Error during BuildShader");
 
 
@@ -114,8 +124,8 @@ void Shader::Load()
     // Attach Shader 
 
     glAttachShader(m_programID, m_vertexID);
+	glAttachShader(m_programID, m_geometryID);
     glAttachShader(m_programID, m_fragmentID);
-
 
     // Verrouillage des entrées shader
 	/*
@@ -147,25 +157,34 @@ void Shader::Load()
 
 
         // Allocation de mémoire
-
-        auto	perror = new char[errorSize + 1];
-
+		std::vector<GLchar> perror(errorSize);
 
         // Récupération de l'erreur
 
-        glGetShaderInfoLog(m_programID, errorSize, &errorSize, perror);
-        perror[errorSize] = '\0';
+        glGetProgramInfoLog(m_programID, errorSize, &errorSize, perror.data());
 
+		std::stringstream out;
+		out << "*****************************" << std::endl;
+		out << "*********Linking error*******" << std::endl;
+		out << perror.data() << std::endl;
+		out << "Error size: " << errorSize << std::endl;
+		out << "*****************************"<< std::endl;
 
+        // Delete program and throw an exception
 
-
-        // Libération de la mémoire et retour du booléen false
-
-        delete[] perror;
         glDeleteProgram(m_programID);
-
-        throw std::string(std::string("Linking error ") + std::string(perror));
+		glDeleteShader(m_vertexID);
+		glDeleteShader(m_geometryID);
+		glDeleteShader(m_fragmentID);
+        throw out.str();
     }
+	else
+	{
+		// We can remove the shader
+		glDeleteShader(m_vertexID);
+		glDeleteShader(m_geometryID);
+		glDeleteShader(m_fragmentID);
+	}
 
 
 

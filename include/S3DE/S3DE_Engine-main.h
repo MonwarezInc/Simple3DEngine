@@ -39,6 +39,7 @@ struct	EngineShader
 {
 	std::string	lightV;			///< light vertex shader filename*/
 	std::string	lightF;			///< light fragment shader filename*/
+	std::string	lightG;			///< basic geometry shader filename*/
 	std::string	guiV;			///< gui vertex shader filename*/
 	std::string	guiF;			///< gui fragment shader filename*/
 };

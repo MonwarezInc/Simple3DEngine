@@ -34,7 +34,9 @@ Light::Light():Shader()
 Light::Light(Light const &shaderToCopy):Shader(shaderToCopy)
 {
 }
-Light::Light(std::string const &vertexSource, std::string const &fragmentSource):Shader(vertexSource,fragmentSource)
+Light::Light(std::string const &vertexSource, std::string const &fragmentSource,
+			std::string const &geometrySource):Shader(vertexSource,fragmentSource,
+														geometrySource)
 {
 }
 Light::~Light()
