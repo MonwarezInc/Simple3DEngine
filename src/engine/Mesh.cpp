@@ -540,8 +540,25 @@ const aiNodeAnim*	Mesh::FindNodeAnim(const aiAnimation* pAnimation, std::string 
 }
 unsigned int 		Mesh::GetAnimationIndex(std::string const & animation)
 {
-	// not implemented yet 
-	return 0;
+	unsigned int idAnimation	=	0;
+	// Some default case when there is no animation or when m_pScene is nullptr
+	if (m_pScene == nullptr)
+		return idAnimation;
+	if (!m_pScene->HasAnimations())
+		return idAnimation;
+	//  Arbitrary set the different value for animation
+	if (animation == "walk")
+		idAnimation	=	1;
+	// Then check if the idAnimation is in a good range
+	if (idAnimation >= m_pScene->mNumAnimations)
+	{
+		std::cerr << "Error in idAnimation range" << std::endl;
+		std::stringstream out;
+		out << "Error in idAnimation range, there is only: " << m_pScene->mNumAnimations;
+		out << " but the following id animation has request " << idAnimation << std::endl;
+		throw out.str();
+	}
+	return idAnimation;
 }
 inline glm::mat4 	S3DE::aiMatrixToMat4(aiMatrix4x4 const & src)
 {

@@ -171,9 +171,11 @@ void Loader::LoadMesh()
 				f	=	std::stof(substr);
 				
 				m_pMesh.push_back(MeshData());
-				m_pMesh.back().filename	=	name;
-				m_pMesh.back().position	=	glm::vec3(x,y,z);
-				m_pMesh.back().pitch	=	glm::vec3(glm::radians(u),glm::radians(v),glm::radians(w));
+				m_pMesh.back().filename		=	name;
+				m_pMesh.back().entityName	=	 entity;
+				m_pMesh.back().position		=	glm::vec3(x,y,z);
+				m_pMesh.back().pitch		=	glm::vec3(glm::radians(u),
+													glm::radians(v),glm::radians(w));
 				m_pMesh.back().scale	=	f;
 				
 				// Everything goes well

@@ -155,6 +155,7 @@ class Mesh
 		std::map<std::string, unsigned int>	m_BoneMapping;
 		unsigned int						m_NumBones;
 		std::vector<BoneInfo>				m_BoneInfo;
+		std::string							m_animation;
 };
 }  // end of S3DE namespace
 #endif
