@@ -67,7 +67,7 @@ struct	SpotLight	:	public PointLight
 class Light : public Shader
 {
 	public:
-		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	36;
+		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	6;
 		static	const	unsigned	int	MAX_SPOT_LIGHTS		=	2;
 		Light();
 		Light(std::string const &vertexSource , std::string const &fragmentSource,
