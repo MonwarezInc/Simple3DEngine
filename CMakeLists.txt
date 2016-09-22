@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.3)
 
 #Configuration of project
 #Here is the library
@@ -11,6 +11,11 @@ include_directories(include/S3DE)
 #Add prefix library
 link_directories(${CMAKE_PREFIX}/lib)
 #Generate source file list
+file(
+	GLOB_RECURSE
+	include_files
+	include/S3DE/*
+)
 file(
 	GLOB_RECURSE
 	source_file
@@ -35,12 +40,6 @@ if (USE_SHARED)
 		${source_file}
 	)
 else (USE_SHARED)
-	add_library(
-		Simple3DEngine
-		STATIC
-		${source_file}
-	)
-endif (USE_SHARED)
 target_link_libraries(
 	Simple3DEngine
 	${GL}
@@ -49,6 +48,8 @@ target_link_libraries(
 	GLEW
 	assimp
 )
+endif (USE_SHARED)
+
 if(UNIX)
 	include(FindPkgConfig)
 	PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
@@ -77,3 +78,6 @@ else (WITH_ASSERT)
 	message("Disable Assert")
 	add_definitions(-DNDEBUG)
 endif()
+# Install stuff
+install(FILES ${include_files} DESTINATION include/S3DE)
+install(TARGETS Simple3DEngine LIBRARY DESTINATION lib)
