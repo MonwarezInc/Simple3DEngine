@@ -8,7 +8,8 @@ set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 
 #Include and Library filepath
 include_directories(include/S3DE)
-
+#Add prefix library
+link_directories(${CMAKE_PREFIX}/lib)
 #Generate source file list
 file(
 	GLOB_RECURSE
@@ -16,16 +17,37 @@ file(
 	src/*
 	include/S3DE/*
 )
-set(Extra_CXX_Flags "-Wall -std=c++1y")
+set(Extra_CXX_Flags "-Wall -std=c++14")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(USE_GLM_BUNDLE "FALSE" CACHE BOOL "use bundle glm")
 set(WITH_ASSERT "TRUE" CACHE BOOL "Enable Assert")
+set(USE_SHARED "TRUE" CACHE BOOL "Build shared lib")
+if (win)
+	set(GL opengl32)
+endif (win)
+
 #Declaration of executable
-add_library(
+if (USE_SHARED)
+	add_library(
+		Simple3DEngine
+		SHARED
+		${source_file}
+	)
+else (USE_SHARED)
+	add_library(
+		Simple3DEngine
+		STATIC
+		${source_file}
+	)
+endif (USE_SHARED)
+target_link_libraries(
 	Simple3DEngine
-	STATIC
-	${source_file}
+	${GL}
+	SDL2
+	SDL2_image
+	GLEW
+	assimp
 )
 if(UNIX)
 	include(FindPkgConfig)
