@@ -19,7 +19,7 @@ before_install:
   - sudo apt-get install -qq -y libassimp-dev
 
 script:
-  - cmake . -DUSE_GLM_BUNDLE=TRUE && make
+  - cmake . -DUSE_GLM_BUNDLE=TRUE -DOLD_CXX=TRUE && make
 branches:
   only:
   - master

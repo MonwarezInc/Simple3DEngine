@@ -23,12 +23,19 @@ file(
 	src/*
 	include/S3DE/*
 )
-set(Extra_CXX_Flags "-Wall -std=c++14")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(USE_GLM_BUNDLE "FALSE" CACHE BOOL "use bundle glm")
 set(WITH_ASSERT "TRUE" CACHE BOOL "Enable Assert")
 set(USE_SHARED "TRUE" CACHE BOOL "Build shared lib")
+set(OLD_CXX "FALSE" CACHE BOOL "use c++1y")
+
+if (OLD_CXX)
+	set(Extra_CXX_Flags "-Wall -std=c++1y")
+else (OLD_CXX)
+	set(Extra_CXX_Flags "-Wall -std=c++14")
+endif (OLD_CXX)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 if (win)
 	set(GL opengl32)
 endif (win)
