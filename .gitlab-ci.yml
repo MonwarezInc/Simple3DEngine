@@ -9,12 +9,11 @@ clang-3.9:
        - add-apt-repository ppa:boost-latest/ppa -y
        - add-apt-repository -y 'ppa:dartsim/ppa'
        - apt-get update -qq
-       - aot-get install -qq -y cmake
+       - apt-get install -qq -y cmake
        - apt-get install -qq -y libglew-dev
        - apt-get install -qq -y libsdl2-dev
        - apt-get install -qq -y libsdl2-image-dev
        - apt-get install -qq -y libassimp-dev
 
        - mkdir build && cd build && cmake . -DUSE_GLM_BUNDLE=TRUE && make
-    image: debian:unstable 
 
