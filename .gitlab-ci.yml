@@ -1,15 +1,26 @@
-image:	gcc:5.2
+stages:
+    - prebuild
+    - build
+# pre build
 
-build:
-	stage:	build
-  	- add-apt-repository -y 'ppa:zoogie/sdl2-snapshots'
-  	- add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  	- add-apt-repository ppa:boost-latest/ppa -y 
-  	- add-apt-repository -y 'ppa:dartsim/ppa' 
-  	- apt-get update -qq
-	- apt-get install -qq -y libglew-dev 
-	- apt-get install -qq -y libsdl2-dev 
-	- apt-get install -qq -y libsdl2-image-dev 
-	- apt-get install -qq -y libassimp-dev
-	script:
-	- mkdir build && cd build && cmake ../ -DUSE_GLM_BUNDLE=TRUE && make
+clang-3.9:
+    stage: prebuild
+    script:
+       - add-apt-repository -y 'ppa:zoogie/sdl2-snapshots'
+       - add-apt-repository ppa:ubuntu-toolchain-r/test -y
+       - add-apt-repository ppa:boost-latest/ppa -y
+       - add-apt-repository -y 'ppa:dartsim/ppa'
+       - apt-get update -qq
+       - apt-get install -qq -y libglew-dev
+       - apt-get install -qq -y libsdl2-dev
+       - apt-get install -qq -y libsdl2-image-dev
+       - apt-get install -qq -y libassimp-dev
+
+# Build
+
+clang-3.9:
+    stage: build
+    script:
+       - mkdir build && cd build && cmake . -DUSE_GLM_BUNDLE=TRUE && make
+    image: debian:unstable 
+
