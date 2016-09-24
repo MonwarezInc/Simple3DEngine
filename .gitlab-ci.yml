@@ -1,10 +1,8 @@
 stages:
-    - prebuild
     - build
-# pre build
 
 clang-3.9:
-    stage: prebuild
+    stage: build
     script:
        - add-apt-repository -y 'ppa:zoogie/sdl2-snapshots'
        - add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -17,11 +15,6 @@ clang-3.9:
        - apt-get install -qq -y libsdl2-image-dev
        - apt-get install -qq -y libassimp-dev
 
-# Build
-
-clang-3.9:
-    stage: build
-    script:
        - mkdir build && cd build && cmake . -DUSE_GLM_BUNDLE=TRUE && make
     image: debian:unstable 
 
