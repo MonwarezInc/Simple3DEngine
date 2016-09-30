@@ -127,15 +127,6 @@ void Shader::Load()
 	glAttachShader(m_programID, m_geometryID);
     glAttachShader(m_programID, m_fragmentID);
 
-    // Verrouillage des entrées shader
-	/*
-    glBindAttribLocation(m_programID, 0, "in_Vertex");
-    glBindAttribLocation(m_programID, 1, "in_Color");
-    glBindAttribLocation(m_programID, 2, "in_TexCoord0");
-	glBindAttribLocation(m_programID, 3, "in_Normal");
-	glBindAttribLocation(m_programID, 4, "in_BoneID");
-	glBindAttribLocation(m_programID, 5, "in_BoneW");
-	*/
     // Link  program
 
     glLinkProgram(m_programID);
@@ -283,24 +274,27 @@ bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &source)
 
 
         // Allocation de mémoire
+		std::vector<char> perror;
+		perror.resize(errorSize);
 
-        auto	perror = new char[errorSize + 1];
 
 
         // Récupération de l'erreur
 
-        glGetShaderInfoLog(shader, errorSize, &errorSize, perror);
-        perror[errorSize] = '\0';
+        glGetShaderInfoLog(shader, errorSize, &errorSize, perror.data());
 
 
         // Affichage de l'erreur
 
-        std::cerr << "Error during building shader "<< perror << std::endl;
-
-
+		std::stringstream out;
+		out << "*****************************" << std::endl;
+		out << "*****Building shader error***" << std::endl;
+		out << perror.data() << std::endl;
+		out << "Error size: " << errorSize << std::endl;
+		out << "*****************************"<< std::endl;
+		std::cerr << out.str() ;
         // Libération de la mémoire et retour du booléen false
 
-        delete[] perror;
         glDeleteShader(shader);
 
         return false;

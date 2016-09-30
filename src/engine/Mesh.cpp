@@ -44,12 +44,19 @@ Mesh::Mesh()
 	m_pScene	=	nullptr;
 	m_NumBones	=	0;
 }
+Mesh::Mesh(Mesh const &mesh)
+{
+	m_pScene	=	nullptr;
+	m_NumBones	=	0;
+	this->LoadFromFile(mesh.m_filename);
+}
 Mesh::~Mesh()
 {
 	this->Clear();
 }
 void	Mesh::LoadFromFile(std::string const & filename)
 {
+	m_filename	= filename;
 	// release the previously loaded mesh (if exists)
 	this->Clear();
 	
@@ -64,7 +71,7 @@ void	Mesh::LoadFromFile(std::string const & filename)
 		m_GlobalInverseTransform	=	glm::inverse( m_GlobalInverseTransform);
 		
 		// can launch an except
-		if(!this->InitFromScene(m_pScene,filename))
+		if(!this->InitFromScene(m_pScene))
 		{
 			std::stringstream out;
 			out << "error init from scene at: " << __FILE__ << "( " << __LINE__ << ")";
@@ -75,7 +82,7 @@ void	Mesh::LoadFromFile(std::string const & filename)
 		throw std::string("Error parsing" + filename + " : " + m_Importer.GetErrorString() );
 
 }
-bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
+bool	Mesh::InitFromScene(const aiScene* pScene)
 {
 	m_Entries.resize(pScene->mNumMeshes);
 	m_Textures.resize(pScene->mNumMaterials);
@@ -87,7 +94,7 @@ bool	Mesh::InitFromScene(const aiScene* pScene, std::string const & filename)
 		this->InitMesh(i, paiMesh, 0, 0); // 0 because it's one VAO by meshEntrie
 	}
 
-	return	InitMaterials(pScene, filename);
+	return	InitMaterials(pScene);
 }		
 void	Mesh::Draw(unsigned int  elapsed_time,const Shader &shader, std::string const & animation)
 {
@@ -175,17 +182,17 @@ void	Mesh::InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int Base
 	m_Entries[index].Init(vertices,indices,bones);
 }
 		
-bool	Mesh::InitMaterials(const aiScene* pScene, std::string const & filename)
+bool	Mesh::InitMaterials(const aiScene* pScene)
 {
 	// extract the directory part from the filename
-	std::string::size_type	slashIndex	=	filename.find_last_of("/");
+	std::string::size_type	slashIndex	=	m_filename.find_last_of("/");
 	std::string				dir;
 	if (slashIndex	==	std::string::npos)
 		dir = 	".";
 	else if (slashIndex	==	0)
 		dir	=	"/";
 	else
-		dir	=	filename.substr(0,slashIndex);
+		dir	=	m_filename.substr(0,slashIndex);
 	
 	bool ret	=	true;
 	

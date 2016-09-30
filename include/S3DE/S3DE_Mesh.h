@@ -66,6 +66,9 @@ class Mesh
 	public:
 
 		Mesh();
+		///	\brief Copy constructor
+		///	\param	The mesh to be copied, not that it will simply do LoadFromFile with m.filename
+		Mesh(Mesh const &m);
 		virtual	~Mesh();
 		///	\brief	Load a mesh from a file
 		///
@@ -112,9 +115,9 @@ class Mesh
 			void			AddBoneData(unsigned int boneID, float weight);
 		};
 		void		Clear();
-		bool		InitFromScene(const aiScene* pScene, std::string const & filename);
+		bool		InitFromScene(const aiScene* pScene);
 		void		InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex, unsigned int BaseIndex);
-		bool		InitMaterials(const aiScene* pScene, std::string const & filename);
+		bool		InitMaterials(const aiScene* pScene);
 		void		LoadBones(unsigned int index, const aiMesh* , std::vector<VertexBoneData> & bones);			
 		void		BoneTransform(float TimeInSec, std::vector<glm::mat4>& Transforms, unsigned int idAnimation);
 		void		ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 const & ParentTransform, unsigned int idAnimation);
@@ -147,6 +150,7 @@ class Mesh
 			unsigned int	BaseIndex;
 			int				skinned;
 		};
+		std::string							m_filename;
 		std::vector<MeshEntry>				m_Entries;
 		std::vector<Texture>				m_Textures;
 		const aiScene*						m_pScene;
