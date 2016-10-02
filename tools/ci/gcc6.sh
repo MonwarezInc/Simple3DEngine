@@ -1,6 +1,6 @@
 #!/bin/sh
-export CXX=CC
-export CC=cc
+export CC = gcc-6.2
+export CXX = g++-6.2
 
 apt-get update -qq
 apt-get install -qq -y wget
@@ -18,8 +18,8 @@ apt-get install -qq -y gnupg1
  apt-get update -qq
  apt-get install -qq -y cmake
  apt-get install -qq -y make
- apt-get install -qq -y gcc-6
- apt-get install -qq -y g++-6
+ apt-get install -qq -y gcc-6.2
+ apt-get install -qq -y g++-6.2
  apt-get install -qq -y libglew-dev
  apt-get install -qq -y libsdl2-dev
  apt-get install -qq -y libsdl2-image-dev
