@@ -31,7 +31,7 @@ set(OLD_CXX "FALSE" CACHE BOOL "use c++1y")
 if (OLD_CXX)
 	set(Extra_CXX_Flags "-Wall -std=c++1y")
 else (OLD_CXX)
-	set(Extra_CXX_Flags "-Wall -std=c++14")
+	set(Extra_CXX_Flags "-Wall -std=c++1z")
 endif (OLD_CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")

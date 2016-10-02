@@ -7,9 +7,9 @@ clang-3.9:
        - ./tools/ci/clang39.sh
     image: debian:unstable
 
-gcc-6.1:
+gcc-6:
     stage: build
     script:
-       - ./tools/ci/gcc61.sh
+       - ./tools/ci/gcc6.sh
     image: debian:unstable
 
