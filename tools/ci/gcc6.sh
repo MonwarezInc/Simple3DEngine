@@ -1,8 +1,5 @@
 #!/bin/sh
 
-export CC=gcc-6
-export CXX=g++-6
-
 apt-get update -qq
 apt-get install -qq -y wget
 apt-get install -qq -y gnupg
