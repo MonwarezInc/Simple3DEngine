@@ -32,10 +32,10 @@ using std::string;
 using std::vector;
 using namespace S3DE;
 // Some Bits operation define
-#define CONFIG_MASK	1		//	00000001
-#define MESH_MASK 	2		//	00000010
-#define LIGHT_MASK 	4		//	00000100
-#define DYN_MASK	8		//	00001000
+const unsigned char	CONFIG_MASK	=	1;	//	00000001
+const unsigned char	MESH_MASK 	=	2;	//	00000010
+const unsigned char	LIGHT_MASK 	=	4;	//	00000100
+const unsigned char	DYN_MASK	=	8;	//	00001000
 Loader::Loader()
 {
 	m_state	=	0;
@@ -308,6 +308,10 @@ void Loader::LoadLight()
 void Loader::LoadDynamics()
 {
 	std::ifstream	input(m_lastfilename.c_str());
+	// It's not implemented yet
+	// So when it will, if all goes good
+	if (false)
+		m_state |= DYN_MASK;
 }
 ConfigData	Loader::GetConfigData()
 {
