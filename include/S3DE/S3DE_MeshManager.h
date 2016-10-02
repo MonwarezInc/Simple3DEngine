@@ -38,7 +38,7 @@ struct  RcField
 	std::string     filename;   ///< the filename of the resource
 	size_t          id;         ///< an id to select an entity in particular
 };
-typedef std::vector < std::vector < std::shared_ptr < Mesh > > > Mesh2DArr; ///< A little trick to delete one element of an array
+using Mesh2DArr =  std::vector < std::vector < std::unique_ptr < Mesh > > > ; ///< A little trick to delete one element of an array
 ///	\brief	Manage the mesh resource
 class	MeshManager	:	public	IResourceManager<RcField>
 {
@@ -61,7 +61,7 @@ class	MeshManager	:	public	IResourceManager<RcField>
 	protected:
 		std::vector<RcField>	m_rcfield; 	///< A vector of the rcfield 
 		std::vector<size_t>		m_count; 	///< A vector of counter of ressource
-		Mesh2DArr				m_pmesh; 	///< A 2D vector of shared_ptr Mesh
+		Mesh2DArr				m_pmesh; 	///< A 2D vector of unique_ptr Mesh
 };
 }  // end of S3DE namespace
 #endif

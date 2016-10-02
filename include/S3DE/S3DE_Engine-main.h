@@ -115,7 +115,7 @@ class CEngine
 		virtual	void	Draw(unsigned int elapsed);
 
 	protected:
-		std::shared_ptr<S3DE::CGraphics>		m_pGraphics;
+		std::unique_ptr<S3DE::CGraphics>		m_pGraphics;
 		glm::mat4								m_modelview;
 		glm::mat4								m_projection;
 		// struct ObjectList

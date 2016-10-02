@@ -29,7 +29,7 @@ using namespace S3DE;
 CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::string &title,
                      GLuint bpp, GLuint aa, GLuint major, GLuint minor ):m_bpp(bpp),m_aa(aa)
 {
-    m_pWindow       =   std::make_shared<Window>(title, width, height,fullscreen);
+    m_pWindow       =   std::make_unique<Window>(title, width, height,fullscreen);
 
     // Version d'OpenGL
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,   major);

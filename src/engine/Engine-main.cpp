@@ -36,7 +36,7 @@ CEngine::~CEngine()
 void	CEngine::CreateWindow(EngineWindow const & engine)
 {
 	if (!m_pGraphics)
-		m_pGraphics	=	std::make_shared<CGraphics>(engine.width,engine.height,
+		m_pGraphics	=	std::make_unique<CGraphics>(engine.width,engine.height,
 													engine.fullscreen,engine.title,engine.bpp,
 													engine.aa,engine.major,engine.minor);
 	// load shader

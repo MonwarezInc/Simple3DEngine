@@ -50,7 +50,7 @@ class CGraphics
 		virtual	void	Clear(); // next step is to encapsulate glClear flag
 
 	protected:
-    	std::shared_ptr<Window>	m_pWindow;
+    	std::unique_ptr<Window>	m_pWindow;
     	SDL_GLContext   		m_glContext;
     	//OpenGL specifics
     	GLuint          		m_bpp;
