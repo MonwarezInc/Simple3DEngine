@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "S3DE_Shader.h"
 #include "S3DE_Light.h"
 #include "S3DE_MeshException.h"
+#include "S3DE_BasicMeshManager.h"
 
 #include <vector>
 namespace S3DE
@@ -67,61 +68,56 @@ class CEngine
 		/**	\brief Create a window with the specified OpenGL version (Limited to one window for now)
 		*	@param	engineWindow	Structure that contain all information needed to create the window
 		*/
-		virtual	void	CreateWindow(const EngineWindow & engineWindow);
+		void	CreateWindow(const EngineWindow & engineWindow);
 		///	\brief 	Delete the specifided window (Not Implemented)
 		///	@param[in]	indice		Id of the window
-		virtual void	DeleteWindow(GLuint indice);
+		void	DeleteWindow(GLuint indice);
 		///	\brief 	Set the active window (Not Implemented)
 		///	@param[in]	indice		Id of the window
-		virtual	void	SetActive(GLuint indice);
-		///	\brief Add an object to the scene
-		///	
-		///	\param[in] object 		A pointer to the object mesh
-		///	\param[in] id 			The returned id for managing position etc...
-		
-		
-		virtual void	AddMeshNode(Mesh * object, GLuint & id, bool isVisible=true);
-		///	\brief	Delete the node with id
-		///	\param	id the id of the mesh node
-		
-		virtual	void	DelMeshNode(size_t	id);
+		void	SetActive(GLuint indice);
+		///	\brief	Add a bunch of mesh
+		///	\param	meshPair	A vector of entity,filename pair
+		void	AddMesh(std::vector<MeshPair> const &meshPair);
+		void	DelMeshNode(std::string const & entity);
 		///	\brief	Set/Update the light information
 		///	\param[in]	pointlight	A vector of PointLight data	
-		virtual	void	AttachLight(std::vector<PointLight> const & pointlight);
+		void	AttachLight(std::vector<PointLight> const & pointlight);
 		///	\brief Set/update the spot light information
 		///	\param	spotlight 	a vector of SpotLight data
-		virtual	void	AttachLight(std::vector<SpotLight> const & spotlight);
+		void	AttachLight(std::vector<SpotLight> const & spotlight);
 		///	\brief Set/update the Directional light information
 		///	\param	dlight 	a DirectionalLight 
-		virtual	void	AttachLight(DirectionalLight const & dlight);
+		void	AttachLight(DirectionalLight const & dlight);
 		///	\brief Delete an object from the scene (Not Implemented)
 		///	\param[in]	id	Id of the object
-		virtual	void	DeleteObject(GLuint id);
+		void	DeleteObject(GLuint id);
 		///	\brief	Set the position and rotation of an object of the scene
-		///	\param[in] 	id		The id of the object
+		///	\param[in] 	entity	The name of the entity
 		///	\param[in] 	pos		The new position
 		///	\param[in]	pitch	The pitch rotation X,Y,Z
-		virtual	void	SetNodePosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch);
-		virtual	void	SetNodeScale(GLuint id, float scale);
-		virtual	void	SetNodeAnimation(GLuint id, std::string const & animation);
+		void	SetNodePosRot(std::string const & entity, glm::vec3 const & pos, glm::vec3 const & pitch);
+		void	SetNodeScale(std::string const & entity, float scale);
+		void	SetNodeAnimation(std::string const & entity, std::string const & animation);
 
-		virtual void 	SetCameraLocation(glm::vec3 const & pos,glm::vec3 const & center,glm::vec3 const & vert);
-		virtual	void	SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
+		void 	SetCameraLocation(glm::vec3 const & pos,glm::vec3 const & center,glm::vec3 const & vert);
+		void	SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
 		
-		virtual void	ClearColor(float r, float g, float b, float a);
-		virtual	void	Init(); // next step is to have flags
+		void	ClearColor(float r, float g, float b, float a);
+		void	Init(); // next step is to have flags
 
-		virtual	void	Draw(unsigned int elapsed);
+		void	Draw(unsigned int elapsed);
 
 	protected:
 		std::unique_ptr<S3DE::CGraphics>		m_pGraphics;
+		BasicMeshManager						m_meshManager;
+		std::map<std::string, size_t>			m_entToID;
 		glm::mat4								m_modelview;
 		glm::mat4								m_projection;
 		// struct ObjectList
 		// Maybe next time we will do SceneGraph
 		struct	ObjectNode
 		{
-			Mesh*		object;
+			std::string	entity;
 			glm::vec3	position;
 			float		pitch[3];
 			float		scale;
@@ -130,7 +126,7 @@ class CEngine
 			size_t		id;	///< the id of the Mesh
 			bool		isVisible;	///< Do the node is visible
 		};
-
+		void	AddMeshNode(std::string const & entity, bool isVisible=true);
 		std::vector< ObjectNode>				m_vObjectNode;	
 		// Light is a shader 
 		Light									m_pShader;

@@ -50,10 +50,16 @@ void	CEngine::SetActive(GLuint indice)
 {
 	// not implemented yet
 }
-void	CEngine::AddMeshNode(Mesh* object,GLuint & id, bool isVisible)
+void	CEngine::AddMesh(std::vector<MeshPair> const &meshPair)
+{
+	m_meshManager.Load(meshPair);
+	for (auto &v: meshPair)
+		this->AddMeshNode(v.entity);
+}
+void	CEngine::AddMeshNode(std::string const & entity, bool isVisible)
 {
 	ObjectNode	objectNode;
-	objectNode.object	=	object;
+	objectNode.entity	=	entity;
 	objectNode.position	=	glm::vec3(0.0,0.0,0.0);
 	objectNode.scale	=	1.0;
 	for (unsigned int i=0; i < 3; ++i)
@@ -62,16 +68,17 @@ void	CEngine::AddMeshNode(Mesh* object,GLuint & id, bool isVisible)
 	objectNode.id			=	m_vObjectNode.size();
 	objectNode.isVisible	=	isVisible;
 	m_vObjectNode.push_back(objectNode);
-	id	=	objectNode.id;
+	m_entToID[entity]	=	objectNode.id;
 }
-void	CEngine::DelMeshNode(size_t id)
+void	CEngine::DelMeshNode(std::string const & entity)
 {
 	// If succeed does not launch an exception
 	// it's not manage the memory of the mesh itself
-	if (id >= m_vObjectNode.size())
+	auto	it	=	m_entToID.find(entity);
+	if (it == m_entToID.end())
 		throw std::string ("Error the id is to high for DelMeshNode");
-	m_vObjectNode[id].isVisible	=	false;	// Set to false so that we didn't show it
-	m_vObjectNode[id].object	=	nullptr;	
+	m_vObjectNode[it->second].isVisible	=	false;	// Set to false so that we didn't show it
+	m_vObjectNode[it->second].entity		=	"";	
 }
 void	CEngine::AttachLight(std::vector<PointLight> const & pointlight)
 {
@@ -89,26 +96,29 @@ void	CEngine::DeleteObject(GLuint id)
 {
 	//not implemented yet
 }
-void	CEngine::SetNodePosRot(GLuint id, glm::vec3 const & pos, glm::vec3 const & pitch)
+void	CEngine::SetNodePosRot(std::string const & entity, glm::vec3 const & pos, glm::vec3 const & pitch)
 {
-	if (id < m_vObjectNode.size())
+	auto it 	=	m_entToID.find(entity);
+	if (it != m_entToID.end())
 	{
-		m_vObjectNode[id].position	=	pos;
+		m_vObjectNode[it->second].position	=	pos;
 		for (unsigned int i=0; i < 3; ++i)
-			m_vObjectNode[id].pitch[i]	=	pitch[i];
+			m_vObjectNode[it->second].pitch[i]	=	pitch[i];
 	}
 	// else we do nothing improve performance xD
 }
-void	CEngine::SetNodeScale(GLuint id, float scale)
+void	CEngine::SetNodeScale(std::string const & entity, float scale)
 {
-	if (id < m_vObjectNode.size())
-		m_vObjectNode[id].scale	=	scale;
+	auto it	=	m_entToID.find(entity);
+	if (it != m_entToID.end())
+		m_vObjectNode[it->second].scale	=	scale;
 	// same things like SetObjectPosRot
 }
-void	CEngine::SetNodeAnimation(GLuint id, std::string const & animation)
+void	CEngine::SetNodeAnimation(std::string const & entity, std::string const & animation)
 {
-	if (id < m_vObjectNode.size())
-		m_vObjectNode[id].animation	=	animation;
+	auto it = m_entToID.find(entity);
+	if (it != m_entToID.end())
+		m_vObjectNode[it->second].animation	=	animation;
 }
 void 	CEngine::SetCameraLocation(glm::vec3 const & pos, glm::vec3 const & center, glm::vec3 const & vert)
 {
@@ -167,7 +177,7 @@ void	CEngine::Draw(unsigned int elapsed)
 				// then draw it
 				try
 				{
-					objectNode.object->Draw(elapsed,m_pShader,objectNode.animation);
+					m_meshManager.Draw(objectNode.entity,elapsed,m_pShader,objectNode.animation);
 				}
 				catch (std::string &a)
 				{
