@@ -44,8 +44,10 @@ struct	Deleter
 };
 
 } // end of namespace sdl
-typedef std::unique_ptr<SDL_Window,sdl::Deleter>	WindowPtr;
-typedef std::unique_ptr<SDL_Surface,sdl::Deleter>	SurfacePtr;
+template <class T>
+using SDL_Ptr	=	std::unique_ptr<T, sdl::Deleter>;
+using WindowPtr	=	SDL_Ptr<SDL_Window>;
+using SurfacePtr=	SDL_Ptr<SDL_Surface>;
 
 } // end of namespace S3DE
 #endif

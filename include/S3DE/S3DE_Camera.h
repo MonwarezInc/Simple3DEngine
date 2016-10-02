@@ -35,8 +35,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 namespace S3DE
 {
-typedef     std::map<SDL_Scancode, bool> KeyStates;
-typedef     std::map <std::string, SDL_Scancode> KeyConf;
+using KeyStates = 	std::map<SDL_Scancode, bool>;
+using KeyConf	=	std::map <std::string, SDL_Scancode>;
 class Camera
 {
 	public:
