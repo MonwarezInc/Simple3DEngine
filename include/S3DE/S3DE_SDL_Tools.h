@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef _S3DE_SDL_TOOLS_H_INCLUED
-#define _S3DE_SDL_TOOLS_H_INCLUED
+#pragma once
 #include <SDL.h>
 #include <SDL_main.h>
 #include <SDL_image.h>
@@ -50,4 +49,3 @@ using WindowPtr	=	SDL_Ptr<SDL_Window>;
 using SurfacePtr=	SDL_Ptr<SDL_Surface>;
 
 } // end of namespace S3DE
-#endif

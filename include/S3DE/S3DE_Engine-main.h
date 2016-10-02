@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef ENGINE_MAIN_INCLUED
-#define ENGINE_MAIN_INCLUED
+#pragma once
 #include "S3DE_Graphics.h"
 #include "S3DE_Mesh.h"
 #include "S3DE_Shader.h"
@@ -145,4 +144,3 @@ class CEngine
 		glm::vec3								m_CameraVertical;
 };
 }  // end of S3DE namespace
-#endif

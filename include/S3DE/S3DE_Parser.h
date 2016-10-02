@@ -24,9 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef S3DE_PARSER_INCLUED
-#define S3DE_PARSER_INCLUED
-
+#pragma once
 #include <string>
 
 namespace S3DE
@@ -39,4 +37,3 @@ size_t  ExtractMatch(std::string const &in, std::string &out, std::string const 
 
 } // end of Parser namespace
 } // end of S3DE namespace
-#endif

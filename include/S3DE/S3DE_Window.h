@@ -24,9 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef WINDOW_H_INCLUED
-#define WINDOW_H_INCLUED
-
+#pragma once
 #include "S3DE_SDL_Tools.h"
 #include <string>
 #include <vector>
@@ -55,4 +53,3 @@ class Window
 		WindowPtr	CreateWindow(std::string title, int x, int y, int w, int h, Uint32 flags);
 };
 }  // end of S3DE namespace
-#endif

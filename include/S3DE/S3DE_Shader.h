@@ -24,9 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef DEF_SHADER
-#define DEF_SHADER
-
+#pragma once
 // GLEW for all platform
 #include <GL/glew.h>
 
@@ -86,4 +84,3 @@ class Shader
 		std::string m_geometrySource;
 };
 }  // end of S3DE namespace
-#endif

@@ -24,9 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
-
+#pragma once
 // GLEW for all platform
 #include <GL/glew.h>
 #include <vector>
@@ -59,4 +57,3 @@ class FrameBuffer
 	private:
 };
 }  // end of S3DE namespace
-#endif // FRAMEBUFFER_H

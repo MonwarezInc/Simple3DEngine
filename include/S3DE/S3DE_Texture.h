@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 #include "S3DE_SDL_Tools.h"
 // GLEW for all platform
 #include <GL/glew.h>
@@ -66,4 +65,3 @@ class Texture
 	private:
 };
 }  // end of S3DE namespace
-#endif // TEXTURE_H

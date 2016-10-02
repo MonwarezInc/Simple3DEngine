@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef RESOURCEMANAGER_HPP_INCLUED
-#define RESOURCEMANAGER_HPP_INCLUED
+#pragma once
 #include <string>
 #include <vector>
 #include <map>
@@ -48,4 +47,3 @@ class IResourceManager
 		virtual void 	Release(T &object)=0;
 };
 } // end of S3DE namespace
-#endif

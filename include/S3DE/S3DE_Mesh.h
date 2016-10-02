@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef MESH_INCLUED
-#define MESH_INCLUED
+#pragma once
 #include "S3DE_Texture.h"
 #include "S3DE_Shader.h"
 
@@ -162,4 +161,3 @@ class Mesh
 		std::string							m_animation;
 };
 }  // end of S3DE namespace
-#endif

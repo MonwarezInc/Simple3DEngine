@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef MESH_MANAGER_INCLUED
-#define MESH_MANAGER_INCLUED
+#pragma once
 #include "S3DE_IResourceManager.hpp"
 #include "S3DE_Mesh.h"
 #include <memory>
@@ -64,4 +63,3 @@ class	MeshManager	:	public	IResourceManager<RcField>
 		Mesh2DArr				m_pmesh; 	///< A 2D vector of unique_ptr Mesh
 };
 }  // end of S3DE namespace
-#endif

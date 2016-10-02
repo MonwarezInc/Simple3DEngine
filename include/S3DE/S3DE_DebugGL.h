@@ -24,9 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef DEBUGGL_H_INCLUDED
-#define DEBUGGL_H_INCLUDED
-
+#pragma once
 // GLEW for all platform
 #include <GL/glew.h>
 
@@ -40,4 +38,3 @@ namespace Debug
 bool glCheck(std::string filename, int line);
 } // end of Debug namespace
 
-#endif // DEBUGGL_H_INCLUDED

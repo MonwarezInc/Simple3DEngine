@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef Interpolate_H_INCLUED
-#define Interpolate_H_INCLUED
+#pragma once
 #include <memory>
 #include <string>
 #include <vector>
@@ -101,9 +100,8 @@ class LinearInterpolate : public CurveInterpolate<T>
 		}
 	protected:
 	
-		std::vector <glm::vec3>	m_vposition3D;
+		std::vector <glm::vec3>		m_vposition3D;
 		std::vector <T>				m_time;
 		bool						m_looped;
 };
 }  // end of S3DE namespace
-#endif

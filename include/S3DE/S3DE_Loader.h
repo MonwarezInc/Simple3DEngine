@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef S3DE_LOADER_HEADER_INCLUED_H
-#define S3DE_LOADER_HEADER_INCLUED_H
+#pragma once
 #include <glm/glm.hpp>
 #include <string>
 #include <fstream>
@@ -91,4 +90,3 @@ class	Loader
 		std::vector<LightData>	m_vLight;	
 };
 }  // end of S3DE namespace
-#endif

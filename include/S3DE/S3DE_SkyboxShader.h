@@ -24,8 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef S3DE_SKYBOX_SHADER_H
-#define S3DE_SKYBOX_SHADER_H
+#pragma once
 #include "S3DE_Shader.h"
 #include <glm/glm.hpp>
 
@@ -48,4 +47,3 @@ class SkyboxShader : public Shader
 };
 }  // end of S3DE namespace
 
-#endif

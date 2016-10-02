@@ -24,9 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef S3DE_SHADOW_MAP_INCLUED
-#define	S3DE_SHADOW_MAP_INCLUED
-
+#pragma once
 #include <GL/glew.h>
 #include <S3DE_Shader.h>
 #include <glm/glm.hpp>
@@ -75,4 +73,3 @@ class	ShadowMapShader : public Shader
 };
 
 }  // end of S3DE namespace
-#endif
