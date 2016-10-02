@@ -1,4 +1,6 @@
 #!/bin/sh
+export CXX=CC
+export CC=cc
 
 apt-get update -qq
 apt-get install -qq -y wget
