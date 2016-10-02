@@ -1,7 +1,7 @@
 Simple3DEngine
 =============
 Build status:
-  https://gitlab.com/MonwarezInc/Simple3DEngine/badges/master/build.svg
+[![Build Status](https://gitlab.com/MonwarezInc/Simple3DEngine/badges/master/build.svg)]
 
 Simple3DEngine turned to OpenGL 3.2 (core profile) and 150 for shader <br/>
 List of shader extension used:<br/>

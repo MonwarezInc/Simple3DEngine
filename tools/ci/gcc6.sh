@@ -1,6 +1,6 @@
 #!/bin/sh
-export CC=gcc-6.2
-export CXX=g++-6.2
+export CC=gcc-6
+export CXX=g++-6
 
 apt-get update -qq
 apt-get install -qq -y wget
