@@ -138,8 +138,10 @@ void	CEngine::ClearColor(float r, float g, float b, float a)
 void	CEngine::Init()
 {	
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 }
-void	CEngine::Draw(unsigned int elapsed)
+void	CEngine::Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed)
 {
 	m_pShader.Enable();
 		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);

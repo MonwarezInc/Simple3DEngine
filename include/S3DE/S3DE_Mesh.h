@@ -40,6 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <chrono>
 
 namespace S3DE
 {
@@ -82,7 +83,7 @@ class Mesh
 		///	\param	elapsed_time	The elapsed time since the beginning of the application
 		///	\param	shader			A reference to set some information to the shader (like bone information etc...)
 		///	\param	animation		The name of the animation to play
-		virtual	void	Draw(unsigned int  elapsed_time, Shader const & shader,std::string const & animation);
+		virtual	void	Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed_time, Shader const & shader,std::string const & animation);
 	private:
 		#define NUM_BONES_PER_VERTEX 4
 		#define INVALID_MATERIAL	0xFFFFFFFF

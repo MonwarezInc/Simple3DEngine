@@ -26,13 +26,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 
+#include "S3DE_Input.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "S3DE_Input.h"
 #include <string>
 #include <map>
+#include <chrono>
 namespace S3DE
 {
 using KeyStates = 	std::map<SDL_Scancode, bool>;
@@ -58,7 +60,8 @@ class Camera
 		///
 		///	\param	event	the event for getting mouse move
 		///	\param	elapsed	the current elapsed time
-    	void                Move(CInput const &event, Uint32 elapsed);
+    	void                Move(CInput const &event, 
+							std::chrono::duration<float, std::chrono::milliseconds::period> elapsed);
 		///	\brief	Update the camera KeyStates
 		///	\param	event	the event to check
     	void                KeyBoardEvent(CInput const &event);

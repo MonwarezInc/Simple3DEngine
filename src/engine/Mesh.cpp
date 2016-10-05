@@ -96,10 +96,11 @@ bool	Mesh::InitFromScene(const aiScene* pScene)
 
 	return	InitMaterials(pScene);
 }		
-void	Mesh::Draw(unsigned int  elapsed_time,const Shader &shader, std::string const & animation)
+void	Mesh::Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,const Shader &shader, std::string const & animation)
 {
 	std::vector<glm::mat4>	transforms;
-	this->BoneTransform((static_cast<float>(elapsed_time))/1000.0f, transforms, GetAnimationIndex(animation));
+	//this->BoneTransform((static_cast<float>(elapsed_time))/1000.0f, transforms, GetAnimationIndex(animation));
+	this->BoneTransform(elapsed_time.count(), transforms, GetAnimationIndex(animation));
 	for (unsigned int i=0; i < transforms.size(); ++i)
 	{
 		// we have to send unform matrix

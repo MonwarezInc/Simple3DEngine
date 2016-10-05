@@ -107,9 +107,10 @@ void Camera::KeyBoardEvent(CInput const &event)
     for (auto& key : m_keystat)
         key.second  =   event.GetTouche(key.first);
 }
-void Camera::Move(CInput const &event,  Uint32 elapsed)
+void Camera::Move(CInput const &event,
+				std::chrono::duration<float, std::chrono::milliseconds::period> elapsed)
 {
-    auto time = static_cast<float>(elapsed);
+    auto time = elapsed.count();
 
     if (m_keystat[m_keyconf["forward"]])
     {

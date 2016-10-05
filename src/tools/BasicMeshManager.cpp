@@ -43,7 +43,8 @@ void	BasicMeshManager::Load(std::vector<MeshPair> const & meshPair)
 	}
 }
 
-void	BasicMeshManager::Draw(std::string const & entity, unsigned int elapsed_time, Shader const & shader,
+void	BasicMeshManager::Draw(std::string const & entity, 
+			std::chrono::duration<float, std::chrono::seconds::period> elapsed_time, Shader const & shader,
 				std::string const & animation)
 {
 	m_vMesh[m_nameToID[m_entityToName[entity]]].Draw(elapsed_time, shader, animation);

@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "S3DE_BasicMeshManager.h"
 
 #include <vector>
+#include <chrono>
 namespace S3DE
 {
 struct	EngineShader
@@ -105,7 +106,7 @@ class CEngine
 		void	ClearColor(float r, float g, float b, float a);
 		void	Init(); // next step is to have flags
 
-		void	Draw(unsigned int elapsed);
+		void	Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed);
 
 	protected:
 		std::unique_ptr<S3DE::CGraphics>		m_pGraphics;

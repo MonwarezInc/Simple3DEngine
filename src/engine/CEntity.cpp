@@ -54,7 +54,8 @@ void	CEntity::Clear(std::string const & entityName)
 			// silently discard
 		}
 }
-void	CEntity::Draw(std::vector<std::string> const & entity, unsigned int elapsed_time, 
+void	CEntity::Draw(std::vector<std::string> const & entity, 
+					std::chrono::duration<float, std::chrono::seconds::period> elapsed_time, 
 						Shader const & shader, std::string const & animation)
 {
 		for (auto &v : entity)

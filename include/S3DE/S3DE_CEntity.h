@@ -30,6 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 #include <memory>
 #include <vector>
+#include <chrono>
 ///
 ///	\brief	namespace of the engine
 namespace S3DE
@@ -53,7 +54,8 @@ class CEntity
 		///	\param	elapsed_time	The elapsed time since the beginning, so that animation works
 		///	\param	shader			A reference to the shader to use
 		///	\param	animation		The name of the animation to play
-		virtual	void		Draw(std::vector<std::string> const & entity, unsigned int elapsed_time, 
+		virtual	void		Draw(std::vector<std::string> const & entity, 
+									std::chrono::duration<float, std::chrono::seconds::period>  elapsed_time, 
 									Shader const & shader, std::string const & animation);
 	protected:
 		MeshManager						m_rcManager;////< the resource manager

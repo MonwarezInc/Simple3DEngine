@@ -120,7 +120,7 @@ void	MeshManager::Release(RcField	&rc)
 	rc.filename=	std::string("");
 	rc.id	=	0;
 }
-void	MeshManager::Draw(RcField const & rc, unsigned int elapsed_time, Shader const & shader, std::string const & animation)
+void	MeshManager::Draw(RcField const & rc, std::chrono::duration<float, std::chrono::seconds::period> elapsed_time, Shader const & shader, std::string const & animation)
 {
 	if ((rc.id < m_count.size()) && (rc.id > 0))
 		m_pmesh[rc.id - 1][0]->Draw(elapsed_time, shader, animation);

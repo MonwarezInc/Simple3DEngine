@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "S3DE_IResourceManager.hpp"
 #include "S3DE_Mesh.h"
 #include <memory>
+#include <chrono>
 
 namespace S3DE
 {
@@ -55,8 +56,8 @@ class	MeshManager	:	public	IResourceManager<RcField>
 		///	\param	elapsed_time	The	elapsed time since the beginning , so that animation could works
 		///	\param	shader			A reference to the shader to use
 		///	\param	animation		The name of the animation to play
-		void		Draw(RcField const & rcfield, unsigned int elapsed_time, Shader const & shader,
-							std::string const & animation);
+		void		Draw(RcField const & rcfield, std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
+							Shader const & shader, std::string const & animation);
 	protected:
 		std::vector<RcField>	m_rcfield; 	///< A vector of the rcfield 
 		std::vector<size_t>		m_count; 	///< A vector of counter of ressource
