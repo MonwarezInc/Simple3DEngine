@@ -1,4 +1,4 @@
-# Contributing guide
+# Contribution guide
 
 * Use four space for indentation
 * Class naming start with upper case
