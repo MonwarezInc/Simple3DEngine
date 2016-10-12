@@ -155,11 +155,11 @@ void Shader::Load()
         glGetProgramInfoLog(m_programID, errorSize, &errorSize, perror.data());
 
 		std::stringstream out;
-		out << "*****************************" << std::endl;
-		out << "*********Linking error*******" << std::endl;
-		out << perror.data() << std::endl;
-		out << "Error size: " << errorSize << std::endl;
-		out << "*****************************"<< std::endl;
+		out << "*****************************\n";
+		out << "*********Linking error*******\n";
+		out << perror.data() << '\n';
+		out << "Error size: " << errorSize << '\n';
+		out << "*****************************\n";
 
         // Delete program and throw an exception
 
@@ -204,7 +204,7 @@ bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &source)
 
     if(shader == 0)
     {
-        std::cout << "Erreur, le type de shader (" << type << ") n'existe pas" << std::endl;
+        std::cout << "Erreur, le type de shader (" << type << ") n'existe pas\n";
         return false;
     }
 
@@ -287,11 +287,11 @@ bool Shader::BuildShader(GLuint &shader, GLenum type, std::string const &source)
         // Affichage de l'erreur
 
 		std::stringstream out;
-		out << "*****************************" << std::endl;
-		out << "*****Building shader error***" << std::endl;
-		out << perror.data() << std::endl;
-		out << "Error size: " << errorSize << std::endl;
-		out << "*****************************"<< std::endl;
+		out << "*****************************\n";
+		out << "*****Building shader error***\n";
+		out << perror.data() << '\n';
+		out << "Error size: " << errorSize << '\n';
+		out << "*****************************\n";
 		std::cerr << out.str() ;
         // Libération de la mémoire et retour du booléen false
 

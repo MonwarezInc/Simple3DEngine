@@ -63,8 +63,8 @@ void	GBuffer::Init(unsigned int width, unsigned int height)
 	if (Status != GL_FRAMEBUFFER_COMPLETE)
 	{
 		std::stringstream out;
-		out << "Error at " << __FILE__ << "(" << __LINE__  << ")"<< std::endl;
-		out << "Framebuffer error, status: 0x" << Status << std::endl;	
+		out << "Error at " << __FILE__ << "(" << __LINE__  << ") \n";
+		out << "Framebuffer error, status: 0x" << Status << '\n';	
 		throw out.str();
 	}
 	

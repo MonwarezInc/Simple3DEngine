@@ -215,8 +215,8 @@ bool	Mesh::InitMaterials(const aiScene* pScene)
 				if (!m_Textures[i].Load())
 				{
 					// maybe use except mechanism ?
-					std::cerr << "Error loading texture " << fullPath << std::endl;
-					std::cerr << "in file: " <<__FILE__ <<"("<<__LINE__<<")" << std::endl;
+					std::cerr << "Error loading texture " << fullPath << '\n';
+					std::cerr << "in file: " <<__FILE__ <<"("<<__LINE__<<")" << '\n';
 					ret				=	false;
 				}
 			}
@@ -560,10 +560,10 @@ unsigned int 		Mesh::GetAnimationIndex(std::string const & animation)
 	// Then check if the idAnimation is in a good range
 	if (idAnimation >= m_pScene->mNumAnimations)
 	{
-		std::cerr << "Error in idAnimation range" << std::endl;
+		std::cerr << "Error in idAnimation range\n";
 		std::stringstream out;
 		out << "Error in idAnimation range, there is only: " << m_pScene->mNumAnimations;
-		out << " but the following id animation has request " << idAnimation << std::endl;
+		out << " but the following id animation has request " << idAnimation << '\n';
 		throw out.str();
 	}
 	return idAnimation;

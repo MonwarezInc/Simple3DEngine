@@ -133,7 +133,7 @@ bool Texture::Load()
     else
     {
         //	We stop loading
-        std::cerr << "Erreur format interne non reconu" << std::endl;
+        std::cerr << "Erreur format interne non reconu\n";
         return false;
     }
 

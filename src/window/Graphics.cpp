@@ -62,11 +62,11 @@ CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::str
     }
     catch (std::string error)
     {
-        std::cerr << error << std::endl;
+        std::cerr << error << '\n';
         exit(-1);
     }
-	std::cout << "OpenGL Vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "OpenGL Vendor: " << glGetString(GL_VENDOR) << '\n';
+    std::cout << "Version: " << glGetString(GL_VERSION) << '\n';
 }
 void        CGraphics::SwapWindow()
 {
