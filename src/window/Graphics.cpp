@@ -48,34 +48,32 @@ CGraphics::CGraphics(int width, int height, bool fullscreen,const std::string &t
     try
     {
 
-        glewExperimental    =   GL_TRUE;
-        GLenum  initialisationGLEW(glewInit());
-
-        if (initialisationGLEW != GLEW_OK)
-            throw std::string(reinterpret_cast<const char *>(glewGetErrorString(initialisationGLEW)));
-
-
+    glewExperimental    =   GL_TRUE;
+    GLenum  initialisationGLEW(glewInit());
+    
+    if (initialisationGLEW != GLEW_OK)
+        throw std::string(reinterpret_cast<const char *>(glewGetErrorString(initialisationGLEW)));
     }
     catch (std::string error)
     {
         std::cerr << error << '\n';
         exit(-1);
     }
-	std::cout << "OpenGL Vendor: " << glGetString(GL_VENDOR) << '\n';
+    std::cout << "OpenGL Vendor: " << glGetString(GL_VENDOR) << '\n';
     std::cout << "Version: " << glGetString(GL_VERSION) << '\n';
 }
 void    CGraphics::SwapWindow()
 {
     SDL_GL_SwapWindow(m_pWindow.get());
 }
-void		CGraphics::ClearColor(float r, float g, float b, float a)
+void    CGraphics::ClearColor(float r, float g, float b, float a)
 {
 	glClearColor(r,g,b,a);
 }
-void 		CGraphics::Clear()
+void    CGraphics::Clear()
 {
-	// more later we will add flags option
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // more later we will add flags option
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 CGraphics::~CGraphics()
 {
