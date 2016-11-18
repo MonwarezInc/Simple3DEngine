@@ -26,25 +26,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Graphics.h>
 using namespace S3DE;
-CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::string &title,
-                     GLuint bpp, GLuint aa, GLuint major, GLuint minor ):m_bpp(bpp),m_aa(aa)
+CGraphics::CGraphics(int width, int height, bool fullscreen,const std::string &title,
+                     int bpp, int aa, int major, int minor ):Window(title,width,height,fullscreen, SDL_WINDOW_OPENGL),m_bpp(bpp),m_aa(aa)
 {
-    m_pWindow       =   std::make_unique<Window>(title, width, height,fullscreen);
-
-    // Version d'OpenGL
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,   major);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,   minor);
-    // profile core
 	
-	if ((major >= 3 && minor >= 2) || major >= 4)
-    	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	else if (3 == major)
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+    if ((major >= 3 && minor >= 2) || major >= 4)
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    else if (3 == major)
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-    m_glContext     =   m_pWindow->CreateContext(0); // on a qu'une seule fenêtre
+    m_glContext    =    SDL_GL_CreateContext(m_pWindow.get());
     GL_CHECK;
 	
     if (m_glContext == 0)
@@ -68,9 +64,9 @@ CGraphics::CGraphics(GLuint width, GLuint height, bool fullscreen,const std::str
 	std::cout << "OpenGL Vendor: " << glGetString(GL_VENDOR) << '\n';
     std::cout << "Version: " << glGetString(GL_VERSION) << '\n';
 }
-void        CGraphics::SwapWindow()
+void    CGraphics::SwapWindow()
 {
-    m_pWindow->SwapWindow(0);
+    SDL_GL_SwapWindow(m_pWindow.get());
 }
 void		CGraphics::ClearColor(float r, float g, float b, float a)
 {

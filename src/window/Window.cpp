@@ -26,36 +26,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Window.h>
 using namespace S3DE;
-Window::Window(const std::string &title, unsigned int width, unsigned int height, bool fullscreen)
+Window::Window(const std::string &title, int width, int height, bool fullscreen, Uint32 flags)
 {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		throw std::string ("error sdl init video");
-	m_vsWindow.push_back(SingleWindow());
-	m_vsWindow.back().title	=	title;
-	m_vsWindow.back().width	=	width;
-	m_vsWindow.back().height	=	height;
-	m_vsWindow.back().pWindow =	fullscreen?
-                            this->CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
-							SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL) :
-                            this->CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
-							SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+        throw std::string ("error sdl init video");
+    if (width <= 0)
+        throw std::string ("error width cannot be lesser or equal to 0");
+    if (height <= 0)
+        throw std::string ("error height cannot be lesser or equal to 0");
+
+    m_title	    =    title;
+    m_width	    =    width;
+    m_height    =    height;
+    if (fullscreen)
+        m_pWindow = this->CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN | flags);
+    else
+       m_pWindow = this->CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN | flags);
 }
-SDL_GLContext   Window::CreateContext(unsigned int numWindow)
+WindowPtr    Window::CreateWindow(std::string title, int x, int y, int w, int h, Uint32 flags)
 {
-    if (numWindow >= m_vsWindow.size())
-        throw std::string("error unknow indice");
-    return SDL_GL_CreateContext(m_vsWindow[numWindow].pWindow.get());
-}
-void            Window::SwapWindow(unsigned int numWindow)
-{
-    if (numWindow >= m_vsWindow.size())
-        throw std::string("error unknow indice");
-    SDL_GL_SwapWindow(m_vsWindow[numWindow].pWindow.get());
-}
-WindowPtr	Window::CreateWindow(std::string title, int x, int y, int w, int h, Uint32 flags)
-{
-	return WindowPtr(SDL_CreateWindow(title.c_str(),x,y,w,h,flags), sdl::Deleter());
-}
-Window::~Window()
-{
+    return WindowPtr(SDL_CreateWindow(title.c_str(),x,y,w,h,flags), sdl::Deleter());
 }
