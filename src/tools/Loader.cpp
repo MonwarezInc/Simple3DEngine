@@ -32,90 +32,90 @@ using std::string;
 using std::vector;
 using namespace S3DE;
 // Some Bits operation define
-const unsigned char	CONFIG_MASK	=	1;	//	00000001
-const unsigned char	MESH_MASK 	=	2;	//	00000010
-const unsigned char	LIGHT_MASK 	=	4;	//	00000100
-const unsigned char	DYN_MASK	=	8;	//	00001000
+const unsigned char	CONFIG_MASK	=    1;	//    00000001
+const unsigned char	MESH_MASK 	=    2;	//    00000010
+const unsigned char	LIGHT_MASK 	=    4;	//    00000100
+const unsigned char	DYN_MASK	=    8;	//    00001000
 Loader::Loader()
 {
-	m_state	=	0;
+    m_state	=    0;
 }
 void Loader::Load(string const &filename, LoaderType type)
 {
-	m_lastfilename =	filename;
-	switch (type)
-	{
-		case LoaderType::CONFIG:
-			this->LoadConfig();
-			break;
-		case LoaderType::MESH:
-			this->LoadMesh();
-			break;
-		case LoaderType::LIGHT:
-			this->LoadLight();
-			break;
-		case LoaderType::DYNAMICS:
-			this->LoadDynamics();
-			break;
-	}
+    m_lastfilename =    filename;
+    switch (type)
+    {
+        case LoaderType::CONFIG:
+            this->LoadConfig();
+            break;
+        case LoaderType::MESH:
+             this->LoadMesh();
+             break;
+        case LoaderType::LIGHT:
+            this->LoadLight();
+            break;
+        case LoaderType::DYNAMICS:
+            this->LoadDynamics();
+            break;
+    }
 }
 void Loader::LoadConfig()
 {
-	std::ifstream	input(m_lastfilename.c_str());
-	this->ClearState(CONFIG_MASK);
-	if (input.is_open())
-	{
-		float	x,y,z,u,v,w,a,b,c;
-		std::string	buf;
-		std::getline(input, buf);
-		auto	i1	=	buf.find("camera position");
-		if (i1	==	std::string::npos)
-			throw string("Error configuration file at first line");
+    std::ifstream    input(m_lastfilename.c_str());
+    this->ClearState(CONFIG_MASK);
+    if (input.is_open())
+    {
+        float    x,y,z,u,v,w,a,b,c;
+        std::string	buf;
+        std::getline(input, buf);
+        auto    i1    =    buf.find("camera position");
+        if (i1	==	std::string::npos)
+            throw string("Error configuration file at first line");
 
-		std::string	substr1;
-		auto	i2	=	Parser::ExtractMatch(buf,substr1);
-		Parser::Find3uple(substr1,x,y,z);
-		buf	=	buf.substr(i2+1);	
-		
-		i1	=	buf.find("target");
-		if (i1	==	std::string::npos)
-			throw string("Error configuration file at first line");
-		buf	=	buf.substr(i1);
-		i2		=	Parser::ExtractMatch(buf,substr1);
-		Parser::Find3uple(substr1,u,v,w);
-		
-		buf	=	buf.substr(i2+1);
-		i1	=	buf.find("up");
-		if (i1	==	std::string::npos)
-			throw string("Error configuration file at first line");
-		Parser::ExtractMatch(buf,substr1);
-		Parser::Find3uple(substr1,a,b,c);
+        std::string	substr1;
+        auto    i2    =    Parser::ExtractMatch(buf,substr1);
+        Parser::Find3uple(substr1,x,y,z);
+        buf    =    buf.substr(i2+1);
 
-		std::getline(input,buf);
-		i1	=	buf.find("resolution");
-		if (i1	==	std::string::npos)
-			throw string("Error configuration file at first line");
-		Parser::ExtractMatch(buf,substr1);
-		unsigned long	width,height;
-		Parser::FindCouple(substr1,width,height);
+        i1     =    buf.find("target");
+        if (i1	==	std::string::npos)
+            throw string("Error configuration file at first line");
+        buf   =    buf.substr(i1);
+        i2    =    Parser::ExtractMatch(buf,substr1);
+        Parser::Find3uple(substr1,u,v,w);
 
-		std::getline(input,buf);
-		i1	=	buf.find("fullscreen");
-		if (i1	==	std::string::npos)
-			throw string("Error configuration file at first line");
-		Parser::ExtractMatch(buf,substr1);
-		auto	fullscreen	=	std::stoul(substr1);
+        buf   =    buf.substr(i2+1);
+        i1    =    buf.find("up");
+        if (i1 == std::string::npos)
+            throw string("Error configuration file at first line");
+        Parser::ExtractMatch(buf,substr1);
+        Parser::Find3uple(substr1,a,b,c);
 
-		// Now we can store the config
-		m_config.position	=	glm::vec3(x,y,z);
-		m_config.target		=	glm::vec3(u,v,w);
-		m_config.up			=	glm::vec3(a,b,c);
-		m_config.width		=	width;
-		m_config.height		=	height;
-		m_config.fullscreen	=	(1==fullscreen)?true:false;	
-		// Update state
-		m_state				|=	CONFIG_MASK;									
-	}
+        std::getline(input,buf);
+        i1    =    buf.find("resolution");
+        if (i1 == std::string::npos)
+            throw string("Error configuration file at first line");
+        Parser::ExtractMatch(buf,substr1);
+        unsigned long	width,height;
+        Parser::FindCouple(substr1,width,height);
+
+        std::getline(input,buf);
+        i1    =    buf.find("fullscreen");
+        if (i1 == std::string::npos)
+            throw string("Error configuration file at first line");
+        Parser::ExtractMatch(buf,substr1);
+        auto    fullscreen    =    std::stoul(substr1);
+
+        // Now we can store the config
+        m_config.position     =    glm::vec3(x,y,z);
+        m_config.target       =    glm::vec3(u,v,w);
+        m_config.up           =    glm::vec3(a,b,c);
+        m_config.width        =    width;
+        m_config.height       =    height;
+        m_config.fullscreen   =    (1==fullscreen)?true:false;
+        // Update state
+        m_state               |=   CONFIG_MASK;
+    }
 }
 void Loader::LoadMesh()
 {
