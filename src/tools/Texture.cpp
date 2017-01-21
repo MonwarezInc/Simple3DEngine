@@ -26,12 +26,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Texture.h>
 #include <S3DE_SDL_Tools.h>
+#include <S3DE_DebugGL.h>
+
 using namespace std;
 using namespace S3DE;
 Texture::Texture(const string &filename): m_id(0), m_filename(filename), m_largeur(0), m_hauteur(0), m_format(0),
                                         m_formatInterne(0), m_textureVide(false)
 {
-    //ctor
+    #ifdef S3DE_USE_DSA
+        if (!GLEW_ARB_direct_state_access)
+            throw std::string("Error nee ARB_direct_state_access for using DSA");
+    #endif
 }
 Texture::Texture(const Texture &toCopy)
 {
@@ -71,7 +76,6 @@ Texture& Texture::operator=(const Texture &toCopy)
 }
 Texture::~Texture()
 {
-    //dtor
     glDeleteTextures(1,&m_id);
 }
 void Texture::LoadEmptyTexture()
@@ -79,15 +83,24 @@ void Texture::LoadEmptyTexture()
     if(GL_TRUE == glIsTexture(m_id))
         glDeleteTextures(1, &m_id);
 
-    glGenTextures(1,&m_id);
+    #ifdef S3DE_USE_DSA
+        glCreateTextures(GL_TEXTURE_2D,1,&m_id);
+        glTextureStorage2D(m_id, 1, m_formatInterne, m_largeur, m_hauteur);
+        glTextureSubImage2D(m_id, 0, 0, 0, m_largeur, m_hauteur, m_format, GL_UNSIGNED_BYTE, nullptr);
+        glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    #else
+        glGenTextures(1,&m_id);
+        GLuint boundTexture = 0;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, reinterpret_cast<GLint*>(& boundTexture));
+        glBindTexture(GL_TEXTURE_2D, m_id);
 
-    glBindTexture(GL_TEXTURE_2D, m_id);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, m_formatInterne, m_largeur, m_hauteur, 0, m_format, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_formatInterne, m_largeur, m_hauteur, 0, m_format, GL_UNSIGNED_BYTE, nullptr);
         // filtre
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, boundTexture);
+    #endif
 
 }
 bool Texture::Load()
@@ -100,18 +113,15 @@ bool Texture::Load()
         glDeleteTextures(1,&m_id);
 
 
-    glGenTextures(1, &m_id);
-    glBindTexture(GL_TEXTURE_2D, m_id);
 
-    GLenum      formatInterne(0);
-    GLenum      format(0);
+    GLenum     formatInterne(0);
+    GLenum     format(0);
 
     // détermination du format interne
     if (imgSDL->format->BytesPerPixel   ==  3)
     {
         // format interne
-        formatInterne       =   GL_RGB;
-
+        formatInterne       =   GL_RGB4;
         // format
         if (imgSDL->format->Rmask   ==  0xff)
             format          =   GL_RGB;
@@ -121,8 +131,7 @@ bool Texture::Load()
     else if (imgSDL->format->BytesPerPixel  ==  4)
     {
         // format interne
-        formatInterne       =   GL_RGBA;
-
+        formatInterne       =   GL_RGBA4;
         // format
         if (imgSDL->format->Rmask   ==  0xff)
             format          =   GL_RGBA;
@@ -137,14 +146,29 @@ bool Texture::Load()
         return false;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, formatInterne, imgSDL->w, imgSDL->h, 0, format, GL_UNSIGNED_BYTE, imgSDL->pixels);
 
-    // Application des filtres
+    #ifdef S3DE_USE_DSA
+        glCreateTextures(GL_TEXTURE_2D,1, &m_id);
+        glTextureStorage2D(m_id, 1, formatInterne, imgSDL->w, imgSDL->h);
+        glTextureSubImage2D(m_id, 0, 0, 0, imgSDL->w, imgSDL->h, format, GL_UNSIGNED_BYTE, imgSDL->pixels);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    #else
+        glGenTextures(1,&m_id);
+        GLuint boundTexture = 0;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, reinterpret_cast<GLint *>(& boundTexture));
+        glBindTexture(GL_TEXTURE_2D, m_id);
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, formatInterne, imgSDL->w, imgSDL->h, 0, format, GL_UNSIGNED_BYTE, imgSDL->pixels);
+
+        // Application des filtres
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glBindTexture(GL_TEXTURE_2D, boundTexture);
+    #endif
     // on a finis
     return true;
 }

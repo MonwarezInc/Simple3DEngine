@@ -28,6 +28,11 @@ set(WITH_ASSERT "TRUE" CACHE BOOL "Enable Assert")
 set(USE_SHARED "TRUE" CACHE BOOL "Build shared lib")
 set(OLD_CXX "FALSE" CACHE BOOL "use c++1y")
 set(USE_PROFILING "FALSE" CACHE BOOL "Enable profiling with gprof May not work")
+set(USE_DSA "TRUE" CACHE BOOL "Use Direct State Access, need ARB_direct_state")
+
+if (USE_DSA)
+    add_definitions(-DS3DE_USE_DSA)
+endif()
 
 if (OLD_CXX)
     set(Extra_CXX_Flags "-Wall -std=c++1y")
