@@ -23,7 +23,6 @@ file(
     src/*
     include/S3DE/*
 )
-set(USE_GLM_BUNDLE "FALSE" CACHE BOOL "use bundle glm")
 set(WITH_ASSERT "TRUE" CACHE BOOL "Enable Assert")
 set(USE_SHARED "TRUE" CACHE BOOL "Build shared lib")
 set(OLD_CXX "FALSE" CACHE BOOL "use c++1y")
@@ -35,13 +34,11 @@ if (USE_DSA)
 endif()
 
 if (OLD_CXX)
-    set(Extra_CXX_Flags "-Wall -std=c++1y")
+    add_compile_options(-Wall -std=c++1y)
 else (OLD_CXX)
-    set(Extra_CXX_Flags "-Wall -std=c++1z")
+    add_compile_options(-Wall -std=c++1z)
 endif (OLD_CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Extra_CXX_Flags}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 # Profiling 
 if (USE_PROFILING)
     message("Use of profiling, warning linking can fail")
@@ -90,9 +87,6 @@ include_directories(${ASSIMP_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES})
 include_directories(${GLEW_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${GLEW_LIBRARIES})
-if (USE_GLM_BUNDLE)
-	include_directories(include/bundle)
-endif()
 if (WITH_ASSERT)
     message("Enable Assert")
 else ()
