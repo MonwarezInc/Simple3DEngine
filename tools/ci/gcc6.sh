@@ -24,5 +24,6 @@ apt-get install -qq -y gnupg1
  apt-get install -qq -y libsdl2-dev
  apt-get install -qq -y libsdl2-image-dev
  apt-get install -qq -y libassimp-dev
+ apt-get install -qq -y libglm-dev
 
- mkdir build && cd build && cmake .. -DUSE_GLM_BUNDLE=TRUE && make
+ mkdir build && cd build && cmake .. && make
