@@ -31,16 +31,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace S3DE;
 using glm::vec3;
 using glm::mat4;
-Camera::Camera():m_phi(0.0),m_theta(0.0),m_orientation(), m_up(0,0,1), m_lateralMove(), m_position(), m_target(), m_sensitive(0.5),
-                m_speed(10)
+Camera::Camera():m_phi(0.0),m_theta(0.0),m_orientation(), m_up(0,0,1), m_lateralMove(),
+    m_position(), m_target(), m_sensitive(0.5),m_speed(10)
 {
-	this->CommonConstructor();
+    this->CommonConstructor();
 }
 Camera::Camera(vec3 position, vec3 target, vec3 up):
                 m_phi(0.0),m_theta(0.0),m_orientation(), m_up(up),
                 m_lateralMove(), m_position(position), m_target(target), m_sensitive(0.5),m_speed(0.1)
 {
-	this->CommonConstructor();
+    this->CommonConstructor();
 }
 void Camera::CommonConstructor()
 {
@@ -48,11 +48,11 @@ void Camera::CommonConstructor()
     this->SetTarget(m_target);
 
     // Keyboard configuation
-    // Key	init
-    m_keyconf["forward"]    =   SDL_SCANCODE_W;
-    m_keyconf["backward"]   =   SDL_SCANCODE_S;
-    m_keyconf["left"]       =   SDL_SCANCODE_A;
-    m_keyconf["right"]      =   SDL_SCANCODE_D;
+    // Key init
+    m_keyconf["forward"]                =   SDL_SCANCODE_W;
+    m_keyconf["backward"]               =   SDL_SCANCODE_S;
+    m_keyconf["left"]                   =   SDL_SCANCODE_A;
+    m_keyconf["right"]                  =   SDL_SCANCODE_D;
     // Keystates init
     m_keystat[m_keyconf["forward"]]     =   false;
     m_keystat[m_keyconf["backward"]]    =   false;
@@ -97,10 +97,10 @@ void Camera::Orient(int xRel, int yRel)
         m_orientation.z         =   sin(phiRad);
     }
 
-    m_lateralMove		        =   cross(m_up, m_orientation);
-    m_lateralMove		        =   normalize(m_lateralMove);
+    m_lateralMove               =   cross(m_up, m_orientation);
+    m_lateralMove               =   normalize(m_lateralMove);
 
-    m_target                =   m_position  +   m_orientation;
+    m_target                    =   m_position  +   m_orientation;
 }
 void Camera::KeyBoardEvent(CInput const &event)
 {
@@ -197,8 +197,4 @@ void Camera::SetSensitive(float sensitive)
 void Camera::SetSpeed(float speed)
 {
     m_speed                 =   std::fabs(speed);
-}
-Camera::~Camera()
-{
-    //dtor
 }

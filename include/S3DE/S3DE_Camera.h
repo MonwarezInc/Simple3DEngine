@@ -56,12 +56,13 @@ public:
     /// \brief    Move the camera, according of mouse event and keyboard event
     ///
     /// The mouse motion event are checked here , for the keyboard event
-    /// the map	KeyStates are checked to see which key are pressed/released
+    /// the map    KeyStates are checked to see which key are pressed/released
     ///
     /// \param    event    the event for getting mouse move
     /// \param    elapsed  the current elapsed time
     void                Move(CInput const &event, 
-    					std::chrono::duration<float, std::chrono::milliseconds::period> elapsed);
+                        std::chrono::duration<float, 
+                        std::chrono::milliseconds::period> elapsed);
     /// \brief    Update the camera KeyStates
     /// \param    event    The event to check
     void                KeyBoardEvent(CInput const &event);
@@ -94,7 +95,7 @@ public:
     glm::vec3           GetTarget()const {return m_target;}
     /// \brief    Return the current position
     glm::vec3           GetPosition() const {return m_position;}
-    virtual ~Camera();
+    virtual ~Camera()=default;
 
 protected:
     void         CommonConstructor();
@@ -117,4 +118,4 @@ protected:
 
 };
 
-}	// end of S3DE namespace
+}// end of S3DE namespace
