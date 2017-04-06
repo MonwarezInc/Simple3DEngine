@@ -1,4 +1,6 @@
 #!/bin/sh
+export CC=gcc
+export CXX=g++
 
 apt-get update -qq
 apt-get install -qq -y wget
