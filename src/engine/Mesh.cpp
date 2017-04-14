@@ -359,22 +359,26 @@ void	Mesh::VertexBoneData::AddBoneData(unsigned int BoneID, float Weight)
 }
 void	Mesh::BoneTransform(float TimeInSec, std::vector<glm::mat4> & Transforms, unsigned int idAnimation)
 {
-	if (!m_pScene->HasAnimations()) // if we have no animation quit the boneTransform
-		return;
-	glm::mat4	Identity		=	glm::mat4();
-	auto	TicksPerSec		=	(m_pScene->mAnimations[idAnimation] != nullptr )? 
-									m_pScene->mAnimations[idAnimation]->mTicksPerSecond : static_cast<float>(25.0);
-	
-	auto	TimeInTicks		=	TimeInSec * TicksPerSec;
-	auto	AnimationTime	=	fmod(TimeInTicks, m_pScene->mAnimations[idAnimation]->mDuration);
+	if (m_pScene->HasAnimations())
+        {
+            if (m_pScene->mAnimations[idAnimation] != nullptr)
+            {
+	        glm::mat4	Identity		=	glm::mat4();
 
-	this->ReadNodeHiearchy(AnimationTime, m_pScene->mRootNode, Identity, idAnimation);
+	        auto	TicksPerSec		=	m_pScene->mAnimations[idAnimation]->mTicksPerSecond; 
+	        
+	        auto	TimeInTicks		=	TimeInSec * TicksPerSec;
+	        auto	AnimationTime	=	fmod(TimeInTicks, m_pScene->mAnimations[idAnimation]->mDuration);
 
-	Transforms.resize(m_NumBones);
-	for (unsigned int i=0; i < m_NumBones; ++i)
-	{
-		Transforms[i]	=	m_BoneInfo[i].FinalTransformation;
-	}
+	        this->ReadNodeHiearchy(AnimationTime, m_pScene->mRootNode, Identity, idAnimation);
+
+	        Transforms.resize(m_NumBones);
+	        for (unsigned int i=0; i < m_NumBones; ++i)
+	        {
+	        	Transforms[i]	=	m_BoneInfo[i].FinalTransformation;
+	        }
+            }
+        }
 }
 void	Mesh::ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 const & ParentTransform, unsigned int idAnimation)
 {
