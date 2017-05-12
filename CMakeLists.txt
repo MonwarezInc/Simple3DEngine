@@ -36,7 +36,7 @@ endif()
 if (OLD_CXX)
     add_compile_options(-Wall -std=c++1y)
 else (OLD_CXX)
-    add_compile_options(-Wall -std=c++1z)
+    add_compile_options(-Wall -std=c++14)
 endif (OLD_CXX)
 
 # Profiling 

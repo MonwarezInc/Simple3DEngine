@@ -31,34 +31,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/glm.hpp>
 #include <glm/gtc/type_precision.hpp>
 
-#include "S3DE_InterpolateFactory.hpp"
+#include "S3DE_InterpolateImpl.hpp"
+#include "S3DE_InterpolateImplLinear.hpp"
 
 namespace S3DE
 {
+enum class CurveType { Linear };
 
-// Curve interpolate
 template <class T>
-class CurveInterpolate
+class CurveInterpolateFactory
 {
-private:
-    std::unique_ptr<CurveInterpolateImpl<T> >    impl_;
 public:
-    CurveInterpolate(CurveType type):impl_{CurveInterpolateFactory<T>::makeCurve(type)}{}
-    ~CurveInterpolate() = default;
-    glm::vec3 GetInterpolated(T totaltime)
+    static std::unique_ptr<CurveInterpolateImpl<T> > makeCurve(S3DE::CurveType type)
     {
-        return impl_->GetInterpolated(totaltime);
-    }
-    void AddPoint(glm::vec3 const & pos, T time)
-    {
-        impl_->AddPoint(pos, time);
-    }
-    void SetClosed(bool closed)
-    {
-        impl_->isClosed = closed;
+        switch(type)
+        {
+            case CurveType::Linear:
+                return static_cast<std::unique_ptr<CurveInterpolateImpl<T> > >(std::make_unique<LinearInterpolate<T> >());
+                break;
+        }
     }
 };
-
 
 
 }

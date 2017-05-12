@@ -31,32 +31,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/glm.hpp>
 #include <glm/gtc/type_precision.hpp>
 
-#include "S3DE_InterpolateFactory.hpp"
-
 namespace S3DE
 {
-
-// Curve interpolate
 template <class T>
-class CurveInterpolate
+class CurveInterpolateImpl
 {
-private:
-    std::unique_ptr<CurveInterpolateImpl<T> >    impl_;
+protected:
+    std::vector<glm::vec3>  position_;
+    std::vector<T>          time_;
 public:
-    CurveInterpolate(CurveType type):impl_{CurveInterpolateFactory<T>::makeCurve(type)}{}
-    ~CurveInterpolate() = default;
-    glm::vec3 GetInterpolated(T totaltime)
+    CurveInterpolateImpl() = default;
+    virtual ~CurveInterpolateImpl() = default;
+
+    virtual glm::vec3 GetInterpolated(T totaltime) = 0;
+    virtual void AddPoint(glm::vec3 const& pos, T time)
     {
-        return impl_->GetInterpolated(totaltime);
+        position_.push_back(pos);
+        time_.push_back(time);
     }
-    void AddPoint(glm::vec3 const & pos, T time)
-    {
-        impl_->AddPoint(pos, time);
-    }
-    void SetClosed(bool closed)
-    {
-        impl_->isClosed = closed;
-    }
+    bool                    isClosed;
 };
 
 
