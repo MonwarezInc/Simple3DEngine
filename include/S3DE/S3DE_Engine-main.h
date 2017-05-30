@@ -25,119 +25,120 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_Graphics.h"
-#include "S3DE_Mesh.h"
-#include "S3DE_Shader.h"
-#include "S3DE_Light.h"
-#include "S3DE_MeshException.h"
 #include "S3DE_BasicMeshManager.h"
+#include "S3DE_Graphics.h"
+#include "S3DE_Light.h"
+#include "S3DE_Mesh.h"
+#include "S3DE_MeshException.h"
+#include "S3DE_Shader.h"
 
-#include <vector>
 #include <chrono>
+#include <vector>
 namespace S3DE
 {
-struct	EngineShader
+struct EngineShader
 {
-	std::string	lightV;			///< light vertex shader filename*/
-	std::string	lightF;			///< light fragment shader filename*/
-	std::string	lightG;			///< basic geometry shader filename*/
-	std::string	guiV;			///< gui vertex shader filename*/
-	std::string	guiF;			///< gui fragment shader filename*/
+    std::string lightV; ///< light vertex shader filename*/
+    std::string lightF; ///< light fragment shader filename*/
+    std::string lightG; ///< basic geometry shader filename*/
+    std::string guiV;   ///< gui vertex shader filename*/
+    std::string guiF;   ///< gui fragment shader filename*/
 };
-struct	EngineWindow
-{	
-	uint32_t		width;		///< width of the window */
-	uint32_t		height;		///< height of the window */
-	bool			fullscreen;	///< boolean for fullscreen state*/
-	std::string		title;		///< title of the window*/
-	uint32_t		bpp;		///< bit per pixel parameter*/
-	uint32_t		aa;			///< antialiasing parameter*/
-	uint32_t		major;		///< OpenGL major version*/
-	uint32_t		minor;		///< OpenGL minor version*/
-	EngineShader	shader;		///< @see EngineShader*/
+struct EngineWindow
+{
+    uint32_t width;      ///< width of the window */
+    uint32_t height;     ///< height of the window */
+    bool fullscreen;     ///< boolean for fullscreen state*/
+    std::string title;   ///< title of the window*/
+    uint32_t bpp;        ///< bit per pixel parameter*/
+    uint32_t aa;         ///< antialiasing parameter*/
+    uint32_t major;      ///< OpenGL major version*/
+    uint32_t minor;      ///< OpenGL minor version*/
+    EngineShader shader; ///< @see EngineShader*/
 };
 ///	\brief 	Main class for the Simple 3D Engine
 ///
-///	This class is an interface with the engine. Almost all  the command for interacting with the engine are here.
+///	This class is an interface with the engine. Almost all  the command for interacting with the
+///engine are here.
 ///	\author	Payet Thibault
 class CEngine
 {
-	public:
-		CEngine();
-		virtual	~CEngine();
-		
-		/**	\brief Create a window with the specified OpenGL version (Limited to one window for now)
-		*	@param	engineWindow	Structure that contain all information needed to create the window
-		*/
-		void	CreateWindow(const EngineWindow & engineWindow);
-		///	\brief 	Delete the specifided window (Not Implemented)
-		///	@param[in]	indice		Id of the window
-		void	DeleteWindow(GLuint indice);
-		///	\brief 	Set the active window (Not Implemented)
-		///	@param[in]	indice		Id of the window
-		void	SetActive(GLuint indice);
-		///	\brief	Add a bunch of mesh
-		///	\param	meshPair	A vector of entity,filename pair
-		void	AddMesh(std::vector<MeshPair> const &meshPair);
-		void	DelMeshNode(std::string const & entity);
-		///	\brief	Set/Update the light information
-		///	\param[in]	pointlight	A vector of PointLight data	
-		void	AttachLight(std::vector<PointLight> const & pointlight);
-		///	\brief Set/update the spot light information
-		///	\param	spotlight 	a vector of SpotLight data
-		void	AttachLight(std::vector<SpotLight> const & spotlight);
-		///	\brief Set/update the Directional light information
-		///	\param	dlight 	a DirectionalLight 
-		void	AttachLight(DirectionalLight const & dlight);
-		///	\brief Delete an object from the scene (Not Implemented)
-		///	\param[in]	id	Id of the object
-		void	DeleteObject(GLuint id);
-		///	\brief	Set the position and rotation of an object of the scene
-		///	\param[in] 	entity	The name of the entity
-		///	\param[in] 	pos		The new position
-		///	\param[in]	pitch	The pitch rotation X,Y,Z
-		void	SetNodePosRot(std::string const & entity, glm::vec3 const & pos, glm::vec3 const & pitch);
-		void	SetNodeScale(std::string const & entity, float scale);
-		void	SetNodeAnimation(std::string const & entity, std::string const & animation);
+public:
+    CEngine();
+    virtual ~CEngine();
 
-		void 	SetCameraLocation(glm::vec3 const & pos,glm::vec3 const & center,glm::vec3 const & vert);
-		void	SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
-		
-		void	ClearColor(float r, float g, float b, float a);
-		void	Init(); // next step is to have flags
+    /**	\brief Create a window with the specified OpenGL version (Limited to one window for now)
+    *	@param	engineWindow	Structure that contain all information needed to create the window
+    */
+    void CreateWindow(const EngineWindow &engineWindow);
+    ///	\brief 	Delete the specifided window (Not Implemented)
+    ///	@param[in]	indice		Id of the window
+    void DeleteWindow(GLuint indice);
+    ///	\brief 	Set the active window (Not Implemented)
+    ///	@param[in]	indice		Id of the window
+    void SetActive(GLuint indice);
+    ///	\brief	Add a bunch of mesh
+    ///	\param	meshPair	A vector of entity,filename pair
+    void AddMesh(std::vector<MeshPair> const &meshPair);
+    void DelMeshNode(std::string const &entity);
+    ///	\brief	Set/Update the light information
+    ///	\param[in]	pointlight	A vector of PointLight data
+    void AttachLight(std::vector<PointLight> const &pointlight);
+    ///	\brief Set/update the spot light information
+    ///	\param	spotlight 	a vector of SpotLight data
+    void AttachLight(std::vector<SpotLight> const &spotlight);
+    ///	\brief Set/update the Directional light information
+    ///	\param	dlight 	a DirectionalLight
+    void AttachLight(DirectionalLight const &dlight);
+    ///	\brief Delete an object from the scene (Not Implemented)
+    ///	\param[in]	id	Id of the object
+    void DeleteObject(GLuint id);
+    ///	\brief	Set the position and rotation of an object of the scene
+    ///	\param[in] 	entity	The name of the entity
+    ///	\param[in] 	pos		The new position
+    ///	\param[in]	pitch	The pitch rotation X,Y,Z
+    void SetNodePosRot(std::string const &entity, glm::vec3 const &pos, glm::vec3 const &pitch);
+    void SetNodeScale(std::string const &entity, float scale);
+    void SetNodeAnimation(std::string const &entity, std::string const &animation);
 
-		void	Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed);
+    void SetCameraLocation(glm::vec3 const &pos, glm::vec3 const &center, glm::vec3 const &vert);
+    void SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
 
-	protected:
-		std::unique_ptr<S3DE::CGraphics>		m_pGraphics;
-		BasicMeshManager						m_meshManager;
-		std::map<std::string, size_t>			m_entToID;
-		glm::mat4								m_modelview;
-		glm::mat4								m_projection;
-		// struct ObjectList
-		// Maybe next time we will do SceneGraph
-		struct	ObjectNode
-		{
-			std::string	entity;
-			glm::vec3	position;
-			float		pitch[3];
-			float		scale;
-			void	DoTransformation(glm::mat4 & modelview)const;
-			std::string	animation;
-			size_t		id;	///< the id of the Mesh
-			bool		isVisible;	///< Do the node is visible
-		};
-		void	AddMeshNode(std::string const & entity, bool isVisible=true);
-		std::vector< ObjectNode>				m_vObjectNode;	
-		// Light is a shader 
-		Light									m_pShader;
-		// Here is the different light 
-		DirectionalLight						m_Directional;
-		std::vector<PointLight>					m_PointLight;
-		std::vector<SpotLight>					m_SpotLight;
-		// Save some camera settings
-		glm::vec3								m_CameraPosition;
-		glm::vec3								m_CameraCenter;
-		glm::vec3								m_CameraVertical;
+    void ClearColor(float r, float g, float b, float a);
+    void Init(); // next step is to have flags
+
+    void Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed);
+
+protected:
+    std::unique_ptr<S3DE::CGraphics> m_pGraphics;
+    BasicMeshManager m_meshManager;
+    std::map<std::string, size_t> m_entToID;
+    glm::mat4 m_modelview;
+    glm::mat4 m_projection;
+    // struct ObjectList
+    // Maybe next time we will do SceneGraph
+    struct ObjectNode
+    {
+        std::string entity;
+        glm::vec3 position;
+        float pitch[3];
+        float scale;
+        void DoTransformation(glm::mat4 &modelview) const;
+        std::string animation;
+        size_t id;      ///< the id of the Mesh
+        bool isVisible; ///< Do the node is visible
+    };
+    void AddMeshNode(std::string const &entity, bool isVisible = true);
+    std::vector<ObjectNode> m_vObjectNode;
+    // Light is a shader
+    Light m_pShader;
+    // Here is the different light
+    DirectionalLight m_Directional;
+    std::vector<PointLight> m_PointLight;
+    std::vector<SpotLight> m_SpotLight;
+    // Save some camera settings
+    glm::vec3 m_CameraPosition;
+    glm::vec3 m_CameraCenter;
+    glm::vec3 m_CameraVertical;
 };
-}  // end of S3DE namespace
+} // end of S3DE namespace

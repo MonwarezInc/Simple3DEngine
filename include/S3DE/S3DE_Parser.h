@@ -31,9 +31,11 @@ namespace S3DE
 {
 namespace Parser
 {
-void    Find3uple(std::string str, float &x, float &y, float &z, std::string const &sep=",");
-void    FindCouple(std::string str, unsigned long &a, unsigned long &b, std::string const &sep=",");
-size_t  ExtractMatch(std::string const &in, std::string &out, std::string const &start="(", std::string const &end=")");
+    void Find3uple(std::string str, float &x, float &y, float &z, std::string const &sep = ",");
+    void FindCouple(std::string str, unsigned long &a, unsigned long &b,
+                    std::string const &sep = ",");
+    size_t ExtractMatch(std::string const &in, std::string &out, std::string const &start = "(",
+                        std::string const &end = ")");
 
 } // end of Parser namespace
 } // end of S3DE namespace

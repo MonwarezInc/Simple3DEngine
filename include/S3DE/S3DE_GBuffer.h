@@ -29,34 +29,39 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace S3DE
 {
-class	GBuffer
+class GBuffer
 {
-	public:
-		/// \brief set the G Buffer different texture type, plus set the number
-		///	of textures used
-		enum class GBufferTextureType
-		{ POSITION = 0, DIFFUSE = 1, NORMAL = 2, TEXCOORD = 3, NUM_TEXTURES = 4};
-	
-		GBuffer();
-		~GBuffer();
-		///	\brief	Initialize the G Buffer
-		///
-		///	First it will create one framebuffer , four G Buffer textures and 
-		///	one depth buffer texture.
-		///	It will throw an exception if the Framebuffer is not complete
-		///
-		///	\param	width	The window width
-		///	\param	height	The window height
-		void	Init(unsigned int width, unsigned int height);
-		///	\brief just a wrapper to glBindFrameBuffer with GL_DRAW_FRAMEBUFFER
-		void	BindForWriting();
-		///	\brief just a wrapper to glBindFramebuffer with GL_READ_FRAMEBUFFER
-		void	BindForReading();
+public:
+    /// \brief set the G Buffer different texture type, plus set the number
+    ///	of textures used
+    enum class GBufferTextureType {
+        POSITION     = 0,
+        DIFFUSE      = 1,
+        NORMAL       = 2,
+        TEXCOORD     = 3,
+        NUM_TEXTURES = 4
+    };
 
-	protected:
-		GLuint	m_fbo; ///< the object ID for the framebuffer 
-		GLuint	m_textures[static_cast<size_t>(GBufferTextureType::NUM_TEXTURES)]; ///< an arrays of object ID for the textures
-		GLuint	m_depthTexture; ///< the object ID for the depth texture
+    GBuffer();
+    ~GBuffer();
+    ///	\brief	Initialize the G Buffer
+    ///
+    ///	First it will create one framebuffer , four G Buffer textures and
+    ///	one depth buffer texture.
+    ///	It will throw an exception if the Framebuffer is not complete
+    ///
+    ///	\param	width	The window width
+    ///	\param	height	The window height
+    void Init(unsigned int width, unsigned int height);
+    ///	\brief just a wrapper to glBindFrameBuffer with GL_DRAW_FRAMEBUFFER
+    void BindForWriting();
+    ///	\brief just a wrapper to glBindFramebuffer with GL_READ_FRAMEBUFFER
+    void BindForReading();
 
+protected:
+    GLuint m_fbo; ///< the object ID for the framebuffer
+    GLuint m_textures[static_cast<size_t>(
+        GBufferTextureType::NUM_TEXTURES)]; ///< an arrays of object ID for the textures
+    GLuint m_depthTexture;                  ///< the object ID for the depth texture
 };
 }

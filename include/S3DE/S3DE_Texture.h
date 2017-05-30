@@ -32,36 +32,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include <string>
 #include <iostream>
+#include <string>
 
 namespace S3DE
 {
-
 class Texture
 {
-	public:
-    	Texture(const std::string &filename = "");
-    	// for FBO
-    	Texture(int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide);
-    	Texture(const Texture &toCopy);
-    	Texture& operator=(const Texture &toCopy);
-    	bool Load();
-    	void LoadEmptyTexture();
+public:
+    Texture(const std::string &filename = "");
+    // for FBO
+    Texture(int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide);
+    Texture(const Texture &toCopy);
+    Texture &operator=(const Texture &toCopy);
+    bool Load();
+    void LoadEmptyTexture();
 
-    	GLuint GetID () const;
-    	void    SetFilename(const std::string &filename);
-    	virtual ~Texture();
-	protected:
-		SurfacePtr	Load_IMG(std::string const &file);
-    	GLuint                  m_id;
-    	std::string             m_filename;
-    	// for FBO
-    	int                     m_largeur;
-    	int                     m_hauteur;
-    	GLenum                  m_format;
-    	GLenum                  m_formatInterne;
-    	bool                    m_textureVide;
-	private:
+    GLuint GetID() const;
+    void SetFilename(const std::string &filename);
+    virtual ~Texture();
+
+protected:
+    SurfacePtr Load_IMG(std::string const &file);
+    GLuint m_id;
+    std::string m_filename;
+    // for FBO
+    int m_largeur;
+    int m_hauteur;
+    GLenum m_format;
+    GLenum m_formatInterne;
+    bool m_textureVide;
+
+private:
 };
-}  // end of S3DE namespace
+} // end of S3DE namespace

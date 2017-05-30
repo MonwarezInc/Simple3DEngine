@@ -29,28 +29,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // GLEW for all platform
 #include <GL/glew.h>
 
-#include <iostream>
 #include "S3DE_DebugGL.h"
-#include <stdlib.h>
+#include <iostream>
 #include <memory>
+#include <stdlib.h>
 
 namespace S3DE
 {
 class CGraphics : public Window
 {
 public:
-    CGraphics(int width=320, int height=240, bool fullscreen=false, const std::string &title="default",
-          int bpp=32, int aa=2, int major=4, int minor=4 );
-    virtual         ~CGraphics();
-    virtual void    SwapWindow();
-    virtual void    ClearColor(float r, float g, float b, float a);
-    virtual void    Clear(); // next step is to encapsulate glClear flag
+    CGraphics(int width = 320, int height = 240, bool fullscreen = false,
+              const std::string &title = "default", int bpp = 32, int aa = 2, int major = 4,
+              int minor = 4);
+    virtual ~CGraphics();
+    virtual void SwapWindow();
+    virtual void ClearColor(float r, float g, float b, float a);
+    virtual void Clear(); // next step is to encapsulate glClear flag
 
 protected:
-    SDL_GLContext  m_glContext;
-    //OpenGL specifics
-    int            m_bpp;
-    int            m_aa;
-
+    SDL_GLContext m_glContext;
+    // OpenGL specifics
+    int m_bpp;
+    int m_aa;
 };
-} // end of S3DE namespace 
+} // end of S3DE namespace

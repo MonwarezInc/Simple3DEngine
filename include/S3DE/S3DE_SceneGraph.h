@@ -27,56 +27,58 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 #include "S3DE_Mesh.h"
 
-#include <vector>
 #include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
+#include <vector>
 
 
-namespace	S3DE
+namespace S3DE
 {
-struct	Transformation
+struct Transformation
 {
-	glm::vec3	translate;
-	glm::vec3	scale;
-	glm::quat	rotate;
+    glm::vec3 translate;
+    glm::vec3 scale;
+    glm::quat rotate;
 };
 
-class	SceneGraph
+class SceneGraph
 {
-	public:
-		SceneGraph();
-		~SceneGraph();
-		// for beginning we just use mat4 transformation , after we will get quaternion transformation
-		unsigned int	AddMesh(Mesh* obj,glm::mat4 const & transf, unsigned int parent=0, 
-									bool hide= false, bool trans = false);	
-		bool			DeleteObject(unsigned int id);
-		Mesh*		ChainTransformation(unsigned int id, glm::mat4 & transf);
-	protected:
-		struct NodeInfo
-		{
-			Mesh*			obj;
-			bool			hide;
-			bool			transparent;
-			Transformation	transformation;
-			unsigned int 	id;
-		};
-		struct	Node
-		{
-			NodeInfo			nodeInfo;
-			Node*				previous;
-			std::vector<Node*>	next;
-		};
-		class	Tree
-		{
-			public:
-				Tree();
-				virtual	~Tree();
-				virtual	unsigned	int		AddNodeInfo(NodeInfo const & nodeInfo, unsigned int parent);
-			protected:
-				virtual	Node*				Detach(unsigned int id);
-				virtual	bool				Attach(Node const * node, unsigned int parent);
-				Node						m_root;
-		};
-};	
-}  // end of S3DE namespace
+public:
+    SceneGraph();
+    ~SceneGraph();
+    // for beginning we just use mat4 transformation , after we will get quaternion transformation
+    unsigned int AddMesh(Mesh* obj, glm::mat4 const& transf, unsigned int parent = 0,
+                         bool hide = false, bool trans = false);
+    bool DeleteObject(unsigned int id);
+    Mesh* ChainTransformation(unsigned int id, glm::mat4& transf);
+
+protected:
+    struct NodeInfo
+    {
+        Mesh* obj;
+        bool hide;
+        bool transparent;
+        Transformation transformation;
+        unsigned int id;
+    };
+    struct Node
+    {
+        NodeInfo nodeInfo;
+        Node* previous;
+        std::vector<Node*> next;
+    };
+    class Tree
+    {
+    public:
+        Tree();
+        virtual ~Tree();
+        virtual unsigned int AddNodeInfo(NodeInfo const& nodeInfo, unsigned int parent);
+
+    protected:
+        virtual Node* Detach(unsigned int id);
+        virtual bool Attach(Node const* node, unsigned int parent);
+        Node m_root;
+    };
+};
+} // end of S3DE namespace

@@ -25,140 +25,149 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_Texture.h"
 #include "S3DE_Shader.h"
+#include "S3DE_Texture.h"
 
 #include <Importer.hpp>
-#include <scene.h>
+#include <map>
 #include <mesh.h>
 #include <postprocess.h>
+#include <scene.h>
 #include <vector>
-#include <map>
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <chrono>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
 
 namespace S3DE
 {
-inline	glm::mat4	aiMatrixToMat4(aiMatrix4x4 const & src);
-inline	glm::mat4	aiMatrixToMat4(aiMatrix3x3 const & src);
-struct	Vertex
+inline glm::mat4 aiMatrixToMat4(aiMatrix4x4 const& src);
+inline glm::mat4 aiMatrixToMat4(aiMatrix3x3 const& src);
+struct Vertex
 {
-	glm::vec3	m_pos;
-	glm::vec2	m_tex;
-	glm::vec3	m_normal;
-	
-	Vertex() {}
-	
-	Vertex(glm::vec3 const & pos, glm::vec2 const & tex, glm::vec3 const & normal)
-	{
-		m_pos	=	pos;
-		m_tex	=	tex;
-		m_normal=	normal;
-	}
+    glm::vec3 m_pos;
+    glm::vec2 m_tex;
+    glm::vec3 m_normal;
+
+    Vertex() {}
+
+    Vertex(glm::vec3 const& pos, glm::vec2 const& tex, glm::vec3 const& normal)
+    {
+        m_pos    = pos;
+        m_tex    = tex;
+        m_normal = normal;
+    }
 };
 class Mesh
 {
-	public:
+public:
+    Mesh();
+    ///	\brief Copy constructor
+    ///	\param	The mesh to be copied, not that it will simply do LoadFromFile with m.filename
+    Mesh(Mesh const& m);
+    virtual ~Mesh();
+    ///	\brief	Load a mesh from a file
+    ///
+    ///	This function can launch exception and assertion, the loader are really strict. <br/>
+    ///	Loading a resource that is actually loaded may lead to unbehavior issue.
+    ///	\param	filename	filename of the Mesh to load
+    virtual void LoadFromFile(std::string const& filename);
+    ///	\brief	Draw the mesh with the animation specified WIP
+    ///
+    ///	For the moment only the first animation is supported, need some resource with multiple
+    /// animation <br/>
+    ///	which can be loaded, and need to implement a correct search animation id by name function
+    ///	\param	elapsed_time	The elapsed time since the beginning of the application
+    ///	\param	shader			A reference to set some information to the shader (like bone
+    ///information
+    /// etc...)
+    ///	\param	animation		The name of the animation to play
+    virtual void Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
+                      Shader const& shader, std::string const& animation);
 
-		Mesh();
-		///	\brief Copy constructor
-		///	\param	The mesh to be copied, not that it will simply do LoadFromFile with m.filename
-		Mesh(Mesh const &m);
-		virtual	~Mesh();
-		///	\brief	Load a mesh from a file
-		///
-		///	This function can launch exception and assertion, the loader are really strict. <br/>
-		///	Loading a resource that is actually loaded may lead to unbehavior issue.
-		///	\param	filename	filename of the Mesh to load
-		virtual	void	LoadFromFile(std::string const & filename);
-		///	\brief	Draw the mesh with the animation specified WIP
-		///	
-		///	For the moment only the first animation is supported, need some resource with multiple animation <br/>
-		///	which can be loaded, and need to implement a correct search animation id by name function
-		///	\param	elapsed_time	The elapsed time since the beginning of the application
-		///	\param	shader			A reference to set some information to the shader (like bone information etc...)
-		///	\param	animation		The name of the animation to play
-		virtual	void	Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed_time, Shader const & shader,std::string const & animation);
-	private:
-		#define NUM_BONES_PER_VERTEX 4
-		#define INVALID_MATERIAL	0xFFFFFFFF
-		
-		struct 	BoneInfo
-		{
-			glm::mat4		BoneOffset;
-			glm::mat4		FinalTransformation;
+private:
+#define NUM_BONES_PER_VERTEX 4
+#define INVALID_MATERIAL 0xFFFFFFFF
 
-			BoneInfo()
-			{
-				BoneOffset			=	glm::mat4(0);
-				FinalTransformation	=	glm::mat4(0);
-			}
-		};
-		struct 	VertexBoneData
-		{
-			uint			IDs[NUM_BONES_PER_VERTEX];
-			float			Weights[NUM_BONES_PER_VERTEX];
-			
-			VertexBoneData()
-			{
-				for (unsigned int i=0; i < NUM_BONES_PER_VERTEX; ++i)
-				{
-					IDs[i]		=	0;
-					Weights[i]	=	0;
-				}
-			}
-			void			AddBoneData(unsigned int boneID, float weight);
-		};
-		void		Clear();
-		bool		InitFromScene(const aiScene* pScene);
-		void		InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex, unsigned int BaseIndex);
-		bool		InitMaterials(const aiScene* pScene);
-		void		LoadBones(unsigned int index, const aiMesh* , std::vector<VertexBoneData> & bones);			
-		void		BoneTransform(float TimeInSec, std::vector<glm::mat4>& Transforms, unsigned int idAnimation);
-		void		ReadNodeHiearchy(float AnimationTime, const aiNode* pNode, glm::mat4 const & ParentTransform, unsigned int idAnimation);
+    struct BoneInfo
+    {
+        glm::mat4 BoneOffset;
+        glm::mat4 FinalTransformation;
 
-		void		CalcInterpolatedScaling(aiVector3D & Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-		void		CalcInterpolatedRotation(aiQuaternion & Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
-		void		CalcInterpolatedPosition(aiVector3D & Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+        BoneInfo()
+        {
+            BoneOffset          = glm::mat4(0);
+            FinalTransformation = glm::mat4(0);
+        }
+    };
+    struct VertexBoneData
+    {
+        uint IDs[NUM_BONES_PER_VERTEX];
+        float Weights[NUM_BONES_PER_VERTEX];
 
-		const aiNodeAnim*	FindNodeAnim(const aiAnimation* pAnimation, std::string const & NodeName);
-		unsigned int		FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
-		unsigned int		FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
-		unsigned int		FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+        VertexBoneData()
+        {
+            for (unsigned int i = 0; i < NUM_BONES_PER_VERTEX; ++i)
+            {
+                IDs[i]     = 0;
+                Weights[i] = 0;
+            }
+        }
+        void AddBoneData(unsigned int boneID, float weight);
+    };
+    void Clear();
+    bool InitFromScene(const aiScene* pScene);
+    void InitMesh(unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex,
+                  unsigned int BaseIndex);
+    bool InitMaterials(const aiScene* pScene);
+    void LoadBones(unsigned int index, const aiMesh*, std::vector<VertexBoneData>& bones);
+    void BoneTransform(float TimeInSec, std::vector<glm::mat4>& Transforms,
+                       unsigned int idAnimation);
+    void ReadNodeHiearchy(float AnimationTime, const aiNode* pNode,
+                          glm::mat4 const& ParentTransform, unsigned int idAnimation);
 
-		unsigned int		GetAnimationIndex(std::string const & animation);
-		void		CheckFactor(float Factor, std::string const & file, int line);
-		struct	MeshEntry
-		{
-			MeshEntry();
-			~MeshEntry();
+    void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+    void CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime,
+                                  const aiNodeAnim* pNodeAnim);
+    void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime,
+                                  const aiNodeAnim* pNodeAnim);
 
-			void	Init(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, 
-							std::vector<VertexBoneData> const & bones);
-			GLuint			VAO;
-			GLuint			VB;
-			GLuint			IB;
-			GLuint			BONES;
-			unsigned int	NumIndices;
-			unsigned int	MaterialIndex;
-			unsigned int	BaseVertex;
-			unsigned int	BaseIndex;
-			int				skinned;
-		};
-		std::string							m_filename;
-		std::vector<MeshEntry>				m_Entries;
-		std::vector<Texture>				m_Textures;
-		const aiScene*						m_pScene;
-		Assimp::Importer					m_Importer;
-		glm::mat4							m_GlobalInverseTransform;
-		std::map<std::string, unsigned int>	m_BoneMapping;
-		unsigned int						m_NumBones;
-		std::vector<BoneInfo>				m_BoneInfo;
-		std::string							m_animation;
+    const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, std::string const& NodeName);
+    unsigned int FindScaling(float AnimationTime, const aiNodeAnim* pNodeAnim);
+    unsigned int FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
+    unsigned int FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+    unsigned int GetAnimationIndex(std::string const& animation);
+    void CheckFactor(float Factor, std::string const& file, int line);
+    struct MeshEntry
+    {
+        MeshEntry();
+        ~MeshEntry();
+
+        void Init(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices,
+                  std::vector<VertexBoneData> const& bones);
+        GLuint VAO;
+        GLuint VB;
+        GLuint IB;
+        GLuint BONES;
+        unsigned int NumIndices;
+        unsigned int MaterialIndex;
+        unsigned int BaseVertex;
+        unsigned int BaseIndex;
+        int skinned;
+    };
+    std::string m_filename;
+    std::vector<MeshEntry> m_Entries;
+    std::vector<Texture> m_Textures;
+    const aiScene* m_pScene;
+    Assimp::Importer m_Importer;
+    glm::mat4 m_GlobalInverseTransform;
+    std::map<std::string, unsigned int> m_BoneMapping;
+    unsigned int m_NumBones;
+    std::vector<BoneInfo> m_BoneInfo;
+    std::string m_animation;
 };
-}  // end of S3DE namespace
+} // end of S3DE namespace

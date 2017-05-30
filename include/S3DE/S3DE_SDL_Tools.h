@@ -26,26 +26,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 #include <SDL.h>
-#include <SDL_main.h>
 #include <SDL_image.h>
-#include <string>
+#include <SDL_main.h>
 #include <memory>
+#include <string>
 namespace S3DE
 {
 namespace sdl
 {
-///	\brief	Deleter for SDL2 pointer, so that we can use unique_ptr
-struct	Deleter
-{
-	void operator()(SDL_Window *p) const {SDL_DestroyWindow(p);}
-	void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p);}
-	void operator()(SDL_Surface *p) const { SDL_FreeSurface(p);}
-};
+    ///	\brief	Deleter for SDL2 pointer, so that we can use unique_ptr
+    struct Deleter
+    {
+        void operator()(SDL_Window *p) const { SDL_DestroyWindow(p); }
+        void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p); }
+        void operator()(SDL_Surface *p) const { SDL_FreeSurface(p); }
+    };
 
 } // end of namespace sdl
-template <class T>
-using SDL_Ptr	=	std::unique_ptr<T, sdl::Deleter>;
-using WindowPtr	=	SDL_Ptr<SDL_Window>;
-using SurfacePtr=	SDL_Ptr<SDL_Surface>;
+template<class T>
+using SDL_Ptr    = std::unique_ptr<T, sdl::Deleter>;
+using WindowPtr  = SDL_Ptr<SDL_Window>;
+using SurfacePtr = SDL_Ptr<SDL_Surface>;
 
 } // end of namespace S3DE

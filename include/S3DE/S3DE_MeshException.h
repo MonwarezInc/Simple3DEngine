@@ -25,36 +25,32 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include <string>
 #include <exception>
+#include <string>
 namespace S3DE
 {
-enum class MeshExceptFlag {FATAL, RELEASE};
-struct	ResourceExcept
+enum class MeshExceptFlag { FATAL, RELEASE };
+struct ResourceExcept
 {
-		size_t			id;		///< the id of the resource
-		MeshExceptFlag	flag;	///< the flag to set the severity of the exception
+    size_t id;           ///< the id of the resource
+    MeshExceptFlag flag; ///< the flag to set the severity of the exception
 };
-class	MeshException : public std::exception
+class MeshException : public std::exception
 {
-	public:
-		virtual const char* what() const throw()
-		{
-			return	m_msg.c_str();
-		}
-		///	\brief	Set the resource except settings
-		///	\param	rc	a structure filled with id of the resource and the severity of the exception
-		virtual void 	SetResource(ResourceExcept const & rc);
-		///	\brief	Set the message of the exception
-		///	\param	msg the message of the exception
-		virtual	void	SetMsg(std::string const &msg)
-		{
-			m_msg	=	msg;
-		}
-		///	\brief	Return the structure that contain the id of the resource and the severity of the exception
-		virtual ResourceExcept GetResourceExcept()const;
-	protected:
-		ResourceExcept		m_rc;	///< the resource exception information
-		std::string			m_msg;  ///< the description of the error
+public:
+    virtual const char* what() const throw() { return m_msg.c_str(); }
+    ///	\brief	Set the resource except settings
+    ///	\param	rc	a structure filled with id of the resource and the severity of the exception
+    virtual void SetResource(ResourceExcept const& rc);
+    ///	\brief	Set the message of the exception
+    ///	\param	msg the message of the exception
+    virtual void SetMsg(std::string const& msg) { m_msg = msg; }
+    ///	\brief	Return the structure that contain the id of the resource and the severity of the
+    ///exception
+    virtual ResourceExcept GetResourceExcept() const;
+
+protected:
+    ResourceExcept m_rc; ///< the resource exception information
+    std::string m_msg;   ///< the description of the error
 };
-}  // end of S3DE namespace
+} // end of S3DE namespace

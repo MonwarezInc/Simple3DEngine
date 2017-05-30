@@ -31,178 +31,180 @@ CEngine::CEngine()
 }
 CEngine::~CEngine()
 {
-	// for the list of object, we didn't manage the object memory , so just delete the list , and not the content
+    // for the list of object, we didn't manage the object memory , so just delete the list , and
+    // not the content
 }
-void	CEngine::CreateWindow(EngineWindow const & engine)
+void CEngine::CreateWindow(EngineWindow const &engine)
 {
-	if (!m_pGraphics)
-		m_pGraphics	=	std::make_unique<CGraphics>(engine.width,engine.height,
-													engine.fullscreen,engine.title,engine.bpp,
-													engine.aa,engine.major,engine.minor);
-	// load shader
-	m_pShader.SetFile(engine.shader.lightV,engine.shader.lightF, engine.shader.lightG);
+    if (!m_pGraphics)
+        m_pGraphics = std::make_unique<CGraphics>(engine.width, engine.height, engine.fullscreen,
+                                                  engine.title, engine.bpp, engine.aa, engine.major,
+                                                  engine.minor);
+    // load shader
+    m_pShader.SetFile(engine.shader.lightV, engine.shader.lightF, engine.shader.lightG);
 }
-void	CEngine::DeleteWindow(GLuint indice)
+void CEngine::DeleteWindow(GLuint indice)
 {
-	// not implemented  yet
+    // not implemented  yet
 }
-void	CEngine::SetActive(GLuint indice)
+void CEngine::SetActive(GLuint indice)
 {
-	// not implemented yet
+    // not implemented yet
 }
-void	CEngine::AddMesh(std::vector<MeshPair> const &meshPair)
+void CEngine::AddMesh(std::vector<MeshPair> const &meshPair)
 {
-	m_meshManager.Load(meshPair);
-	for (auto &v: meshPair)
-		this->AddMeshNode(v.entity);
+    m_meshManager.Load(meshPair);
+    for (auto &v : meshPair)
+        this->AddMeshNode(v.entity);
 }
-void	CEngine::AddMeshNode(std::string const & entity, bool isVisible)
+void CEngine::AddMeshNode(std::string const &entity, bool isVisible)
 {
-	ObjectNode	objectNode;
-	objectNode.entity	=	entity;
-	objectNode.position	=	glm::vec3(0.0,0.0,0.0);
-	objectNode.scale	=	1.0;
-	for (unsigned int i=0; i < 3; ++i)
-		objectNode.pitch[i]	=	0.0;
-	objectNode.animation	=	"idle"; // idle by default
-	objectNode.id			=	m_vObjectNode.size();
-	objectNode.isVisible	=	isVisible;
-	m_vObjectNode.push_back(objectNode);
-	m_entToID[entity]	=	objectNode.id;
+    ObjectNode objectNode;
+    objectNode.entity   = entity;
+    objectNode.position = glm::vec3(0.0, 0.0, 0.0);
+    objectNode.scale    = 1.0;
+    for (unsigned int i     = 0; i < 3; ++i)
+        objectNode.pitch[i] = 0.0;
+    objectNode.animation    = "idle"; // idle by default
+    objectNode.id           = m_vObjectNode.size();
+    objectNode.isVisible    = isVisible;
+    m_vObjectNode.push_back(objectNode);
+    m_entToID[entity] = objectNode.id;
 }
-void	CEngine::DelMeshNode(std::string const & entity)
+void CEngine::DelMeshNode(std::string const &entity)
 {
-	// If succeed does not launch an exception
-	// it's not manage the memory of the mesh itself
-	auto	it	=	m_entToID.find(entity);
-	if (it == m_entToID.end())
-		throw std::string ("Error the id is to high for DelMeshNode");
-	m_vObjectNode[it->second].isVisible	=	false;	// Set to false so that we didn't show it
-	m_vObjectNode[it->second].entity		=	"";	
+    // If succeed does not launch an exception
+    // it's not manage the memory of the mesh itself
+    auto it = m_entToID.find(entity);
+    if (it == m_entToID.end())
+        throw std::string("Error the id is to high for DelMeshNode");
+    m_vObjectNode[it->second].isVisible = false; // Set to false so that we didn't show it
+    m_vObjectNode[it->second].entity    = "";
 }
-void	CEngine::AttachLight(std::vector<PointLight> const & pointlight)
+void CEngine::AttachLight(std::vector<PointLight> const &pointlight)
 {
-	m_PointLight	=	pointlight;
+    m_PointLight = pointlight;
 }
-void	CEngine::AttachLight(std::vector<SpotLight> const & spotlight)
+void CEngine::AttachLight(std::vector<SpotLight> const &spotlight)
 {
-	m_SpotLight		=	spotlight;
+    m_SpotLight = spotlight;
 }
-void	CEngine::AttachLight(DirectionalLight const & dlight)
+void CEngine::AttachLight(DirectionalLight const &dlight)
 {
-	m_Directional	=	dlight;
+    m_Directional = dlight;
 }
-void	CEngine::DeleteObject(GLuint id)
+void CEngine::DeleteObject(GLuint id)
 {
-	//not implemented yet
+    // not implemented yet
 }
-void	CEngine::SetNodePosRot(std::string const & entity, glm::vec3 const & pos, glm::vec3 const & pitch)
+void CEngine::SetNodePosRot(std::string const &entity, glm::vec3 const &pos, glm::vec3 const &pitch)
 {
-	auto it 	=	m_entToID.find(entity);
-	if (it != m_entToID.end())
-	{
-		m_vObjectNode[it->second].position	=	pos;
-		for (unsigned int i=0; i < 3; ++i)
-			m_vObjectNode[it->second].pitch[i]	=	pitch[i];
-	}
-	// else we do nothing improve performance xD
+    auto it = m_entToID.find(entity);
+    if (it != m_entToID.end())
+    {
+        m_vObjectNode[it->second].position = pos;
+        for (unsigned int i                    = 0; i < 3; ++i)
+            m_vObjectNode[it->second].pitch[i] = pitch[i];
+    }
+    // else we do nothing improve performance xD
 }
-void	CEngine::SetNodeScale(std::string const & entity, float scale)
+void CEngine::SetNodeScale(std::string const &entity, float scale)
 {
-	auto it	=	m_entToID.find(entity);
-	if (it != m_entToID.end())
-		m_vObjectNode[it->second].scale	=	scale;
-	// same things like SetObjectPosRot
+    auto it = m_entToID.find(entity);
+    if (it != m_entToID.end())
+        m_vObjectNode[it->second].scale = scale;
+    // same things like SetObjectPosRot
 }
-void	CEngine::SetNodeAnimation(std::string const & entity, std::string const & animation)
+void CEngine::SetNodeAnimation(std::string const &entity, std::string const &animation)
 {
-	auto it = m_entToID.find(entity);
-	if (it != m_entToID.end())
-		m_vObjectNode[it->second].animation	=	animation;
+    auto it = m_entToID.find(entity);
+    if (it != m_entToID.end())
+        m_vObjectNode[it->second].animation = animation;
 }
-void 	CEngine::SetCameraLocation(glm::vec3 const & pos, glm::vec3 const & center, glm::vec3 const & vert)
+void CEngine::SetCameraLocation(glm::vec3 const &pos, glm::vec3 const &center,
+                                glm::vec3 const &vert)
 {
-	m_modelview	=	glm::lookAt(pos,center,vert);
-	m_CameraPosition	=	pos;
-	m_CameraCenter		=	center;
-	m_CameraVertical	=	vert;
+    m_modelview      = glm::lookAt(pos, center, vert);
+    m_CameraPosition = pos;
+    m_CameraCenter   = center;
+    m_CameraVertical = vert;
 }
-void	CEngine::SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far)
+void CEngine::SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far)
 {
-	m_projection	=	glm::perspective(fov, ratio, near, far);
+    m_projection = glm::perspective(fov, ratio, near, far);
 }
-void	CEngine::ClearColor(float r, float g, float b, float a)
+void CEngine::ClearColor(float r, float g, float b, float a)
 {
-	m_pGraphics->ClearColor(r,g,b,a);
+    m_pGraphics->ClearColor(r, g, b, a);
 }
-void	CEngine::Init()
-{	
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-}
-void	CEngine::Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed)
+void CEngine::Init()
 {
-	m_pShader.Enable();
-		glClear(GL_COLOR_BUFFER_BIT	| GL_DEPTH_BUFFER_BIT);
-		GLuint		mvpLocation	=	m_pShader.GetUniformLocation("MVP");
-		GLuint		modelviewloc=	m_pShader.GetUniformLocation("modelview");
-		GLuint		projectionl	=	m_pShader.GetUniformLocation("projection");
-		
-		//Light
-		m_pShader.Init();
-		m_pShader.SetLights(m_Directional);
-		m_pShader.SetLights(m_PointLight);
-		m_pShader.SetLights(m_SpotLight);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+}
+void CEngine::Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed)
+{
+    m_pShader.Enable();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    GLuint mvpLocation  = m_pShader.GetUniformLocation("MVP");
+    GLuint modelviewloc = m_pShader.GetUniformLocation("modelview");
+    GLuint projectionl  = m_pShader.GetUniformLocation("projection");
 
-		m_pShader.SetEyeWorldPos(m_CameraPosition);
+    // Light
+    m_pShader.Init();
+    m_pShader.SetLights(m_Directional);
+    m_pShader.SetLights(m_PointLight);
+    m_pShader.SetLights(m_SpotLight);
 
-		glUniformMatrix4fv(projectionl, 1, GL_FALSE, glm::value_ptr(m_projection));
-		// end light
-		for (auto &objectNode : m_vObjectNode)
-		{
-			// do transformation stuff
-			// ...
-			//glm::mat4		mvp			=	m_modelview;	// load camera pos
-			if (objectNode.isVisible)
-			{
-				glm::mat4	mvp;
-				objectNode.DoTransformation(mvp);
-				// Send to OpenGL the modelview before apply camera transformation and after object transformation
-				glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(mvp));
-				mvp	=	m_projection * m_modelview * mvp;
-				// send to OpenGL
-				glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
-				// send material
-				m_pShader.SetMatSpecularIntensity(1.0);
-				m_pShader.SetMatSpecularPower(2);
-				// then draw it
-				try
-				{
-					m_meshManager.Draw(objectNode.entity,elapsed,m_pShader,objectNode.animation);
-				}
-				catch (std::string &a)
-				{
-					ResourceExcept	re = { objectNode.id , MeshExceptFlag::RELEASE};
-					MeshException	me;
-					me.SetResource(re);
-					me.SetMsg(a);
-					throw me;	
-				}
-			}	
-		}
-	m_pShader.Disable();
-	m_pGraphics->SwapWindow();
+    m_pShader.SetEyeWorldPos(m_CameraPosition);
+
+    glUniformMatrix4fv(projectionl, 1, GL_FALSE, glm::value_ptr(m_projection));
+    // end light
+    for (auto &objectNode : m_vObjectNode)
+    {
+        // do transformation stuff
+        // ...
+        // glm::mat4		mvp			=	m_modelview;	// load camera pos
+        if (objectNode.isVisible)
+        {
+            glm::mat4 mvp;
+            objectNode.DoTransformation(mvp);
+            // Send to OpenGL the modelview before apply camera transformation and after object
+            // transformation
+            glUniformMatrix4fv(modelviewloc, 1, GL_FALSE, glm::value_ptr(mvp));
+            mvp = m_projection * m_modelview * mvp;
+            // send to OpenGL
+            glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
+            // send material
+            m_pShader.SetMatSpecularIntensity(1.0);
+            m_pShader.SetMatSpecularPower(2);
+            // then draw it
+            try
+            {
+                m_meshManager.Draw(objectNode.entity, elapsed, m_pShader, objectNode.animation);
+            }
+            catch (std::string &a)
+            {
+                ResourceExcept re = {objectNode.id, MeshExceptFlag::RELEASE};
+                MeshException me;
+                me.SetResource(re);
+                me.SetMsg(a);
+                throw me;
+            }
+        }
+    }
+    m_pShader.Disable();
+    m_pGraphics->SwapWindow();
 }
-void	CEngine::ObjectNode::DoTransformation(glm::mat4 & mdv) const
+void CEngine::ObjectNode::DoTransformation(glm::mat4 &mdv) const
 {
-	// Translate to position
-	mdv	=	glm::translate(mdv, position);
-	// axe  X Y Z orientation
-	mdv	=	glm::rotate(mdv, pitch[0], glm::vec3(1,0,0));
-	mdv	=	glm::rotate(mdv, pitch[1], glm::vec3(0,1,0));
-	mdv	=	glm::rotate(mdv, pitch[2], glm::vec3(0,0,1));
-	// resize
-	mdv	=	glm::scale(mdv, glm::vec3(scale,scale,scale));
+    // Translate to position
+    mdv = glm::translate(mdv, position);
+    // axe  X Y Z orientation
+    mdv = glm::rotate(mdv, pitch[0], glm::vec3(1, 0, 0));
+    mdv = glm::rotate(mdv, pitch[1], glm::vec3(0, 1, 0));
+    mdv = glm::rotate(mdv, pitch[2], glm::vec3(0, 0, 1));
+    // resize
+    mdv = glm::scale(mdv, glm::vec3(scale, scale, scale));
 }
-

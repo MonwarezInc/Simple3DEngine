@@ -25,9 +25,9 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 namespace S3DE
 {
 ///	\brief	Interface for managing Resource
@@ -36,14 +36,14 @@ namespace S3DE
 template<class T>
 class IResourceManager
 {
-	public:
-		IResourceManager(){};
-		virtual ~IResourceManager(){};
-		/// \brief pure virtual load function
-		///	\param[in]	filename filename of the resource to load
-		virtual	T	Load(std::string const &filename)=0;
-		/// \brief pure virtual release function
-		///	\param[in,out]	object decrease the count of the ressource for object
-		virtual void 	Release(T &object)=0;
+public:
+    IResourceManager(){};
+    virtual ~IResourceManager(){};
+    /// \brief pure virtual load function
+    ///	\param[in]	filename filename of the resource to load
+    virtual T Load(std::string const &filename) = 0;
+    /// \brief pure virtual release function
+    ///	\param[in,out]	object decrease the count of the ressource for object
+    virtual void Release(T &object) = 0;
 };
 } // end of S3DE namespace

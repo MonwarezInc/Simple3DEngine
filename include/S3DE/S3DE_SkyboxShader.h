@@ -32,18 +32,16 @@ namespace S3DE
 {
 class SkyboxShader : public Shader
 {
-	public:
-		SkyboxShader();
-		//SkyboxShader(std::string const & vertexsrc, std::string const & fragmentsrc);
-		
-		void	SetWVP(glm::mat4 const & wvp);
-		void	SetTextureUnit(unsigned int textureUnit);
-		void	Init();
+public:
+    SkyboxShader();
+    // SkyboxShader(std::string const & vertexsrc, std::string const & fragmentsrc);
 
-	protected:
-		GLuint	m_WVPLocation;
-		GLuint	m_textureLocation;
-		
+    void SetWVP(glm::mat4 const& wvp);
+    void SetTextureUnit(unsigned int textureUnit);
+    void Init();
+
+protected:
+    GLuint m_WVPLocation;
+    GLuint m_textureLocation;
 };
-}  // end of S3DE namespace
-
+} // end of S3DE namespace

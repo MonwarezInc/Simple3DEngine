@@ -37,51 +37,55 @@ void decorate()
 bool Debug::glCheck(string filename, int line)
 {
     switch (glGetError())
-            {
-                case GL_NO_ERROR:
-                    return true;
-                break;
+    {
+        case GL_NO_ERROR: return true; break;
 
-                case GL_OUT_OF_MEMORY:
-                    decorate();
-                    cerr << "there is not enought memory left to execute the command.\nThe state of the GL is undefined in\n" << filename << "( "<< line << " )\n";
-                    decorate();
-                break;
-                case GL_INVALID_ENUM:
-                    decorate();
-                    cerr << "An unacceptable value is specified for an enumerated argument.\nThe offending command is ignored and has no other side effect\n" ;
-                    cerr << filename << "( "<< line << " )"<< endl;
-                    decorate();
-                break;
-                case GL_INVALID_OPERATION:
-                    decorate();
-                    cerr << "The specified operation is not allowed in the current state.\nThe offending command is ignored and has no other side effect\n" ;
-                    cerr << filename << "( "<< line << " )"<< endl;
-                    decorate();
-                break;
-                case GL_INVALID_FRAMEBUFFER_OPERATION:
-                    decorate();
-                    cerr << "The framebuffer object is not complete.\nThe offending command is ignored" ;
-                    cerr << filename << "( "<< line << " )"<< endl;
-                    decorate();
-                break;
-                case GL_STACK_UNDERFLOW:
-                    decorate();
-                    cerr << "An attempt has been made to perform an operation that \nwould cause an internal stack to underflow\n" ;
-                    cerr << filename << "( "<< line << " )"<< endl;
-                    decorate();
-                break;
-                case GL_STACK_OVERFLOW:
-                    decorate();
-                    cerr << "An attempt has been made to perform an operation that \nwould cause an internal stack to overflow\n" ;
-                    cerr << filename << "( "<< line << " )"<< endl;
-                    decorate();
-                break;
-                default:
-                    decorate();
-                    cerr << "Unexpected error in\n" << filename << "( "  << line << " )"<< endl;
-                    decorate();
-                break;
-            }
-            return false;
+        case GL_OUT_OF_MEMORY:
+            decorate();
+            cerr << "there is not enought memory left to execute the command.\nThe state of the GL "
+                    "is undefined in\n"
+                 << filename << "( " << line << " )\n";
+            decorate();
+            break;
+        case GL_INVALID_ENUM:
+            decorate();
+            cerr << "An unacceptable value is specified for an enumerated argument.\nThe offending "
+                    "command is ignored and has no other side effect\n";
+            cerr << filename << "( " << line << " )" << endl;
+            decorate();
+            break;
+        case GL_INVALID_OPERATION:
+            decorate();
+            cerr << "The specified operation is not allowed in the current state.\nThe offending "
+                    "command is ignored and has no other side effect\n";
+            cerr << filename << "( " << line << " )" << endl;
+            decorate();
+            break;
+        case GL_INVALID_FRAMEBUFFER_OPERATION:
+            decorate();
+            cerr << "The framebuffer object is not complete.\nThe offending command is ignored";
+            cerr << filename << "( " << line << " )" << endl;
+            decorate();
+            break;
+        case GL_STACK_UNDERFLOW:
+            decorate();
+            cerr << "An attempt has been made to perform an operation that \nwould cause an "
+                    "internal stack to underflow\n";
+            cerr << filename << "( " << line << " )" << endl;
+            decorate();
+            break;
+        case GL_STACK_OVERFLOW:
+            decorate();
+            cerr << "An attempt has been made to perform an operation that \nwould cause an "
+                    "internal stack to overflow\n";
+            cerr << filename << "( " << line << " )" << endl;
+            decorate();
+            break;
+        default:
+            decorate();
+            cerr << "Unexpected error in\n" << filename << "( " << line << " )" << endl;
+            decorate();
+            break;
+    }
+    return false;
 }

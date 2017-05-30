@@ -26,34 +26,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 // GLEW for all platform
+#include "S3DE_Texture.h"
 #include <GL/glew.h>
 #include <vector>
-#include "S3DE_Texture.h"
 // for exception - use string for beginning
 #include <string>
 namespace S3DE
 {
 class FrameBuffer
 {
-	public:
-    	FrameBuffer();
-    	FrameBuffer(int largeur, int hauteur);
-    	void    CreerRenderBuffer(GLuint &id, GLenum formatInterne);
-    	void    Load(); // can launch an exception
-     	~FrameBuffer();
-    	GLuint  GetID()const;
-    	GLuint  GetColorBufferID(unsigned int index) const;
+public:
+    FrameBuffer();
+    FrameBuffer(int largeur, int hauteur);
+    void CreerRenderBuffer(GLuint &id, GLenum formatInterne);
+    void Load(); // can launch an exception
+    ~FrameBuffer();
+    GLuint GetID() const;
+    GLuint GetColorBufferID(unsigned int index) const;
 
-    	int     GetLargeur() const;
-    	int     GetHauteur() const;
-	protected:
-    	GLuint                  m_id;
+    int GetLargeur() const;
+    int GetHauteur() const;
 
-    	int                     m_largeur;
-    	int                     m_hauteur;
+protected:
+    GLuint m_id;
 
-    	std::vector <Texture>   m_colorBuffers;
-    	GLuint                  m_depthBufferID;
-	private:
+    int m_largeur;
+    int m_hauteur;
+
+    std::vector<Texture> m_colorBuffers;
+    GLuint m_depthBufferID;
+
+private:
 };
-}  // end of S3DE namespace
+} // end of S3DE namespace

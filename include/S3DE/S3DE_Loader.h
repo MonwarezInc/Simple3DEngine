@@ -25,68 +25,68 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
+#include <fstream>
 #include <glm/glm.hpp>
 #include <string>
-#include <fstream>
 #include <vector>
 namespace S3DE
 {
-enum class LoaderType: char
-{ CONFIG, MESH, LIGHT, DYNAMICS };
-struct 	ConfigData
+enum class LoaderType : char { CONFIG, MESH, LIGHT, DYNAMICS };
+struct ConfigData
 {
-	glm::vec3		position;
-	glm::vec3		target;
-	glm::vec3		up;
+    glm::vec3 position;
+    glm::vec3 target;
+    glm::vec3 up;
 
-	unsigned	int	width;
-	unsigned	int	height;
-	bool			fullscreen;
+    unsigned int width;
+    unsigned int height;
+    bool fullscreen;
 };
 // MeshData is for one mesh
-struct 	MeshData
+struct MeshData
 {
-	std::string 	filename;
-	std::string		entityName;
-	glm::vec3		position;
-	glm::vec3		pitch;
-	float			scale;
+    std::string filename;
+    std::string entityName;
+    glm::vec3 position;
+    glm::vec3 pitch;
+    float scale;
 };
-struct	ControlPoint
+struct ControlPoint
 {
-	glm::vec3					position;
-	float						time;	
+    glm::vec3 position;
+    float time;
 };
-struct 	LightData
+struct LightData
 {
-	glm::vec3					color;
-	float						ambient;
-	float						diffuse;
-	float						linear;
-	float						constant;
-	float						exp;
-	std::string					controltype;
-	std::vector<ControlPoint>	vControlPoint;
+    glm::vec3 color;
+    float ambient;
+    float diffuse;
+    float linear;
+    float constant;
+    float exp;
+    std::string controltype;
+    std::vector<ControlPoint> vControlPoint;
 };
-class	Loader
+class Loader
 {
-	public:
-		Loader ();
-		void					Load(std::string const &filename, LoaderType type);
-		ConfigData				GetConfigData();
-		std::vector<MeshData>	GetMeshData();
-		std::vector<LightData> 	GetLightData();
-	protected:
-		void	LoadConfig();
-		void	LoadMesh();
-		void 	LoadLight();
-		void	LoadDynamics();
-		void	ClearState(unsigned char mask);
+public:
+    Loader();
+    void Load(std::string const &filename, LoaderType type);
+    ConfigData GetConfigData();
+    std::vector<MeshData> GetMeshData();
+    std::vector<LightData> GetLightData();
 
-		std::string				m_lastfilename;
-		unsigned char			m_state;
-		ConfigData				m_config;
-		std::vector<MeshData>	m_pMesh;
-		std::vector<LightData>	m_vLight;	
+protected:
+    void LoadConfig();
+    void LoadMesh();
+    void LoadLight();
+    void LoadDynamics();
+    void ClearState(unsigned char mask);
+
+    std::string m_lastfilename;
+    unsigned char m_state;
+    ConfigData m_config;
+    std::vector<MeshData> m_pMesh;
+    std::vector<LightData> m_vLight;
 };
-}  // end of S3DE namespace
+} // end of S3DE namespace

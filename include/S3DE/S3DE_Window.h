@@ -26,23 +26,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 #include "S3DE_SDL_Tools.h"
+#include <memory.h>
 #include <string>
 #include <vector>
-#include <memory.h>
 
 namespace S3DE
 {
 class Window
 {
 public:
-    Window(const std::string &title, int width, int height, bool fullscreen,
-           Uint32 flags = 0);
+    Window(const std::string &title, int width, int height, bool fullscreen, Uint32 flags = 0);
 
 protected:
-    std::string    m_title;
-    WindowPtr      m_pWindow;
-    int            m_width;
-    int            m_height;
-    WindowPtr      CreateWindow(std::string title, int x, int y, int w, int h, Uint32 flags);
+    std::string m_title;
+    WindowPtr m_pWindow;
+    int m_width;
+    int m_height;
+    WindowPtr CreateWindow(std::string title, int x, int y, int w, int h, Uint32 flags);
 };
-}  // end of S3DE namespace
+} // end of S3DE namespace

@@ -28,24 +28,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using namespace S3DE;
 
-void	BasicMeshManager::Load(std::vector<MeshPair> const & meshPair)
+void BasicMeshManager::Load(std::vector<MeshPair> const& meshPair)
 {
-
-	for (auto const & v: meshPair)
-	{
-		m_entityToName[v.entity] = v.filename;
-		if (m_nameToID.find(v.filename) == m_nameToID.end())
-		{
-			m_vMesh.emplace_back();
-			m_vMesh.back().LoadFromFile(v.filename);
-			m_nameToID[v.filename]	=	m_vMesh.size() -1;
-		}
-	}
+    for (auto const& v : meshPair)
+    {
+        m_entityToName[v.entity] = v.filename;
+        if (m_nameToID.find(v.filename) == m_nameToID.end())
+        {
+            m_vMesh.emplace_back();
+            m_vMesh.back().LoadFromFile(v.filename);
+            m_nameToID[v.filename] = m_vMesh.size() - 1;
+        }
+    }
 }
 
-void	BasicMeshManager::Draw(std::string const & entity, 
-			std::chrono::duration<float, std::chrono::seconds::period> elapsed_time, Shader const & shader,
-				std::string const & animation)
+void BasicMeshManager::Draw(std::string const& entity,
+                            std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
+                            Shader const& shader, std::string const& animation)
 {
-	m_vMesh[m_nameToID[m_entityToName[entity]]].Draw(elapsed_time, shader, animation);
+    m_vMesh[m_nameToID[m_entityToName[entity]]].Draw(elapsed_time, shader, animation);
 }

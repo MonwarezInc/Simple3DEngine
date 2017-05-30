@@ -28,27 +28,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <GL/glew.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 namespace S3DE
 {
 class CubemapTexture
 {
 public:
-    CubemapTexture(std::string const & directory, std::string const & posx, std::string const &negx,
-                    std::string const &posy, std::string const &negy, std::string const &posz,
-                    std::string const &negz);
+    CubemapTexture(std::string const &directory, std::string const &posx, std::string const &negx,
+                   std::string const &posy, std::string const &negy, std::string const &posz,
+                   std::string const &negz);
     ~CubemapTexture();
 
     bool Load();
 
-    void Bind(GLenum	textureUnit);
-protected:
-    std::vector<std::string>    m_name;
-    std::vector<GLenum>         m_type;
-    GLuint                      m_textureId;
-};
-}  // end of S3DE namespace
+    void Bind(GLenum textureUnit);
 
+protected:
+    std::vector<std::string> m_name;
+    std::vector<GLenum> m_type;
+    GLuint m_textureId;
+};
+} // end of S3DE namespace

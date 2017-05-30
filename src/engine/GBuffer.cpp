@@ -28,46 +28,43 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include <string>
 using namespace S3DE;
-void	GBuffer::Init(unsigned int width, unsigned int height)
+void GBuffer::Init(unsigned int width, unsigned int height)
 {
-	// First create the FBO
-	glGenFramebuffers(1, &m_fbo);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
+    // First create the FBO
+    glGenFramebuffers(1, &m_fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
 
-	// Create gbuffer textures
-	glGenTextures(static_cast<int>(GBufferTextureType::NUM_TEXTURES), m_textures);
-	glGenTextures(1, &m_depthTexture);
+    // Create gbuffer textures
+    glGenTextures(static_cast<int>(GBufferTextureType::NUM_TEXTURES), m_textures);
+    glGenTextures(1, &m_depthTexture);
 
-	for (size_t i= 0; i < static_cast<size_t>(GBufferTextureType::NUM_TEXTURES); ++i)
-	{
-		glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-		glTexImage2D(	GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, 
-						GL_FLOAT, nullptr);
-		glFramebufferTexture2D(	GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, 
-								GL_TEXTURE_2D, m_textures[i], 0);
-	}
-	// Depth
-	glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-	glTexImage2D(	GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, 
-					GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-	glFramebufferTexture2D(	GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-							m_depthTexture, 0);
+    for (size_t i = 0; i < static_cast<size_t>(GBufferTextureType::NUM_TEXTURES); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, m_textures[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D,
+                               m_textures[i], 0);
+    }
+    // Depth
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT,
+                 GL_FLOAT, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 
-	GLenum DrawBuffers[static_cast<size_t>(GBufferTextureType::NUM_TEXTURES)] =
-										{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
-										GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT3};
-	glDrawBuffers(static_cast<size_t>(GBufferTextureType::NUM_TEXTURES), DrawBuffers);
+    GLenum DrawBuffers[static_cast<size_t>(GBufferTextureType::NUM_TEXTURES)]
+        = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT3};
+    glDrawBuffers(static_cast<size_t>(GBufferTextureType::NUM_TEXTURES), DrawBuffers);
 
-	GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-	if (Status != GL_FRAMEBUFFER_COMPLETE)
-	{
-		std::stringstream out;
-		out << "Error at " << __FILE__ << "(" << __LINE__  << ") \n";
-		out << "Framebuffer error, status: 0x" << Status << '\n';	
-		throw out.str();
-	}
-	
-	// Then restore default framebuffer
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    if (Status != GL_FRAMEBUFFER_COMPLETE)
+    {
+        std::stringstream out;
+        out << "Error at " << __FILE__ << "(" << __LINE__ << ") \n";
+        out << "Framebuffer error, status: 0x" << Status << '\n';
+        throw out.str();
+    }
+
+    // Then restore default framebuffer
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }

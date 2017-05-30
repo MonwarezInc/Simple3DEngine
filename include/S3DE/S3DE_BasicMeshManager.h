@@ -27,33 +27,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 #include "S3DE_Mesh.h"
 
+#include <chrono>
 #include <memory>
 #include <stdio.h>
 #include <string>
-#include <vector>
 #include <unordered_map>
-#include <chrono>
+#include <vector>
 
 namespace S3DE
 {
-using 	entityNameMap    =    std::unordered_map<std::string, std::string>;
-using	nameIDMap        =    std::unordered_map<std::string, size_t>;
+using entityNameMap = std::unordered_map<std::string, std::string>;
+using nameIDMap     = std::unordered_map<std::string, size_t>;
 struct MeshPair
 {
-    std::string    entity;
-    std::string    filename;
+    std::string entity;
+    std::string filename;
 };
 class BasicMeshManager
 {
 public:
     BasicMeshManager(){};
-    void	Load(std::vector<MeshPair> const & meshpair);
-    void	Draw(std::string const & entity, std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
-                 Shader const & shader,  std::string const & animation);
-protected:
-    std::vector<Mesh>    m_vMesh;
-    entityNameMap        m_entityToName;
-    nameIDMap            m_nameToID;
-};
+    void Load(std::vector<MeshPair> const& meshpair);
+    void Draw(std::string const& entity,
+              std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
+              Shader const& shader, std::string const& animation);
 
+protected:
+    std::vector<Mesh> m_vMesh;
+    entityNameMap m_entityToName;
+    nameIDMap m_nameToID;
+};
 }

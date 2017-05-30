@@ -28,33 +28,31 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace S3DE;
 CEntity::~CEntity()
 {
-    for ( auto & v: m_rcField)
+    for (auto &v : m_rcField)
         m_rcManager.Release(v);
 }
 void CEntity::Load(std::string const &filename, std::string const &entityName)
 {
     m_rcField.push_back(m_rcManager.Load(filename));
-    m_entityKey[entityName]	=	m_rcField.size() - 1;
+    m_entityKey[entityName] = m_rcField.size() - 1;
 }
-void CEntity::Clear(std::string const & entityName)
+void CEntity::Clear(std::string const &entityName)
 {
     if (m_entityKey.find(entityName) != m_entityKey.end())
     {
-        auto id       =    m_entityKey[entityName];
-        auto rcField  =    m_rcField[id];
+        auto id      = m_entityKey[entityName];
+        auto rcField = m_rcField[id];
         m_rcManager.Release(rcField);
-        m_rcField[id] =    rcField;
+        m_rcField[id] = rcField;
     }
     else
     {
         // silently discard
     }
 }
-void CEntity::Draw(std::vector<std::string> const & entity, 
-                    std::chrono::duration<float, 
-                    std::chrono::seconds::period> elapsed_time, 
-                    Shader const & shader, 
-                    std::string const & animation)
+void CEntity::Draw(std::vector<std::string> const &entity,
+                   std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
+                   Shader const &shader, std::string const &animation)
 {
     for (auto &v : entity)
     {

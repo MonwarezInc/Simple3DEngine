@@ -29,22 +29,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "S3DE_Input.h"
 
 #include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
 
-#include <string>
-#include <map>
 #include <chrono>
+#include <map>
+#include <string>
 namespace S3DE
 {
-using KeyStates  =    std::map<SDL_Scancode, bool>;
-using KeyConf    =    std::map <std::string, SDL_Scancode>;
+using KeyStates = std::map<SDL_Scancode, bool>;
+using KeyConf   = std::map<std::string, SDL_Scancode>;
 class Camera
 {
 public:
     Camera();
     /// \brief    Construct the camera with some settings
-    /// 
+    ///
     /// \param[in]    position  Set the initial position of the camera
     /// \param[in]    target    Set the target of the camera
     /// \param[in]    up        Set the up axis of the world
@@ -52,7 +52,7 @@ public:
     /// \brief    Set the relative mouse motion
     /// \param    xRel    Set the x-axis relative motion
     /// \param    yRel    Set the y-axis relative motion
-    void                Orient(int xRel,int yRel);
+    void Orient(int xRel, int yRel);
     /// \brief    Move the camera, according of mouse event and keyboard event
     ///
     /// The mouse motion event are checked here , for the keyboard event
@@ -60,62 +60,60 @@ public:
     ///
     /// \param    event    the event for getting mouse move
     /// \param    elapsed  the current elapsed time
-    void                Move(CInput const &event, 
-                        std::chrono::duration<float, 
-                        std::chrono::milliseconds::period> elapsed);
+    void Move(CInput const &event,
+              std::chrono::duration<float, std::chrono::milliseconds::period> elapsed);
     /// \brief    Update the camera KeyStates
     /// \param    event    The event to check
-    void                KeyBoardEvent(CInput const &event);
+    void KeyBoardEvent(CInput const &event);
     /// \brief    Set the view matrix in modelview
     /// \param[out]    modelview    The view matrix get by the camera
-    void                LookAt(glm::mat4    &modelview);
+    void LookAt(glm::mat4 &modelview);
     /// \brief    Set the target of the camera
     /// \param    target    The target of the camera
-    void                SetTarget(glm::vec3 const &target);
+    void SetTarget(glm::vec3 const &target);
     /// \brief    Set the position of the camera
     /// \param    position    The position of the camera
-    void				SetPosition(glm::vec3 const & position);
+    void SetPosition(glm::vec3 const &position);
     /// \brief    Get the current sensitive value
-    float               GetSensitive() const;
+    float GetSensitive() const;
     /// \brief    Get the current speed of the camera
-    float               GetSpeed() const;
+    float GetSpeed() const;
     /// \brief    Set the sensitive of the camera
     ///
     /// The sensitive will always be a positive value, if a negative value is set
     /// it will be the absolute value that will be set in m_sensitive
     ///
     /// \param    sensitive    The sensitivty of the camera
-    void                SetSensitive(float sensitive);
+    void SetSensitive(float sensitive);
     /// \brief    Set the speed of the camera
     ///
     /// The speed will always be a positive value, if a negative value is set
     /// it will be the absolute value that will be set in m_speed
-    void                SetSpeed(float speed);
+    void SetSpeed(float speed);
     /// \brief    Return the current target
-    glm::vec3           GetTarget()const {return m_target;}
+    glm::vec3 GetTarget() const { return m_target; }
     /// \brief    Return the current position
-    glm::vec3           GetPosition() const {return m_position;}
-    virtual ~Camera()=default;
+    glm::vec3 GetPosition() const { return m_position; }
+    virtual ~Camera() = default;
 
 protected:
-    void         CommonConstructor();
-    float        m_phi;
-    float        m_theta;
-    glm::vec3    m_orientation;
-    
-    glm::vec3    m_up;
-    glm::vec3    m_lateralMove;
-    
-    glm::vec3    m_position;
-    glm::vec3    m_target;
-    
-    float        m_sensitive;
-    float        m_speed;
-    
-    
-    KeyConf     m_keyconf;
-    KeyStates   m_keystat;
+    void CommonConstructor();
+    float m_phi;
+    float m_theta;
+    glm::vec3 m_orientation;
 
+    glm::vec3 m_up;
+    glm::vec3 m_lateralMove;
+
+    glm::vec3 m_position;
+    glm::vec3 m_target;
+
+    float m_sensitive;
+    float m_speed;
+
+
+    KeyConf m_keyconf;
+    KeyStates m_keystat;
 };
 
-}// end of S3DE namespace
+} // end of S3DE namespace

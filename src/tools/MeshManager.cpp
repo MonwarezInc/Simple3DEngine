@@ -27,102 +27,104 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <S3DE_MeshManager.h>
 
 using namespace S3DE;
-#define NULL_RC	0
+#define NULL_RC 0
 MeshManager::MeshManager()
 {
-	// Add an empty rc
-	RcField	rc	=	{std::string(""), NULL_RC};
-	m_rcfield.push_back(rc);
-	m_count.push_back(0);
+    // Add an empty rc
+    RcField rc = {std::string(""), NULL_RC};
+    m_rcfield.push_back(rc);
+    m_count.push_back(0);
 }
 MeshManager::~MeshManager()
 {
 }
-RcField	MeshManager::Load(std::string const &filename)
+RcField MeshManager::Load(std::string const &filename)
 {
-	/*	So what happend: 	m_count: (0 1 2 1 3 5 2 1 3)
-	*						m_rcfield: (NULL_RC rc1 rc2 rc3 ...)
-	*						m_pmesh: (p1 p2 p3 ...)
-	*
-	*	The link ?: m_count[i] refer to the count of m_pmesh[i-1] if i > 0
-	*/
-	RcField	rc	= {filename, NULL_RC};
-	if (filename == "")
-		throw std::string ("Can't load a Mesh with empty name");
+    /*	So what happend: 	m_count: (0 1 2 1 3 5 2 1 3)
+    *						m_rcfield: (NULL_RC rc1 rc2 rc3 ...)
+    *						m_pmesh: (p1 p2 p3 ...)
+    *
+    *	The link ?: m_count[i] refer to the count of m_pmesh[i-1] if i > 0
+    */
+    RcField rc = {filename, NULL_RC};
+    if (filename == "")
+        throw std::string("Can't load a Mesh with empty name");
 
-	auto	n	=	m_rcfield.size();
-	bool	foundempty	=	false;
-	size_t	emptyind	=	0;
+    auto n          = m_rcfield.size();
+    bool foundempty = false;
+    size_t emptyind = 0;
 
-	size_t	i	=	0;
-	for (i = 1; i < n; ++i)
-	{
-		if (filename == m_rcfield[i].filename)
-			break;
-		if (!foundempty)
-		{
-			if (m_count[i]	==	0)
-			{
-				foundempty	=	true;
-				emptyind	=	i;
-			}
-		}
-	}
-	// This is a new Mesh
-	if ( i == n)
-	{
-		if (foundempty)
-		{
-			m_pmesh[emptyind - 1].emplace_back();
-			m_pmesh[emptyind - 1].back()	=	std::make_unique<Mesh>();
-			m_pmesh[emptyind - 1].back()->LoadFromFile(filename);
+    size_t i = 0;
+    for (i = 1; i < n; ++i)
+    {
+        if (filename == m_rcfield[i].filename)
+            break;
+        if (!foundempty)
+        {
+            if (m_count[i] == 0)
+            {
+                foundempty = true;
+                emptyind   = i;
+            }
+        }
+    }
+    // This is a new Mesh
+    if (i == n)
+    {
+        if (foundempty)
+        {
+            m_pmesh[emptyind - 1].emplace_back();
+            m_pmesh[emptyind - 1].back() = std::make_unique<Mesh>();
+            m_pmesh[emptyind - 1].back()->LoadFromFile(filename);
 
-			m_count[emptyind]	=	1;
-			rc.id	=	emptyind;
-			m_rcfield[emptyind]	=	rc;
-		}
-		else
-		{
-			m_pmesh.emplace_back();
-			m_pmesh.back().emplace_back();
-			m_pmesh.back().back()	=	std::make_unique<Mesh>();
-			m_pmesh.back().back()->LoadFromFile(filename);
-			
-			m_count.push_back(1);
-			rc.id	=	m_count.size() - 1;
-			m_rcfield.push_back(rc);
-		}
-	}
-	else 
-	{
-		++m_count[i];
-		rc	=	m_rcfield[i];
-	}
-	
-	return rc;
+            m_count[emptyind]   = 1;
+            rc.id               = emptyind;
+            m_rcfield[emptyind] = rc;
+        }
+        else
+        {
+            m_pmesh.emplace_back();
+            m_pmesh.back().emplace_back();
+            m_pmesh.back().back() = std::make_unique<Mesh>();
+            m_pmesh.back().back()->LoadFromFile(filename);
+
+            m_count.push_back(1);
+            rc.id = m_count.size() - 1;
+            m_rcfield.push_back(rc);
+        }
+    }
+    else
+    {
+        ++m_count[i];
+        rc = m_rcfield[i];
+    }
+
+    return rc;
 }
-void	MeshManager::Release(RcField	&rc)
+void MeshManager::Release(RcField &rc)
 {
-	if ((rc.id < m_count.size()) && (rc.id > 0))
-	{
-		// Release if count == 1
-		if (1	==	m_count[rc.id])
-		{
-			// release the mesh
-			m_count[rc.id]	=	0;
-			m_pmesh[rc.id - 1].clear();
-			m_rcfield[rc.id].filename	=	"";
-			m_rcfield[rc.id].id			=	NULL_RC;
-		}
-		if (m_count[rc.id] > 1)
-			m_count[rc.id]--;
-	}
-	rc.filename=	std::string("");
-	rc.id	=	0;
+    if ((rc.id < m_count.size()) && (rc.id > 0))
+    {
+        // Release if count == 1
+        if (1 == m_count[rc.id])
+        {
+            // release the mesh
+            m_count[rc.id] = 0;
+            m_pmesh[rc.id - 1].clear();
+            m_rcfield[rc.id].filename = "";
+            m_rcfield[rc.id].id       = NULL_RC;
+        }
+        if (m_count[rc.id] > 1)
+            m_count[rc.id]--;
+    }
+    rc.filename = std::string("");
+    rc.id       = 0;
 }
-void	MeshManager::Draw(RcField const & rc, std::chrono::duration<float, std::chrono::seconds::period> elapsed_time, Shader const & shader, std::string const & animation)
+void MeshManager::Draw(RcField const &rc,
+                       std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
+                       Shader const &shader, std::string const &animation)
 {
-	if ((rc.id < m_count.size()) && (rc.id > 0))
-		m_pmesh[rc.id - 1][0]->Draw(elapsed_time, shader, animation);
-	// Else silently discard the draw 
+    if ((rc.id < m_count.size()) && (rc.id > 0))
+        m_pmesh[rc.id - 1][0]->Draw(elapsed_time, shader, animation);
+    // Else silently discard the draw
 }

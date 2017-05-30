@@ -25,46 +25,58 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Camera.h>
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 using namespace S3DE;
 using glm::vec3;
 using glm::mat4;
-Camera::Camera():m_phi(0.0),m_theta(0.0),m_orientation(), m_up(0,0,1), m_lateralMove(),
-    m_position(), m_target(), m_sensitive(0.5),m_speed(10)
+Camera::Camera()
+    : m_phi(0.0)
+    , m_theta(0.0)
+    , m_orientation()
+    , m_up(0, 0, 1)
+    , m_lateralMove()
+    , m_position()
+    , m_target()
+    , m_sensitive(0.5)
+    , m_speed(10)
 {
     this->CommonConstructor();
 }
-Camera::Camera(vec3 position, vec3 target, vec3 up):
-                m_phi(0.0),m_theta(0.0),m_orientation(), m_up(up),
-                m_lateralMove(), m_position(position), m_target(target), m_sensitive(0.5),m_speed(0.1)
+Camera::Camera(vec3 position, vec3 target, vec3 up)
+    : m_phi(0.0)
+    , m_theta(0.0)
+    , m_orientation()
+    , m_up(up)
+    , m_lateralMove()
+    , m_position(position)
+    , m_target(target)
+    , m_sensitive(0.5)
+    , m_speed(0.1)
 {
     this->CommonConstructor();
 }
 void Camera::CommonConstructor()
 {
-
     this->SetTarget(m_target);
 
     // Keyboard configuation
     // Key init
-    m_keyconf["forward"]                =   SDL_SCANCODE_W;
-    m_keyconf["backward"]               =   SDL_SCANCODE_S;
-    m_keyconf["left"]                   =   SDL_SCANCODE_A;
-    m_keyconf["right"]                  =   SDL_SCANCODE_D;
+    m_keyconf["forward"]  = SDL_SCANCODE_W;
+    m_keyconf["backward"] = SDL_SCANCODE_S;
+    m_keyconf["left"]     = SDL_SCANCODE_A;
+    m_keyconf["right"]    = SDL_SCANCODE_D;
     // Keystates init
-    m_keystat[m_keyconf["forward"]]     =   false;
-    m_keystat[m_keyconf["backward"]]    =   false;
-    m_keystat[m_keyconf["left"]]        =   false;
-    m_keystat[m_keyconf["right"]]       =   false;
-
-
+    m_keystat[m_keyconf["forward"]]  = false;
+    m_keystat[m_keyconf["backward"]] = false;
+    m_keystat[m_keyconf["left"]]     = false;
+    m_keystat[m_keyconf["right"]]    = false;
 }
 void Camera::Orient(int xRel, int yRel)
 {
-    m_phi               +=  -yRel * m_sensitive;
-    m_theta             +=  -xRel * m_sensitive;
+    m_phi += -yRel * m_sensitive;
+    m_theta += -xRel * m_sensitive;
 
     if (m_theta >= 360)
         m_theta = 0;
@@ -73,114 +85,112 @@ void Camera::Orient(int xRel, int yRel)
 
     if (m_phi > 89.0)
         m_phi = 89.0;
-    else if (m_phi < - 89.0)
-        m_phi = - 89.0;
-    float   phiRad      = m_phi * M_PI / 180.0;
-    float   thetaRad    = m_theta*M_PI / 180.0;
+    else if (m_phi < -89.0)
+        m_phi      = -89.0;
+    float phiRad   = m_phi * M_PI / 180.0;
+    float thetaRad = m_theta * M_PI / 180.0;
 
     if (m_up.x == 1.0)
     {
-        m_orientation.x         =   sin(phiRad);
-        m_orientation.y         =   cos(phiRad)*cos(thetaRad);
-        m_orientation.z         =   cos(phiRad)*sin(thetaRad);
+        m_orientation.x = sin(phiRad);
+        m_orientation.y = cos(phiRad) * cos(thetaRad);
+        m_orientation.z = cos(phiRad) * sin(thetaRad);
     }
     else if (m_up.y == 1.0)
     {
-        m_orientation.x         =   cos(phiRad) * sin (thetaRad);
-        m_orientation.y         =   sin(phiRad);
-        m_orientation.z         =   cos(phiRad) * cos(thetaRad);
+        m_orientation.x = cos(phiRad) * sin(thetaRad);
+        m_orientation.y = sin(phiRad);
+        m_orientation.z = cos(phiRad) * cos(thetaRad);
     }
     else
     {
-        m_orientation.x         =   cos(phiRad)*cos(thetaRad);
-        m_orientation.y         =   cos(phiRad)*sin(thetaRad);
-        m_orientation.z         =   sin(phiRad);
+        m_orientation.x = cos(phiRad) * cos(thetaRad);
+        m_orientation.y = cos(phiRad) * sin(thetaRad);
+        m_orientation.z = sin(phiRad);
     }
 
-    m_lateralMove               =   cross(m_up, m_orientation);
-    m_lateralMove               =   normalize(m_lateralMove);
+    m_lateralMove = cross(m_up, m_orientation);
+    m_lateralMove = normalize(m_lateralMove);
 
-    m_target                    =   m_position  +   m_orientation;
+    m_target = m_position + m_orientation;
 }
 void Camera::KeyBoardEvent(CInput const &event)
 {
-    for (auto& key : m_keystat)
-        key.second  =   event.GetTouche(key.first);
+    for (auto &key : m_keystat)
+        key.second = event.GetTouche(key.first);
 }
 void Camera::Move(CInput const &event,
-				std::chrono::duration<float, std::chrono::milliseconds::period> elapsed)
+                  std::chrono::duration<float, std::chrono::milliseconds::period> elapsed)
 {
     auto time = elapsed.count();
 
     if (m_keystat[m_keyconf["forward"]])
     {
-        m_position      +=  m_orientation * m_speed*time;
-        m_target	    =   m_position + m_orientation;
+        m_position += m_orientation * m_speed * time;
+        m_target = m_position + m_orientation;
     }
 
     if (m_keystat[m_keyconf["left"]])
     {
-        m_position      +=  m_lateralMove*m_speed*time;
-        m_target	    =   m_position + m_orientation;
+        m_position += m_lateralMove * m_speed * time;
+        m_target = m_position + m_orientation;
     }
     if (m_keystat[m_keyconf["backward"]])
     {
-        m_position      -=  m_orientation * m_speed*time;
-        m_target	    =   m_position + m_orientation;
+        m_position -= m_orientation * m_speed * time;
+        m_target = m_position + m_orientation;
     }
     if (m_keystat[m_keyconf["right"]])
     {
-        m_position      -=  m_lateralMove*m_speed*time;
-        m_target	    =   m_position + m_orientation;
+        m_position -= m_lateralMove * m_speed * time;
+        m_target = m_position + m_orientation;
     }
 
     if (event.MotionMouse())
     {
-       this->Orient(event.GetXRel(), event.GetYRel());
+        this->Orient(event.GetXRel(), event.GetYRel());
     }
-
 }
-void Camera::SetTarget(vec3	const & target)
+void Camera::SetTarget(vec3 const &target)
 {
-    m_orientation           =   target - m_position;
-    m_orientation           =   normalize(m_orientation);
+    m_orientation = target - m_position;
+    m_orientation = normalize(m_orientation);
 
     if (m_up.x == 1.0)
     {
-        m_phi               =   asin(m_orientation.x);
-        m_theta             =   acos((m_orientation.y / cos(m_phi)));
+        m_phi   = asin(m_orientation.x);
+        m_theta = acos((m_orientation.y / cos(m_phi)));
 
-        if(m_orientation.y < 0)
+        if (m_orientation.y < 0)
             m_theta *= -1;
-
     }
     else if (m_up.y == 1.0)
     {
-        m_phi               =   asin(m_orientation.y);
-        m_theta             =   acos((m_orientation.z / cos(m_phi)));
+        m_phi   = asin(m_orientation.y);
+        m_theta = acos((m_orientation.z / cos(m_phi)));
 
-        if(m_orientation.y < 0)
+        if (m_orientation.y < 0)
             m_theta *= -1;
     }
     else
     {
-        m_phi               =   asin(m_orientation.x);
-        m_theta             =   acos((m_orientation.z / cos(m_phi)));
+        m_phi   = asin(m_orientation.x);
+        m_theta = acos((m_orientation.z / cos(m_phi)));
 
-        if(m_orientation.y < 0)
+        if (m_orientation.y < 0)
             m_theta *= -1;
     }
 
-    m_phi                   *=  180.0 / M_PI ;
-    m_theta                 *=  180.0 / M_PI ;
+    m_phi *= 180.0 / M_PI;
+    m_theta *= 180.0 / M_PI;
 }
-void Camera::SetPosition(vec3 const & position)
+void Camera::SetPosition(vec3 const &position)
 {
-	m_position	=	position;
+    m_position = position;
 }
 void Camera::LookAt(mat4 &modelview)
 {
-    modelview               =   glm::lookAt(m_position, m_target, m_up);
+    modelview = glm::lookAt(m_position, m_target, m_up);
 }
 float Camera::GetSensitive() const
 {
@@ -192,9 +202,9 @@ float Camera::GetSpeed() const
 }
 void Camera::SetSensitive(float sensitive)
 {
-    m_sensitive             =   std::fabs(sensitive);
+    m_sensitive = std::fabs(sensitive);
 }
 void Camera::SetSpeed(float speed)
 {
-    m_speed                 =   std::fabs(speed);
+    m_speed = std::fabs(speed);
 }

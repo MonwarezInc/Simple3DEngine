@@ -27,8 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma once
 #include "S3DE_Shader.h"
 #include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
 
 // GLEW for all platform
 #include <GL/glew.h>
@@ -38,82 +38,83 @@ namespace S3DE
 {
 struct DirectionalLight
 {
-	glm::vec3	Color;
-	GLfloat		AmbientIntensity;
-	glm::vec3	Direction;
-	GLfloat		DiffuseIntensity;
+    glm::vec3 Color;
+    GLfloat AmbientIntensity;
+    glm::vec3 Direction;
+    GLfloat DiffuseIntensity;
 };
 struct BaseLight
 {
-	glm::vec3	Color;
-	GLfloat		AmbientIntensity;
-	GLfloat		DiffuseIntensity;
+    glm::vec3 Color;
+    GLfloat AmbientIntensity;
+    GLfloat DiffuseIntensity;
 };
-struct PointLight	:	public BaseLight
+struct PointLight : public BaseLight
 {
-	glm::vec3		Position;
-	struct
-	{
-		GLfloat		Constant;
-		GLfloat		Linear;
-		GLfloat		Exp;
-	} Attenuation;
+    glm::vec3 Position;
+    struct
+    {
+        GLfloat Constant;
+        GLfloat Linear;
+        GLfloat Exp;
+    } Attenuation;
 };
-struct	SpotLight	:	public PointLight
+struct SpotLight : public PointLight
 {
-	glm::vec3	Direction;
-	float		Cutoff;
+    glm::vec3 Direction;
+    float Cutoff;
 };
 
 class Light : public Shader
 {
-	public:
-		static 	const	unsigned	int	MAX_POINT_LIGHTS	=	6;
-		static	const	unsigned	int	MAX_SPOT_LIGHTS		=	2;
-		Light();
-		Light(std::string const &vertexSource , std::string const &fragmentSource,
-				std::string const &geometrySource);
-		Light(Light const &);
-	
-		~Light();
-		virtual	void	SetEyeWorldPos(const glm::vec3 &eyeWorldPos);
-		virtual	void	SetMatSpecularIntensity(GLfloat intensity);
-		virtual	void	SetMatSpecularPower(GLfloat power);
-		virtual	void	SetLights(std::vector<PointLight> const &  lights);
-		virtual	void	SetLights(std::vector<SpotLight> const & lights);
-		virtual	void	SetLights(DirectionalLight	const &light);
-		virtual	void	Init();
+public:
+    static const unsigned int MAX_POINT_LIGHTS = 6;
+    static const unsigned int MAX_SPOT_LIGHTS  = 2;
+    Light();
+    Light(std::string const &vertexSource, std::string const &fragmentSource,
+          std::string const &geometrySource);
+    Light(Light const &);
 
-	protected:
-		glm::vec3			m_eyeWorldPos;
-		GLfloat				m_specularIntensity;
-		GLfloat				m_specularPower;
-		// Location
-		GLuint				m_dirLightColorLocation;
-		GLuint				m_dirLightAmbientIntensityLocation;
-		GLuint				m_dirLightDirectionLocation;
-		GLuint				m_dirLightDiffuseIntensityLocation;
-		GLuint				m_eyeWorldPosLocation;
-		GLuint				m_matSpecularIntensityLocation;
-		GLuint				m_matSpecularPowerLocation;
-		struct PointLightLocation{
-			GLuint			Color;
-			GLuint			AmbientIntensity;
-			GLuint			DiffuseIntensity;
-			GLuint			Position;
-			struct
-			{
-				GLuint		Constant;
-				GLuint		Linear;
-				GLuint		Exp;
-			} Atten;
-		}m_pointLightsLocation[MAX_POINT_LIGHTS];
-		struct	SpotLightLocation	:	public	PointLightLocation
-		{
-			GLuint			Direction;
-			GLuint			Cutoff;
-		}m_spotLightsLocation[MAX_SPOT_LIGHTS]; 
-		GLuint				m_numPointLightsLocation;
-		GLuint				m_numSpotLightsLocation;
+    ~Light();
+    virtual void SetEyeWorldPos(const glm::vec3 &eyeWorldPos);
+    virtual void SetMatSpecularIntensity(GLfloat intensity);
+    virtual void SetMatSpecularPower(GLfloat power);
+    virtual void SetLights(std::vector<PointLight> const &lights);
+    virtual void SetLights(std::vector<SpotLight> const &lights);
+    virtual void SetLights(DirectionalLight const &light);
+    virtual void Init();
+
+protected:
+    glm::vec3 m_eyeWorldPos;
+    GLfloat m_specularIntensity;
+    GLfloat m_specularPower;
+    // Location
+    GLuint m_dirLightColorLocation;
+    GLuint m_dirLightAmbientIntensityLocation;
+    GLuint m_dirLightDirectionLocation;
+    GLuint m_dirLightDiffuseIntensityLocation;
+    GLuint m_eyeWorldPosLocation;
+    GLuint m_matSpecularIntensityLocation;
+    GLuint m_matSpecularPowerLocation;
+    struct PointLightLocation
+    {
+        GLuint Color;
+        GLuint AmbientIntensity;
+        GLuint DiffuseIntensity;
+        GLuint Position;
+        struct
+        {
+            GLuint Constant;
+            GLuint Linear;
+            GLuint Exp;
+        } Atten;
+    } m_pointLightsLocation[MAX_POINT_LIGHTS];
+    struct SpotLightLocation : public PointLightLocation
+    {
+        GLuint Direction;
+        GLuint Cutoff;
+    } m_spotLightsLocation[MAX_SPOT_LIGHTS];
+    GLuint m_numPointLightsLocation;
+    GLuint m_numSpotLightsLocation;
 };
-}  // end of S3DE namespace
+} // end of S3DE namespace
