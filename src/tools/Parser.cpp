@@ -26,47 +26,48 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Parser.h>
 
-void S3DE::Parser::Find3uple(std::string buf, float &x, float &y, float &z, std::string const &sep)
+void S3DE::Parser::Find3uple( std::string buf, float &x, float &y, float &z,
+                              std::string const &sep )
 {
-    auto i1 = buf.find(sep);
-    if ((i1 == std::string::npos) || (i1 == 0))
-        throw std::string("Error could not get the first parameter of 3-uple");
-    auto substr1 = buf.substr(0, i1);
-    buf          = buf.substr(i1 + 1);
-    x            = std::stof(substr1);
-    i1           = buf.find(sep);
-    if ((i1 == std::string::npos) || (i1 == 0))
-        throw std::string("Error could not get the second parameter of 3-uple");
-    substr1 = buf.substr(0, i1);
-    y       = std::stof(substr1);
-    buf     = buf.substr(i1 + 1);
-    if (buf.length() == 0)
-        throw std::string("Error could not get the third parameter of 3-uple");
+    auto i1 = buf.find( sep );
+    if ( ( i1 == std::string::npos ) || ( i1 == 0 ) )
+        throw std::string( "Error could not get the first parameter of 3-uple" );
+    auto substr1 = buf.substr( 0, i1 );
+    buf          = buf.substr( i1 + 1 );
+    x            = std::stof( substr1 );
+    i1           = buf.find( sep );
+    if ( ( i1 == std::string::npos ) || ( i1 == 0 ) )
+        throw std::string( "Error could not get the second parameter of 3-uple" );
+    substr1 = buf.substr( 0, i1 );
+    y       = std::stof( substr1 );
+    buf     = buf.substr( i1 + 1 );
+    if ( buf.length() == 0 )
+        throw std::string( "Error could not get the third parameter of 3-uple" );
 
-    z = std::stof(buf);
+    z = std::stof( buf );
 }
-void S3DE::Parser::FindCouple(std::string buf, unsigned long &a, unsigned long &b,
-                              std::string const &sep)
+void S3DE::Parser::FindCouple( std::string buf, unsigned long &a, unsigned long &b,
+                               std::string const &sep )
 {
-    auto i1 = buf.find(sep);
-    if ((i1 == std::string::npos) || (i1 == 0))
-        throw std::string("Error could not get the first parameter of couple");
-    auto substr1 = buf.substr(0, i1);
-    buf          = buf.substr(i1 + 1);
-    if (buf.length() == 0)
-        throw std::string("Error could not get the second parameter of couple");
+    auto i1 = buf.find( sep );
+    if ( ( i1 == std::string::npos ) || ( i1 == 0 ) )
+        throw std::string( "Error could not get the first parameter of couple" );
+    auto substr1 = buf.substr( 0, i1 );
+    buf          = buf.substr( i1 + 1 );
+    if ( buf.length() == 0 )
+        throw std::string( "Error could not get the second parameter of couple" );
 
-    a = std::stoul(substr1);
-    b = std::stoul(buf);
+    a = std::stoul( substr1 );
+    b = std::stoul( buf );
 }
-size_t S3DE::Parser::ExtractMatch(std::string const &in, std::string &out, std::string const &start,
-                                  std::string const &end)
+size_t S3DE::Parser::ExtractMatch( std::string const &in, std::string &out,
+                                   std::string const &start, std::string const &end )
 {
-    auto i1 = in.find(start);
-    auto i2 = in.find(end);
-    if ((i1 == std::string::npos) || (i2 == std::string::npos) || i1 > i2)
-        throw std::string("Error , ") + start + std::string(" or") + end
-            + std::string("  are not match");
-    out = in.substr(i1 + 1, i2 - i1 - 1);
+    auto i1 = in.find( start );
+    auto i2 = in.find( end );
+    if ( ( i1 == std::string::npos ) || ( i2 == std::string::npos ) || i1 > i2 )
+        throw std::string( "Error , " ) + start + std::string( " or" ) + end
+            + std::string( "  are not match" );
+    out = in.substr( i1 + 1, i2 - i1 - 1 );
     return i2;
 }

@@ -47,10 +47,10 @@ class BasicMeshManager
 {
 public:
     BasicMeshManager(){};
-    void Load(std::vector<MeshPair> const& meshpair);
-    void Draw(std::string const& entity,
-              std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
-              Shader const& shader, std::string const& animation);
+    void Load( std::vector<MeshPair> const& meshpair );
+    void Draw( std::string const& entity,
+               std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
+               Shader const& shader, std::string const& animation );
 
 protected:
     std::vector<Mesh> m_vMesh;

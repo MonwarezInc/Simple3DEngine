@@ -37,12 +37,12 @@ class FrameBuffer
 {
 public:
     FrameBuffer();
-    FrameBuffer(int largeur, int hauteur);
-    void CreerRenderBuffer(GLuint &id, GLenum formatInterne);
+    FrameBuffer( int largeur, int hauteur );
+    void CreerRenderBuffer( GLuint &id, GLenum formatInterne );
     void Load(); // can launch an exception
     ~FrameBuffer();
     GLuint GetID() const;
-    GLuint GetColorBufferID(unsigned int index) const;
+    GLuint GetColorBufferID( unsigned int index ) const;
 
     int GetLargeur() const;
     int GetHauteur() const;

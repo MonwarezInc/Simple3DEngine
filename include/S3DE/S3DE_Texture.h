@@ -40,20 +40,20 @@ namespace S3DE
 class Texture
 {
 public:
-    Texture(const std::string &filename = "");
+    Texture( const std::string &filename = "" );
     // for FBO
-    Texture(int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide);
-    Texture(const Texture &toCopy);
-    Texture &operator=(const Texture &toCopy);
+    Texture( int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide );
+    Texture( const Texture &toCopy );
+    Texture &operator=( const Texture &toCopy );
     bool Load();
     void LoadEmptyTexture();
 
     GLuint GetID() const;
-    void SetFilename(const std::string &filename);
+    void SetFilename( const std::string &filename );
     virtual ~Texture();
 
 protected:
-    SurfacePtr Load_IMG(std::string const &file);
+    SurfacePtr Load_IMG( std::string const &file );
     GLuint m_id;
     std::string m_filename;
     // for FBO

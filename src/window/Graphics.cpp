@@ -26,59 +26,59 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <S3DE_Graphics.h>
 using namespace S3DE;
-CGraphics::CGraphics(int width, int height, bool fullscreen, const std::string &title, int bpp,
-                     int aa, int major, int minor)
-    : Window(title, width, height, fullscreen, SDL_WINDOW_OPENGL)
-    , m_bpp(bpp)
-    , m_aa(aa)
+CGraphics::CGraphics( int width, int height, bool fullscreen, const std::string &title, int bpp,
+                      int aa, int major, int minor )
+    : Window( title, width, height, fullscreen, SDL_WINDOW_OPENGL )
+    , m_bpp( bpp )
+    , m_aa( aa )
 {
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, major );
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, minor );
 
-    if ((major >= 3 && minor >= 2) || major >= 4)
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    else if (3 == major)
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+    if ( ( major >= 3 && minor >= 2 ) || major >= 4 )
+        SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
+    else if ( 3 == major )
+        SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY );
 
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
 
-    m_glContext = SDL_GL_CreateContext(m_pWindow.get());
+    m_glContext = SDL_GL_CreateContext( m_pWindow.get() );
     GL_CHECK;
 
-    if (m_glContext == 0)
-        throw std::string(SDL_GetError());
+    if ( m_glContext == 0 )
+        throw std::string( SDL_GetError() );
     try
     {
         glewExperimental = GL_TRUE;
-        GLenum initialisationGLEW(glewInit());
+        GLenum initialisationGLEW( glewInit() );
 
-        if (initialisationGLEW != GLEW_OK)
+        if ( initialisationGLEW != GLEW_OK )
             throw std::string(
-                reinterpret_cast<const char *>(glewGetErrorString(initialisationGLEW)));
+                reinterpret_cast<const char *>( glewGetErrorString( initialisationGLEW ) ) );
     }
-    catch (std::string error)
+    catch ( std::string error )
     {
         std::cerr << error << '\n';
-        exit(-1);
+        exit( -1 );
     }
-    std::cout << "OpenGL Vendor: " << glGetString(GL_VENDOR) << '\n';
-    std::cout << "Version: " << glGetString(GL_VERSION) << '\n';
+    std::cout << "OpenGL Vendor: " << glGetString( GL_VENDOR ) << '\n';
+    std::cout << "Version: " << glGetString( GL_VERSION ) << '\n';
 }
 void CGraphics::SwapWindow()
 {
-    SDL_GL_SwapWindow(m_pWindow.get());
+    SDL_GL_SwapWindow( m_pWindow.get() );
 }
-void CGraphics::ClearColor(float r, float g, float b, float a)
+void CGraphics::ClearColor( float r, float g, float b, float a )
 {
-    glClearColor(r, g, b, a);
+    glClearColor( r, g, b, a );
 }
 void CGraphics::Clear()
 {
     // more later we will add flags option
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 }
 CGraphics::~CGraphics()
 {
-    SDL_GL_DeleteContext(m_glContext);
+    SDL_GL_DeleteContext( m_glContext );
 }

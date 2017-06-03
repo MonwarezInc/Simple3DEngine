@@ -56,58 +56,58 @@ struct EngineWindow
     uint32_t minor;      ///< OpenGL minor version*/
     EngineShader shader; ///< @see EngineShader*/
 };
-///	\brief 	Main class for the Simple 3D Engine
+/// \brief  Main class for the Simple 3D Engine
 ///
-///	This class is an interface with the engine. Almost all  the command for interacting with the
-///engine are here.
-///	\author	Payet Thibault
+/// This class is an interface with the engine. Almost all  the command for interacting with the
+/// engine are here.
+/// \author Payet Thibault
 class CEngine
 {
 public:
     CEngine();
     virtual ~CEngine();
 
-    /**	\brief Create a window with the specified OpenGL version (Limited to one window for now)
-    *	@param	engineWindow	Structure that contain all information needed to create the window
+    /** \brief Create a window with the specified OpenGL version (Limited to one window for now)
+    *   @param  engineWindow    Structure that contain all information needed to create the window
     */
-    void CreateWindow(const EngineWindow &engineWindow);
+    void CreateWindow( const EngineWindow &engineWindow );
     ///	\brief 	Delete the specifided window (Not Implemented)
-    ///	@param[in]	indice		Id of the window
-    void DeleteWindow(GLuint indice);
+    ///	@param[in]  indice  Id of the window
+    void DeleteWindow( GLuint indice );
     ///	\brief 	Set the active window (Not Implemented)
-    ///	@param[in]	indice		Id of the window
-    void SetActive(GLuint indice);
-    ///	\brief	Add a bunch of mesh
-    ///	\param	meshPair	A vector of entity,filename pair
-    void AddMesh(std::vector<MeshPair> const &meshPair);
-    void DelMeshNode(std::string const &entity);
-    ///	\brief	Set/Update the light information
-    ///	\param[in]	pointlight	A vector of PointLight data
-    void AttachLight(std::vector<PointLight> const &pointlight);
+    ///	@param[in]  indice Id of the window
+    void SetActive( GLuint indice );
+    ///	\brief  Add a bunch of mesh
+    ///	\param  meshPair    A vector of entity,filename pair
+    void AddMesh( std::vector<MeshPair> const &meshPair );
+    void DelMeshNode( std::string const &entity );
+    ///	\brief  Set/Update the light information
+    ///	\param[in]  pointlight  A vector of PointLight data
+    void AttachLight( std::vector<PointLight> const &pointlight );
     ///	\brief Set/update the spot light information
-    ///	\param	spotlight 	a vector of SpotLight data
-    void AttachLight(std::vector<SpotLight> const &spotlight);
+    ///	\param	spotlight   a vector of SpotLight data
+    void AttachLight( std::vector<SpotLight> const &spotlight );
     ///	\brief Set/update the Directional light information
-    ///	\param	dlight 	a DirectionalLight
-    void AttachLight(DirectionalLight const &dlight);
+    ///	\param  dlight  a DirectionalLight
+    void AttachLight( DirectionalLight const &dlight );
     ///	\brief Delete an object from the scene (Not Implemented)
-    ///	\param[in]	id	Id of the object
-    void DeleteObject(GLuint id);
-    ///	\brief	Set the position and rotation of an object of the scene
-    ///	\param[in] 	entity	The name of the entity
-    ///	\param[in] 	pos		The new position
-    ///	\param[in]	pitch	The pitch rotation X,Y,Z
-    void SetNodePosRot(std::string const &entity, glm::vec3 const &pos, glm::vec3 const &pitch);
-    void SetNodeScale(std::string const &entity, float scale);
-    void SetNodeAnimation(std::string const &entity, std::string const &animation);
+    ///	\param[in]  id jId of the object
+    void DeleteObject( GLuint id );
+    ///	\brief  Set the position and rotation of an object of the scene
+    ///	\param[in]  entity  The name of the entity
+    ///	\param[in]  pos The new position
+    ///	\param[in]  pitch   The pitch rotation X,Y,Z
+    void SetNodePosRot( std::string const &entity, glm::vec3 const &pos, glm::vec3 const &pitch );
+    void SetNodeScale( std::string const &entity, float scale );
+    void SetNodeAnimation( std::string const &entity, std::string const &animation );
 
-    void SetCameraLocation(glm::vec3 const &pos, glm::vec3 const &center, glm::vec3 const &vert);
-    void SetCameraSettings(GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far);
+    void SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center, glm::vec3 const &vert );
+    void SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far );
 
-    void ClearColor(float r, float g, float b, float a);
+    void ClearColor( float r, float g, float b, float a );
     void Init(); // next step is to have flags
 
-    void Draw(std::chrono::duration<float, std::chrono::seconds::period> elapsed);
+    void Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed );
 
 protected:
     std::unique_ptr<S3DE::CGraphics> m_pGraphics;
@@ -121,14 +121,14 @@ protected:
     {
         std::string entity;
         glm::vec3 position;
-        float pitch[3];
+        float pitch[ 3 ];
         float scale;
-        void DoTransformation(glm::mat4 &modelview) const;
+        void DoTransformation( glm::mat4 &modelview ) const;
         std::string animation;
         size_t id;      ///< the id of the Mesh
         bool isVisible; ///< Do the node is visible
     };
-    void AddMeshNode(std::string const &entity, bool isVisible = true);
+    void AddMeshNode( std::string const &entity, bool isVisible = true );
     std::vector<ObjectNode> m_vObjectNode;
     // Light is a shader
     Light m_pShader;

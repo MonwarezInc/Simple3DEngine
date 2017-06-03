@@ -54,7 +54,7 @@ PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Left
 ReflowComments: true
-SpaceAfterTemplateKeyword: false
+SpaceAfterTemplateKeyword: true
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: ControlStatements
 SpaceInEmptyParentheses: false
@@ -62,8 +62,8 @@ SpacesBeforeTrailingComments: 1
 SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInContainerLiterals: false
-SpacesInParentheses: false
-SpacesInSquareBrackets: false
+SpacesInParentheses: true
+SpacesInSquareBrackets: true
 Standard: Cpp11
 TabWidth: 4
 UseTab: Never

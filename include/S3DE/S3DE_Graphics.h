@@ -39,12 +39,12 @@ namespace S3DE
 class CGraphics : public Window
 {
 public:
-    CGraphics(int width = 320, int height = 240, bool fullscreen = false,
-              const std::string &title = "default", int bpp = 32, int aa = 2, int major = 4,
-              int minor = 4);
+    CGraphics( int width = 320, int height = 240, bool fullscreen = false,
+               const std::string &title = "default", int bpp = 32, int aa = 2, int major = 4,
+               int minor = 4 );
     virtual ~CGraphics();
     virtual void SwapWindow();
-    virtual void ClearColor(float r, float g, float b, float a);
+    virtual void ClearColor( float r, float g, float b, float a );
     virtual void Clear(); // next step is to encapsulate glClear flag
 
 protected:

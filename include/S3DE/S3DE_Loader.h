@@ -71,7 +71,7 @@ class Loader
 {
 public:
     Loader();
-    void Load(std::string const &filename, LoaderType type);
+    void Load( std::string const &filename, LoaderType type );
     ConfigData GetConfigData();
     std::vector<MeshData> GetMeshData();
     std::vector<LightData> GetLightData();
@@ -81,7 +81,7 @@ protected:
     void LoadMesh();
     void LoadLight();
     void LoadDynamics();
-    void ClearState(unsigned char mask);
+    void ClearState( unsigned char mask );
 
     std::string m_lastfilename;
     unsigned char m_state;

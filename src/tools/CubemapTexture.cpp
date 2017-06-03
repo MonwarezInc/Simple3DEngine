@@ -28,88 +28,88 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using namespace S3DE;
 
-CubemapTexture::CubemapTexture(std::string const &directory, std::string const &posx,
-                               std::string const &negx, std::string const &posy,
-                               std::string const &negy, std::string const &posz,
-                               std::string const &negz)
+CubemapTexture::CubemapTexture( std::string const &directory, std::string const &posx,
+                                std::string const &negx, std::string const &posy,
+                                std::string const &negy, std::string const &posz,
+                                std::string const &negz )
 {
     m_textureId = 0;
-    m_type.resize(6);
-    m_type[0] = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-    m_type[1] = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-    m_type[2] = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-    m_type[3] = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-    m_type[4] = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-    m_type[5] = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+    m_type.resize( 6 );
+    m_type[ 0 ] = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+    m_type[ 1 ] = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+    m_type[ 2 ] = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+    m_type[ 3 ] = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+    m_type[ 4 ] = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+    m_type[ 5 ] = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
 
-    m_name.resize(6);
-    m_name[0] = directory + posx;
-    m_name[1] = directory + negx;
-    m_name[2] = directory + posy;
-    m_name[3] = directory + negy;
-    m_name[4] = directory + posz;
-    m_name[5] = directory + negz;
+    m_name.resize( 6 );
+    m_name[ 0 ] = directory + posx;
+    m_name[ 1 ] = directory + negx;
+    m_name[ 2 ] = directory + posy;
+    m_name[ 3 ] = directory + negy;
+    m_name[ 4 ] = directory + posz;
+    m_name[ 5 ] = directory + negz;
 }
 CubemapTexture::~CubemapTexture()
 {
-    if (GL_TRUE == glIsTexture(m_textureId))
-        glDeleteTextures(1, &m_textureId);
+    if ( GL_TRUE == glIsTexture( m_textureId ) )
+        glDeleteTextures( 1, &m_textureId );
 }
 bool CubemapTexture::Load()
 {
-    glGenTextures(1, &m_textureId);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureId);
+    glGenTextures( 1, &m_textureId );
+    glBindTexture( GL_TEXTURE_CUBE_MAP, m_textureId );
 
-    for (size_t i = 0; i < m_type.size(); ++i)
+    for ( size_t i = 0; i < m_type.size(); ++i )
     {
-        auto imgSDL = IMG_Load(m_name[i].c_str());
+        auto imgSDL = IMG_Load( m_name[ i ].c_str() );
 
-        if (nullptr == imgSDL)
-            throw std::string(SDL_GetError());
+        if ( nullptr == imgSDL )
+            throw std::string( SDL_GetError() );
 
-        GLenum internalformat(0);
-        GLenum format(0);
+        GLenum internalformat( 0 );
+        GLenum format( 0 );
 
-        if (imgSDL->format->BytesPerPixel == 3)
+        if ( imgSDL->format->BytesPerPixel == 3 )
         {
             internalformat = GL_RGB;
 
-            if (imgSDL->format->Rmask == 0xff)
+            if ( imgSDL->format->Rmask == 0xff )
                 format = GL_RGB;
             else
                 format = GL_BGR;
         }
-        else if (imgSDL->format->BytesPerPixel == 4)
+        else if ( imgSDL->format->BytesPerPixel == 4 )
         {
             internalformat = GL_RGBA;
 
-            if (imgSDL->format->Rmask == 0xff)
+            if ( imgSDL->format->Rmask == 0xff )
                 format = GL_RGBA;
             else
                 format = GL_BGRA;
         }
         else
         {
-            SDL_FreeSurface(imgSDL);
+            SDL_FreeSurface( imgSDL );
             return false;
         }
 
-        glTexImage2D(m_type[i], 0, internalformat, imgSDL->w, imgSDL->h, 0, format,
-                     GL_UNSIGNED_BYTE, imgSDL->pixels);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexImage2D( m_type[ i ], 0, internalformat, imgSDL->w, imgSDL->h, 0, format,
+                      GL_UNSIGNED_BYTE, imgSDL->pixels );
+        glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+        glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+        glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE );
 
-        SDL_FreeSurface(imgSDL);
+        SDL_FreeSurface( imgSDL );
     }
 
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    glBindTexture( GL_TEXTURE_CUBE_MAP, 0 );
     return true;
 }
-void CubemapTexture::Bind(GLenum textureUnit)
+void CubemapTexture::Bind( GLenum textureUnit )
 {
-    glActiveTexture(textureUnit);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureId);
+    glActiveTexture( textureUnit );
+    glBindTexture( GL_TEXTURE_CUBE_MAP, m_textureId );
 }

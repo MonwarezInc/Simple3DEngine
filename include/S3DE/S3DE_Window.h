@@ -35,13 +35,13 @@ namespace S3DE
 class Window
 {
 public:
-    Window(const std::string &title, int width, int height, bool fullscreen, Uint32 flags = 0);
+    Window( const std::string &title, int width, int height, bool fullscreen, Uint32 flags = 0 );
 
 protected:
     std::string m_title;
     WindowPtr m_pWindow;
     int m_width;
     int m_height;
-    WindowPtr CreateWindow(std::string title, int x, int y, int w, int h, Uint32 flags);
+    WindowPtr CreateWindow( std::string title, int x, int y, int w, int h, Uint32 flags );
 };
 } // end of S3DE namespace

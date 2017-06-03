@@ -27,17 +27,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <S3DE_Input.h>
 using namespace S3DE;
 CInput::CInput()
-    : m_x(0)
-    , m_y(0)
-    , m_xRel(0)
-    , m_yRel(0)
-    , m_terminer(false)
+    : m_x( 0 )
+    , m_y( 0 )
+    , m_xRel( 0 )
+    , m_yRel( 0 )
+    , m_terminer( false )
 {
-    for (unsigned i  = 0; i < SDL_NUM_SCANCODES; ++i)
-        m_touches[i] = false;
+    for ( unsigned i   = 0; i < SDL_NUM_SCANCODES; ++i )
+        m_touches[ i ] = false;
 
-    for (unsigned int i   = 0; i < 8; ++i)
-        m_boutonSouris[i] = false;
+    for ( unsigned int i    = 0; i < 8; ++i )
+        m_boutonSouris[ i ] = false;
 }
 CInput::~CInput()
 {
@@ -46,16 +46,16 @@ void CInput::UpdateEvent()
 {
     m_xRel = 0;
     m_yRel = 0;
-    while (SDL_PollEvent(&m_event))
+    while ( SDL_PollEvent( &m_event ) )
     {
-        switch (m_event.type)
+        switch ( m_event.type )
         {
-            case SDL_KEYDOWN: m_touches[m_event.key.keysym.scancode] = true; break;
+            case SDL_KEYDOWN: m_touches[ m_event.key.keysym.scancode ] = true; break;
 
-            case SDL_KEYUP: m_touches[m_event.key.keysym.scancode]          = false; break;
-            case SDL_MOUSEBUTTONDOWN: m_boutonSouris[m_event.button.button] = true; break;
+            case SDL_KEYUP: m_touches[ m_event.key.keysym.scancode ]          = false; break;
+            case SDL_MOUSEBUTTONDOWN: m_boutonSouris[ m_event.button.button ] = true; break;
 
-            case SDL_MOUSEBUTTONUP: m_boutonSouris[m_event.button.button] = false; break;
+            case SDL_MOUSEBUTTONUP: m_boutonSouris[ m_event.button.button ] = false; break;
 
             case SDL_MOUSEMOTION:
                 m_x    = m_event.motion.x;
@@ -65,7 +65,7 @@ void CInput::UpdateEvent()
                 break;
 
             case SDL_WINDOWEVENT:
-                if (m_event.window.event == SDL_WINDOWEVENT_CLOSE)
+                if ( m_event.window.event == SDL_WINDOWEVENT_CLOSE )
                     m_terminer = true;
             default: break;
         }
@@ -75,17 +75,17 @@ bool CInput::terminer() const
 {
     return m_terminer;
 }
-bool CInput::GetTouche(const SDL_Scancode touche) const
+bool CInput::GetTouche( const SDL_Scancode touche ) const
 {
-    return m_touches[touche];
+    return m_touches[ touche ];
 }
-bool CInput::GetBoutonSouris(const Uint8 bouton) const
+bool CInput::GetBoutonSouris( const Uint8 bouton ) const
 {
-    return m_boutonSouris[bouton];
+    return m_boutonSouris[ bouton ];
 }
 bool CInput::MotionMouse() const
 {
-    if (m_xRel == 0 && m_yRel == 0)
+    if ( m_xRel == 0 && m_yRel == 0 )
         return false;
     else
         return true;
@@ -106,11 +106,11 @@ int CInput::GetYRel() const
 {
     return m_yRel;
 }
-void CInput::ShowCursor(bool reponse) const
+void CInput::ShowCursor( bool reponse ) const
 {
-    reponse ? SDL_ShowCursor(SDL_ENABLE) : SDL_ShowCursor(SDL_DISABLE);
+    reponse ? SDL_ShowCursor( SDL_ENABLE ) : SDL_ShowCursor( SDL_DISABLE );
 }
-void CInput::GrabCursor(bool reponse) const
+void CInput::GrabCursor( bool reponse ) const
 {
-    reponse ? SDL_SetRelativeMouseMode(SDL_TRUE) : SDL_SetRelativeMouseMode(SDL_FALSE);
+    reponse ? SDL_SetRelativeMouseMode( SDL_TRUE ) : SDL_SetRelativeMouseMode( SDL_FALSE );
 }

@@ -36,8 +36,8 @@ public:
     SkyboxShader();
     // SkyboxShader(std::string const & vertexsrc, std::string const & fragmentsrc);
 
-    void SetWVP(glm::mat4 const& wvp);
-    void SetTextureUnit(unsigned int textureUnit);
+    void SetWVP( glm::mat4 const& wvp );
+    void SetTextureUnit( unsigned int textureUnit );
     void Init();
 
 protected:

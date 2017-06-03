@@ -31,9 +31,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <string>
 
-#define GL_CHECK Debug::glCheck(__FILE__, __LINE__)
+#define GL_CHECK Debug::glCheck( __FILE__, __LINE__ )
 
 namespace Debug
 {
-bool glCheck(std::string filename, int line);
+bool glCheck( std::string filename, int line );
 } // end of Debug namespace

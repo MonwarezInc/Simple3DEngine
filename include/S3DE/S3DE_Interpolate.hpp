@@ -34,62 +34,62 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace S3DE
 {
 // Curve interpolate
-template<class T>
+template <class T>
 class CurveInterpolate
 {
 public:
     CurveInterpolate() {}
-    virtual glm::vec3 GetInterpolated(T totaltime) = 0;
-    virtual void AddPoint(glm::vec3 const& pos, T time) = 0;
+    virtual glm::vec3 GetInterpolated( T totaltime ) = 0;
+    virtual void AddPoint( glm::vec3 const& pos, T time ) = 0;
 };
-template<class T>
+template <class T>
 class LinearInterpolate : public CurveInterpolate<T>
 {
 public:
     LinearInterpolate() {}
-    virtual void AddPoint(glm::vec3 const& pos, T time)
+    virtual void AddPoint( glm::vec3 const& pos, T time )
     {
-        m_vposition3D.push_back(pos);
-        m_time.push_back(time);
+        m_vposition3D.push_back( pos );
+        m_time.push_back( time );
     }
-    virtual void SetLooped(bool looped) { m_looped = looped; }
-    virtual glm::vec3 GetInterpolated(T totaltime)
+    virtual void SetLooped( bool looped ) { m_looped = looped; }
+    virtual glm::vec3 GetInterpolated( T totaltime )
     {
         auto sizeVpos = m_vposition3D.size();
         T currenttime = 0;
         T lasttime    = 0;
         T t           = 0;
         auto indice   = 0;
-        if (m_looped)
+        if ( m_looped )
         {
-            currenttime += sizeVpos * m_time[indice];
-            while (totaltime > currenttime)
+            currenttime += sizeVpos * m_time[ indice ];
+            while ( totaltime > currenttime )
                 totaltime -= currenttime;
             currenttime = 0;
         }
-        while (indice < sizeVpos)
+        while ( indice < sizeVpos )
         {
-            currenttime += m_time[indice];
-            if (totaltime <= currenttime)
+            currenttime += m_time[ indice ];
+            if ( totaltime <= currenttime )
                 break;
             ++indice;
             lasttime = currenttime;
         }
-        if (1 == sizeVpos)
+        if ( 1 == sizeVpos )
             return m_vposition3D.front();
-        if (0 == sizeVpos)
-            throw std::string("error no key pos defined");
-        if (0 == currenttime)
-            throw std::string("error currenttime equal 0 , can't divide");
+        if ( 0 == sizeVpos )
+            throw std::string( "error no key pos defined" );
+        if ( 0 == currenttime )
+            throw std::string( "error currenttime equal 0 , can't divide" );
         t = totaltime - lasttime;
-        if ((indice + 1 < sizeVpos) && (indice < sizeVpos))
+        if ( ( indice + 1 < sizeVpos ) && ( indice < sizeVpos ) )
         {
-            t /= m_time[indice];
+            t /= m_time[ indice ];
             T x, y, z;
-            x = t * m_vposition3D[indice + 1].x + (1 - t) * m_vposition3D[indice].x;
-            y = t * m_vposition3D[indice + 1].y + (1 - t) * m_vposition3D[indice].y;
-            z = t * m_vposition3D[indice + 1].z + (1 - t) * m_vposition3D[indice].z;
-            glm::vec3 result(x, y, z);
+            x = t * m_vposition3D[ indice + 1 ].x + ( 1 - t ) * m_vposition3D[ indice ].x;
+            y = t * m_vposition3D[ indice + 1 ].y + ( 1 - t ) * m_vposition3D[ indice ].y;
+            z = t * m_vposition3D[ indice + 1 ].z + ( 1 - t ) * m_vposition3D[ indice ].z;
+            glm::vec3 result( x, y, z );
             return result;
         }
         else

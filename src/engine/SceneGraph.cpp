@@ -35,19 +35,19 @@ SceneGraph::~SceneGraph()
 {
     // not implemented yet
 }
-unsigned int SceneGraph::AddMesh(Mesh* obj, glm::mat4 const& transf, unsigned int parent, bool hide,
-                                 bool trans)
+unsigned int SceneGraph::AddMesh( Mesh* obj, glm::mat4 const& transf, unsigned int parent,
+                                  bool hide, bool trans )
 {
     // not implemented yet
 
     return 0;
 }
-bool SceneGraph::DeleteObject(unsigned int id)
+bool SceneGraph::DeleteObject( unsigned int id )
 {
     // not implemented yet
     return false;
 }
-Mesh* SceneGraph::ChainTransformation(unsigned int id, glm::mat4& transf)
+Mesh* SceneGraph::ChainTransformation( unsigned int id, glm::mat4& transf )
 {
     // not implemented yet
     return nullptr;
@@ -60,21 +60,21 @@ SceneGraph::Tree::Tree()
     m_root.nodeInfo.obj = nullptr;
     // it is root id = 0 so don't care about more initialisation
     m_root.previous = nullptr;
-    m_root.next.push_back(nullptr);
+    m_root.next.push_back( nullptr );
 }
 SceneGraph::Tree::~Tree()
 {
     // not implemented yet
 }
-unsigned int SceneGraph::Tree::AddNodeInfo(NodeInfo const& nodeInfo, unsigned int parent)
+unsigned int SceneGraph::Tree::AddNodeInfo( NodeInfo const& nodeInfo, unsigned int parent )
 {
     // not implemented yet
 }
-SceneGraph::Node* SceneGraph::Tree::Detach(unsigned int id)
+SceneGraph::Node* SceneGraph::Tree::Detach( unsigned int id )
 {
     // not implemented yet
 }
-bool SceneGraph::Tree::Attach(Node const* node, unsigned int id)
+bool SceneGraph::Tree::Attach( Node const* node, unsigned int id )
 {
     // not implemented yet
 }

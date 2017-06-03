@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using namespace S3DE;
 
-void MeshException::SetResource(ResourceExcept const& rc)
+void MeshException::SetResource( ResourceExcept const& rc )
 {
     m_rc = rc;
 }

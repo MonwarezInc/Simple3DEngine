@@ -34,16 +34,16 @@ namespace S3DE
 {
 namespace sdl
 {
-    ///	\brief	Deleter for SDL2 pointer, so that we can use unique_ptr
+    /// \brief  Deleter for SDL2 pointer, so that we can use unique_ptr
     struct Deleter
     {
-        void operator()(SDL_Window *p) const { SDL_DestroyWindow(p); }
-        void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p); }
-        void operator()(SDL_Surface *p) const { SDL_FreeSurface(p); }
+        void operator()( SDL_Window *p ) const { SDL_DestroyWindow( p ); }
+        void operator()( SDL_Texture *p ) const { SDL_DestroyTexture( p ); }
+        void operator()( SDL_Surface *p ) const { SDL_FreeSurface( p ); }
     };
 
 } // end of namespace sdl
-template<class T>
+template <class T>
 using SDL_Ptr    = std::unique_ptr<T, sdl::Deleter>;
 using WindowPtr  = SDL_Ptr<SDL_Window>;
 using SurfacePtr = SDL_Ptr<SDL_Surface>;

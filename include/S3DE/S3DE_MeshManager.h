@@ -39,27 +39,27 @@ struct RcField
     size_t id;            ///< an id to select an entity in particular
 };
 using Mesh2DArr = std::vector<std::vector<std::unique_ptr<Mesh>>>; ///< A little trick to delete one
-                                                                   ///element of an array
-///	\brief	Manage the mesh resource
+                                                                   /// element of an array
+/// \brief  Manage the mesh resource
 class MeshManager : public IResourceManager<RcField>
 {
 public:
     MeshManager();
     ~MeshManager();
-    ///	\brief Load a mesh only once and return a RcField to manage it
-    ///	\param	filename filename of the resource to load
-    RcField Load(std::string const &filename);
-    ///	\brief Decrease the count of the resource of a mesh, and eventually release the resource
-    ///	\param	object decrease the count of the ressource for object
-    void Release(RcField &object);
-    ///	\brief	Wrapper to the mesh->Draw(...)
-    ///	\param	rcfield			The RcField so that more verification could be done
-    ///	\param	elapsed_time	The	elapsed time since the beginning , so that animation could works
-    ///	\param	shader			A reference to the shader to use
-    ///	\param	animation		The name of the animation to play
-    void Draw(RcField const &rcfield,
-              std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
-              Shader const &shader, std::string const &animation);
+    /// \brief Load a mesh only once and return a RcField to manage it
+    /// \param  filename filename of the resource to load
+    RcField Load( std::string const &filename );
+    /// \brief Decrease the count of the resource of a mesh, and eventually release the resource
+    /// \param  object decrease the count of the ressource for object
+    void Release( RcField &object );
+    /// \brief  Wrapper to the mesh->Draw(...)
+    /// \param  rcfield The RcField so that more verification could be done
+    /// \param  elapsed_time    The elapsed time since the beginning , so that animation could works
+    /// \param  shader  A reference to the shader to use
+    /// \param  animation   The name of the animation to play
+    void Draw( RcField const &rcfield,
+               std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
+               Shader const &shader, std::string const &animation );
 
 protected:
     std::vector<RcField> m_rcfield; ///< A vector of the rcfield

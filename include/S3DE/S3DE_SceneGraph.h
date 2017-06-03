@@ -48,10 +48,10 @@ public:
     SceneGraph();
     ~SceneGraph();
     // for beginning we just use mat4 transformation , after we will get quaternion transformation
-    unsigned int AddMesh(Mesh* obj, glm::mat4 const& transf, unsigned int parent = 0,
-                         bool hide = false, bool trans = false);
-    bool DeleteObject(unsigned int id);
-    Mesh* ChainTransformation(unsigned int id, glm::mat4& transf);
+    unsigned int AddMesh( Mesh* obj, glm::mat4 const& transf, unsigned int parent = 0,
+                          bool hide = false, bool trans = false );
+    bool DeleteObject( unsigned int id );
+    Mesh* ChainTransformation( unsigned int id, glm::mat4& transf );
 
 protected:
     struct NodeInfo
@@ -73,11 +73,11 @@ protected:
     public:
         Tree();
         virtual ~Tree();
-        virtual unsigned int AddNodeInfo(NodeInfo const& nodeInfo, unsigned int parent);
+        virtual unsigned int AddNodeInfo( NodeInfo const& nodeInfo, unsigned int parent );
 
     protected:
-        virtual Node* Detach(unsigned int id);
-        virtual bool Attach(Node const* node, unsigned int parent);
+        virtual Node* Detach( unsigned int id );
+        virtual bool Attach( Node const* node, unsigned int parent );
         Node m_root;
     };
 };

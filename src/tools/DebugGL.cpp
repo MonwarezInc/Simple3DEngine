@@ -34,9 +34,9 @@ void decorate()
     cerr << "**********************************************************************\n";
 }
 }
-bool Debug::glCheck(string filename, int line)
+bool Debug::glCheck( string filename, int line )
 {
-    switch (glGetError())
+    switch ( glGetError() )
     {
         case GL_NO_ERROR: return true; break;
 

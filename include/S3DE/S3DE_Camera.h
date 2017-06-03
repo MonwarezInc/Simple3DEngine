@@ -48,11 +48,11 @@ public:
     /// \param[in]    position  Set the initial position of the camera
     /// \param[in]    target    Set the target of the camera
     /// \param[in]    up        Set the up axis of the world
-    Camera(glm::vec3 position, glm::vec3 target, glm::vec3 up);
+    Camera( glm::vec3 position, glm::vec3 target, glm::vec3 up );
     /// \brief    Set the relative mouse motion
     /// \param    xRel    Set the x-axis relative motion
     /// \param    yRel    Set the y-axis relative motion
-    void Orient(int xRel, int yRel);
+    void Orient( int xRel, int yRel );
     /// \brief    Move the camera, according of mouse event and keyboard event
     ///
     /// The mouse motion event are checked here , for the keyboard event
@@ -60,20 +60,20 @@ public:
     ///
     /// \param    event    the event for getting mouse move
     /// \param    elapsed  the current elapsed time
-    void Move(CInput const &event,
-              std::chrono::duration<float, std::chrono::milliseconds::period> elapsed);
+    void Move( CInput const &event,
+               std::chrono::duration<float, std::chrono::milliseconds::period> elapsed );
     /// \brief    Update the camera KeyStates
     /// \param    event    The event to check
-    void KeyBoardEvent(CInput const &event);
+    void KeyBoardEvent( CInput const &event );
     /// \brief    Set the view matrix in modelview
     /// \param[out]    modelview    The view matrix get by the camera
-    void LookAt(glm::mat4 &modelview);
+    void LookAt( glm::mat4 &modelview );
     /// \brief    Set the target of the camera
     /// \param    target    The target of the camera
-    void SetTarget(glm::vec3 const &target);
+    void SetTarget( glm::vec3 const &target );
     /// \brief    Set the position of the camera
     /// \param    position    The position of the camera
-    void SetPosition(glm::vec3 const &position);
+    void SetPosition( glm::vec3 const &position );
     /// \brief    Get the current sensitive value
     float GetSensitive() const;
     /// \brief    Get the current speed of the camera
@@ -84,12 +84,12 @@ public:
     /// it will be the absolute value that will be set in m_sensitive
     ///
     /// \param    sensitive    The sensitivty of the camera
-    void SetSensitive(float sensitive);
+    void SetSensitive( float sensitive );
     /// \brief    Set the speed of the camera
     ///
     /// The speed will always be a positive value, if a negative value is set
     /// it will be the absolute value that will be set in m_speed
-    void SetSpeed(float speed);
+    void SetSpeed( float speed );
     /// \brief    Return the current target
     glm::vec3 GetTarget() const { return m_target; }
     /// \brief    Return the current position
