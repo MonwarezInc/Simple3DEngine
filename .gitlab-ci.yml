@@ -2,15 +2,25 @@ variables:
     GIT_SUBMODULE_STRATEGY: recursive
 stages:
     - build
+    - test
 
-clang-3.9:
+build:clang-3.9:
     stage: build
     script:
        - ./tools/ci/clang39.sh
     image: debian:unstable
 
-gcc-6:
+build:gcc-6:
     stage: build
     script:
        - ./tools/ci/gcc6.sh
     image: debian:unstable
+
+test:
+    stage: test
+    script:
+      - ./tools/ci/test.sh
+
+artifacts:
+    paths:
+      - build/out-coverage

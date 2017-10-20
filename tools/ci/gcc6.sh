@@ -24,5 +24,7 @@ apt-get install -qq -y gnupg1
  apt-get install -qq -y libsdl2-image-dev
  apt-get install -qq -y libassimp-dev
  apt-get install -qq -y libglm-dev
+ apt-get install -qq -y lcov
+ apt-get install -qq -y gcov
 
  mkdir build && cd build && cmake .. -GNinja && cmake --build . --target all
