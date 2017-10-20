@@ -6,6 +6,10 @@ project(Simple3DEngine)
 
 set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
 #Include and Library filepath
 include_directories(include/S3DE)
 #Add prefix library
@@ -36,7 +40,6 @@ endif ()
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_subdirectory(src)
 
 
 if (test)
@@ -49,7 +52,39 @@ if (test)
   include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
 
   # here we will put coverage
+  set(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage")
+  list(APPEND CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
+  set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
 
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/coverage-base.info
+  COMMAND lcov --capture --no-external --initial --directory ${CMAKE_CURRENT_SOURCE_DIR} --output-file ${CMAKE_CURRENT_BINARY_DIR}/coverage-base.info
+  DEPENDS Simple3DEngine test-Parser
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  COMMENT "Pre-coverage report"
+  )
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/out-coverage/index.html
+  COMMAND lcov --capture --no-external --directory ${CMAKE_CURRENT_SOURCE_DIR} --output-file ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
+  COMMAND lcov --add-tracefile ${CMAKE_CURRENT_BINARY_DIR}/coverage-base.info --add-tracefile ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
+  --output-file ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
+  COMMAND lcov --remove ${CMAKE_CURRENT_BINARY_DIR}/coverage.info '/usr/local/include/*' -o ${CMAKE_CURRENT_BINARY_DIR}/filtered.info
+  COMMAND genhtml ${CMAKE_CURRENT_BINARY_DIR}/coverage.info --ignore-errors source ${CMAKE_CURRENT_BINARY_DIR}/filtered.info
+  --prefix ${CMAKE_CURRENT_SOURCE_DIR} --keep-descriptions --frames --show-details --legend
+  --output-directory ${CMAKE_CURRENT_BINARY_DIR}/out-coverage
+  DEPENDS Simple3DEngine test-Parser
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  COMMENT "Generating coverage report"
+  )
+
+  add_custom_target(pre_coverage DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/coverage-base.info)
+  add_custom_target(coverage_report DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/out-coverage/index.html)
+
+endif()
+
+add_subdirectory(src)
+
+if (test)
+  # add test here
+  add_subdirectory(tests/Parser)
 endif()
 
 if (asan)
