@@ -68,13 +68,13 @@ SceneGraph::Tree::~Tree()
 }
 unsigned int SceneGraph::Tree::AddNodeInfo( NodeInfo const& nodeInfo, unsigned int parent )
 {
-    // not implemented yet
+    throw std::runtime_error( "Not implemented yet" );
 }
 SceneGraph::Node* SceneGraph::Tree::Detach( unsigned int id )
 {
-    // not implemented yet
+    throw std::runtime_error( "Not implemented yet" );
 }
 bool SceneGraph::Tree::Attach( Node const* node, unsigned int id )
 {
-    // not implemented yet
+    throw std::runtime_error( "Not implemented yet" );
 }

@@ -1,5 +1,4 @@
-# Use version 2.8 because of Travis
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 
 #Configuration of project
 #Here is the library
@@ -11,88 +10,49 @@ set(LIBRARY_OUTPUT_PATH lib/${CMAKE_BUILD_TYPE})
 include_directories(include/S3DE)
 #Add prefix library
 link_directories(${CMAKE_PREFIX}/lib)
-#Generate source file list
-file(
-    GLOB_RECURSE
-    include_files
-    include/S3DE/*
-)
-file(
-    GLOB_RECURSE
-    source_file
-    src/*
-    include/S3DE/*
-)
-set(WITH_ASSERT "TRUE" CACHE BOOL "Enable Assert")
-set(USE_SHARED "TRUE" CACHE BOOL "Build shared lib")
-set(OLD_CXX "FALSE" CACHE BOOL "use c++1y")
-set(USE_PROFILING "FALSE" CACHE BOOL "Enable profiling with gprof May not work")
-set(USE_DSA "TRUE" CACHE BOOL "Use Direct State Access, need ARB_direct_state")
+option(USE_SHARED "Build shared lib" ON)
+option(USE_PROFILING "Enable profiling" OFF)
+option(USE_DSA "Use Direct State Access" ON)
+option(test "Build with test" ON)
+option(asan "Build with asan enabled" OFF)
+
+# Profiling 
+if (USE_PROFILING)
+    message("Use of profiling")
+    if(CMAKE_COMPILER_IS_GNUXX)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -fPIC")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
+    endif()
+endif ()
 
 if (USE_DSA)
     add_definitions(-DS3DE_USE_DSA)
 endif()
 
-if (OLD_CXX)
-    add_compile_options(-Wall -std=c++1y)
-else (OLD_CXX)
-    add_compile_options(-Wall -std=c++1z)
-endif (OLD_CXX)
-
-# Profiling 
-if (USE_PROFILING)
-    message("Use of profiling, warning linking can fail")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -fPIC")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
-endif ()
 if (win)
     set(GL opengl32)
 endif ()
 
-#Declaration of executable
-if (USE_SHARED)
-    add_library(
-        Simple3DEngine
-        SHARED
-        ${source_file}
-    )
-else ()
-target_link_libraries(
-    Simple3DEngine
-    ${GL}
-    SDL2
-    SDL2_image
-    GLEW
-    assimp
-)
-endif ()
+set(CMAKE_CXX_STANDARD 14)
 
-if(UNIX)
-    include(FindPkgConfig)
-    PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-    PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image >=2.0.0)
-    PKG_SEARCH_MODULE(ASSIMP REQUIRED assimp >= 3.0)
-    PKG_SEARCH_MODULE(GLEW REQUIRED glew)
-else ()
-    message("Please Define the followings path")
-    message("SDL2_INCLUDE_DIRS, SDL2IMAGE_INCLUDE_DIRS")
-    message("SDL2_LIBRARIES, SDL2IMAGE_LIBRARIES")
-    message("ASSIMP_INCLUDE_DIRS, ASSIMP_LIBRARIES")
-    message("GLEW_INCLUDE_DIRS, GLEW_LIBRARIES")
-endif ()
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
-include_directories(${ASSIMP_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES})
-include_directories(${GLEW_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${GLEW_LIBRARIES})
-if (WITH_ASSERT)
-    message("Enable Assert")
-else ()
-    message("Disable Assert")
-    add_definitions(-DNDEBUG)
+add_subdirectory(src)
+
+
+if (test)
+
+  add_subdirectory(googletest)
+
+  enable_testing()
+
+  include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+  include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
+
+  # here we will put coverage
+
 endif()
-# Install stuff
-install(FILES ${include_files} DESTINATION include/S3DE)
-install(TARGETS Simple3DEngine LIBRARY DESTINATION lib)
+
+if (asan)
+  add_definitions("-fsanitize=address -fno-omit-frame-pointer")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+endif()

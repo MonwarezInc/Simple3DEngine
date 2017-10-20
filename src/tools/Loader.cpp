@@ -36,6 +36,7 @@ const unsigned char CONFIG_MASK = 1; //    00000001
 const unsigned char MESH_MASK   = 2; //    00000010
 const unsigned char LIGHT_MASK  = 4; //    00000100
 const unsigned char DYN_MASK    = 8; //    00001000
+
 Loader::Loader()
 {
     m_state = 0;

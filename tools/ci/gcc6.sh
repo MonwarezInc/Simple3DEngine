@@ -17,7 +17,7 @@ apt-get install -qq -y gnupg1
  ./add-apt-repository 'ppa:dartsim/ppa'
  apt-get update -qq
  apt-get install -qq -y cmake
- apt-get install -qq -y make
+ apt-get install -qq -y ninja-build
  apt-get install -qq -y build-essential
  apt-get install -qq -y libglew-dev
  apt-get install -qq -y libsdl2-dev
@@ -25,4 +25,4 @@ apt-get install -qq -y gnupg1
  apt-get install -qq -y libassimp-dev
  apt-get install -qq -y libglm-dev
 
- mkdir build && cd build && cmake .. && make
+ mkdir build && cd build && cmake .. -GNinja && cmake --build . --target all
