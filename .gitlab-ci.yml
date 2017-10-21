@@ -8,15 +8,17 @@ stages:
 build:clang-3.9:
     stage: build
     script:
+       - ./tools/ci/dependency.sh
        - ./tools/ci/clang39.sh
     artifacts:
       untracked: true
     image: debian:unstable
 
-build:gcc-6:
+build:gcc-7:
     stage: build
     script:
-       - ./tools/ci/gcc6.sh
+       - ./tools/ci/dependency.sh
+       - ./tools/ci/gcc.sh
     artifacts:
       untracked: true
     image: debian:unstable
@@ -26,18 +28,22 @@ test:clang-3.9:
     dependencies:
       - build:clang-3.9
     script:
-      - ./tools/ci/simpleTest.sh
+       - ./tools/ci/dependency.sh
+       - ./tools/ci/simpleTest.sh
+    image: debian:unstable
 
 
-test:gcc-6:
+test:gcc-7:
     stage: test
     dependencies:
-      - build:gcc-6
+      - build:gcc-7
     script:
-      - ./tools/ci/test.sh
+       - ./tools/ci/dependency.sh
+       - ./tools/ci/test.sh
     artifacts:
       paths:
         - build/out-coverage
+    image: debian:unstable
 
 documentation:
      stage: documentation

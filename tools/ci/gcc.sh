@@ -1,6 +1,5 @@
 #!/bin/sh
-
-export CC=clang-3.9
-export CXX=clang++-3.9
+export CC=gcc
+export CXX=g++
 
  mkdir build && cd build && cmake .. -GNinja && cmake --build . --target all

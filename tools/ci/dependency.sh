@@ -1,7 +1,4 @@
 #!/bin/sh
-export CC=gcc
-export CXX=g++
-
 apt-get update -qq
 apt-get install -qq -y wget
 apt-get install -qq -y gnupg
@@ -26,5 +23,4 @@ apt-get install -qq -y gnupg1
  apt-get install -qq -y libglm-dev
  apt-get install -qq -y lcov
  apt-get install -qq -y gcov
-
- mkdir build && cd build && cmake .. -GNinja && cmake --build . --target all
+ apt-get install -qq -y clang-3.9
