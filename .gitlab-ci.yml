@@ -2,15 +2,13 @@ variables:
     GIT_SUBMODULE_STRATEGY: recursive
 stages:
     - build
+    - documentation
 
+# for clang don't use test for now ( need to use llvm-cov gcov instead of gcov )
 build:clang-3.9:
     stage: build
     script:
        - ./tools/ci/clang39.sh
-       - ./tools/ci/test.sh
-    artifacts:
-      paths:
-        - build/out-coverage
     image: debian:unstable
 
 build:gcc-6:
@@ -23,3 +21,10 @@ build:gcc-6:
         - build/out-coverage
     image: debian:unstable
 
+documentation:
+     stage: documentation
+     script:
+       - ./tools/ci/doxygen.sh
+     artifacts:
+       paths:
+        - docs/html
