@@ -18,7 +18,7 @@ option(USE_SHARED "Build shared lib" ON)
 option(USE_PROFILING "Enable profiling" OFF)
 option(USE_DSA "Use Direct State Access" ON)
 option(test "Build with test" ON)
-option(asan "Build with asan enabled" OFF)
+option(asan "Build with asan enabled" ON)
 
 # Profiling 
 if (USE_PROFILING)
@@ -39,7 +39,6 @@ if (win)
 endif ()
 
 set(CMAKE_CXX_STANDARD 14)
-
 
 
 if (test)
