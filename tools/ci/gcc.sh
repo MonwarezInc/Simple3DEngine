@@ -2,4 +2,4 @@
 export CC=gcc
 export CXX=g++
 
- mkdir build && cd build && cmake .. -GNinja && cmake --build . --target all
+ mkdir build && cd build && cmake .. -GNinja -Dasan=OFF && cmake --build . --target all
