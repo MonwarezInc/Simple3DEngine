@@ -25,23 +25,60 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_SDL_Tools.h"
-#include <memory.h>
-#include <string>
+#include "Mesh.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
 #include <vector>
+
 
 namespace S3DE
 {
-class Window
+struct Transformation
+{
+    glm::vec3 translate;
+    glm::vec3 scale;
+    glm::quat rotate;
+};
+
+class SceneGraph
 {
 public:
-    Window( const std::string &title, int width, int height, bool fullscreen, Uint32 flags = 0 );
+    SceneGraph();
+    ~SceneGraph();
+    // for beginning we just use mat4 transformation , after we will get quaternion transformation
+    unsigned int AddMesh( Mesh* obj, glm::mat4 const& transf, unsigned int parent = 0,
+                          bool hide = false, bool trans = false );
+    bool DeleteObject( unsigned int id );
+    Mesh* ChainTransformation( unsigned int id, glm::mat4& transf );
 
 protected:
-    std::string m_title;
-    WindowPtr m_pWindow;
-    int m_width;
-    int m_height;
-    WindowPtr CreateWindow( std::string title, int x, int y, int w, int h, Uint32 flags );
+    struct NodeInfo
+    {
+        Mesh* obj;
+        bool hide;
+        bool transparent;
+        Transformation transformation;
+        unsigned int id;
+    };
+    struct Node
+    {
+        NodeInfo nodeInfo;
+        Node* previous;
+        std::vector<Node*> next;
+    };
+    class Tree
+    {
+    public:
+        Tree();
+        virtual ~Tree();
+        virtual unsigned int AddNodeInfo( NodeInfo const& nodeInfo, unsigned int parent );
+
+    protected:
+        virtual Node* Detach( unsigned int id );
+        virtual bool Attach( Node const* node, unsigned int parent );
+        Node m_root;
+    };
 };
 } // end of S3DE namespace

@@ -25,7 +25,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include <S3DE_Parser.h>
+#include "tools/Parser.h"
 #include <array>
 #include <gtest/gtest.h>
 #include <string>

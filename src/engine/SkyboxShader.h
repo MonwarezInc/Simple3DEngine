@@ -25,44 +25,23 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_SDL_Tools.h"
-// GLEW for all platform
-#include <GL/glew.h>
-
-
-#include <SDL.h>
-#include <SDL_image.h>
-#include <iostream>
-#include <string>
+#include "Shader.h"
+#include <glm/glm.hpp>
 
 namespace S3DE
 {
-class Texture
+class SkyboxShader : public Shader
 {
 public:
-    Texture( const std::string &filename = "" );
-    // for FBO
-    Texture( int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide );
-    Texture( const Texture &toCopy );
-    Texture &operator=( const Texture &toCopy );
-    bool Load();
-    void LoadEmptyTexture();
+    SkyboxShader();
+    // SkyboxShader(std::string const & vertexsrc, std::string const & fragmentsrc);
 
-    GLuint GetID() const;
-    void SetFilename( const std::string &filename );
-    virtual ~Texture();
+    void SetWVP( glm::mat4 const& wvp );
+    void SetTextureUnit( unsigned int textureUnit );
+    void Init();
 
 protected:
-    SurfacePtr Load_IMG( std::string const &file );
-    GLuint m_id;
-    std::string m_filename;
-    // for FBO
-    int m_largeur;
-    int m_hauteur;
-    GLenum m_format;
-    GLenum m_formatInterne;
-    bool m_textureVide;
-
-private:
+    GLuint m_WVPLocation;
+    GLuint m_textureLocation;
 };
 } // end of S3DE namespace

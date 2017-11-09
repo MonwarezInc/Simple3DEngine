@@ -25,60 +25,37 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_Mesh.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/transform.hpp>
+// GLEW for all platform
+#include "../tools/Texture.h"
+#include <GL/glew.h>
 #include <vector>
-
-
+// for exception - use string for beginning
+#include <string>
 namespace S3DE
 {
-struct Transformation
-{
-    glm::vec3 translate;
-    glm::vec3 scale;
-    glm::quat rotate;
-};
-
-class SceneGraph
+class FrameBuffer
 {
 public:
-    SceneGraph();
-    ~SceneGraph();
-    // for beginning we just use mat4 transformation , after we will get quaternion transformation
-    unsigned int AddMesh( Mesh* obj, glm::mat4 const& transf, unsigned int parent = 0,
-                          bool hide = false, bool trans = false );
-    bool DeleteObject( unsigned int id );
-    Mesh* ChainTransformation( unsigned int id, glm::mat4& transf );
+    FrameBuffer();
+    FrameBuffer( int largeur, int hauteur );
+    void CreerRenderBuffer( GLuint &id, GLenum formatInterne );
+    void Load(); // can launch an exception
+    ~FrameBuffer();
+    GLuint GetID() const;
+    GLuint GetColorBufferID( unsigned int index ) const;
+
+    int GetLargeur() const;
+    int GetHauteur() const;
 
 protected:
-    struct NodeInfo
-    {
-        Mesh* obj;
-        bool hide;
-        bool transparent;
-        Transformation transformation;
-        unsigned int id;
-    };
-    struct Node
-    {
-        NodeInfo nodeInfo;
-        Node* previous;
-        std::vector<Node*> next;
-    };
-    class Tree
-    {
-    public:
-        Tree();
-        virtual ~Tree();
-        virtual unsigned int AddNodeInfo( NodeInfo const& nodeInfo, unsigned int parent );
+    GLuint m_id;
 
-    protected:
-        virtual Node* Detach( unsigned int id );
-        virtual bool Attach( Node const* node, unsigned int parent );
-        Node m_root;
-    };
+    int m_largeur;
+    int m_hauteur;
+
+    std::vector<Texture> m_colorBuffers;
+    GLuint m_depthBufferID;
+
+private:
 };
 } // end of S3DE namespace

@@ -25,37 +25,32 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
+#include "Window.h"
 // GLEW for all platform
-#include "S3DE_Texture.h"
 #include <GL/glew.h>
-#include <vector>
-// for exception - use string for beginning
-#include <string>
+
+#include "tools/DebugGL.h"
+#include <iostream>
+#include <memory>
+#include <stdlib.h>
+
 namespace S3DE
 {
-class FrameBuffer
+class CGraphics : public Window
 {
 public:
-    FrameBuffer();
-    FrameBuffer( int largeur, int hauteur );
-    void CreerRenderBuffer( GLuint &id, GLenum formatInterne );
-    void Load(); // can launch an exception
-    ~FrameBuffer();
-    GLuint GetID() const;
-    GLuint GetColorBufferID( unsigned int index ) const;
-
-    int GetLargeur() const;
-    int GetHauteur() const;
+    CGraphics( int width = 320, int height = 240, bool fullscreen = false,
+               const std::string &title = "default", int bpp = 32, int aa = 2, int major = 4,
+               int minor = 4 );
+    virtual ~CGraphics();
+    virtual void SwapWindow();
+    virtual void ClearColor( float r, float g, float b, float a );
+    virtual void Clear(); // next step is to encapsulate glClear flag
 
 protected:
-    GLuint m_id;
-
-    int m_largeur;
-    int m_hauteur;
-
-    std::vector<Texture> m_colorBuffers;
-    GLuint m_depthBufferID;
-
-private:
+    SDL_GLContext m_glContext;
+    // OpenGL specifics
+    int m_bpp;
+    int m_aa;
 };
 } // end of S3DE namespace

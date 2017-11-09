@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 
-#include "S3DE_Input.h"
+#include "../misc/Input.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>

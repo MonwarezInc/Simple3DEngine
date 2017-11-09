@@ -24,9 +24,9 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <S3DE_DebugGL.h>
-#include <S3DE_SDL_Tools.h>
-#include <S3DE_Texture.h>
+#include "Texture.h"
+#include "DebugGL.h"
+#include "SDL_Tools.h"
 
 using namespace std;
 using namespace S3DE;

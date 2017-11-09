@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 #Include and Library filepath
-include_directories(include/S3DE)
+include_directories("src")
 #Add prefix library
 link_directories(${CMAKE_PREFIX}/lib)
 option(USE_SHARED "Build shared lib" ON)
@@ -52,7 +52,7 @@ if (test)
 
   # here we will put coverage
   set(CMAKE_CXX_FLAGS "-g -O0 -Wall -fprofile-arcs -ftest-coverage")
-  list(APPEND CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
+  list(APPEND CMAKE_SHARED_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
   set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
 
   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/coverage-base.info
@@ -88,5 +88,5 @@ endif()
 
 if (asan)
   add_definitions("-fsanitize=address -fno-omit-frame-pointer")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
 endif()

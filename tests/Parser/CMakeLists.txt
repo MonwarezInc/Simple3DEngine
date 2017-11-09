@@ -10,11 +10,10 @@ set(SOURCES
 
 
 include_directories("./")
-add_executable(test-Parser ${SOURCES})
-target_link_libraries(test-Parser Simple3DEngine)
-target_link_libraries(test-Parser gtest gtest_main)
-target_link_libraries(test-Parser gmock gmock_main)
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-add_test(NAME test-Parser COMMAND test-Parser)
+include(../test-link.cmake)
+
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 include(../../common.cmake)

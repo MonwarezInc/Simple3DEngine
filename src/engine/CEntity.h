@@ -25,8 +25,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_Mesh.h"
-#include "S3DE_MeshManager.h"
+#include "Mesh.h"
+#include "MeshManager.h"
 #include <chrono>
 #include <map>
 #include <memory>

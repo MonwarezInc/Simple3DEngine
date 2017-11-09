@@ -24,15 +24,25 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <S3DE_MeshException.h>
+#pragma once
+#include "../tools/SDL_Tools.h"
 
-using namespace S3DE;
+#include <memory.h>
+#include <string>
+#include <vector>
 
-void MeshException::SetResource( ResourceExcept const& rc )
+namespace S3DE
 {
-    m_rc = rc;
-}
-ResourceExcept MeshException::GetResourceExcept() const
+class Window
 {
-    return m_rc;
-}
+public:
+    Window( const std::string &title, int width, int height, bool fullscreen, Uint32 flags = 0 );
+
+protected:
+    std::string m_title;
+    WindowPtr m_pWindow;
+    int m_width;
+    int m_height;
+    WindowPtr CreateWindow( std::string title, int x, int y, int w, int h, Uint32 flags );
+};
+} // end of S3DE namespace

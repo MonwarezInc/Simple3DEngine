@@ -25,8 +25,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_Shader.h"
-#include "S3DE_Texture.h"
+#include "../tools/Texture.h"
+#include "Shader.h"
 
 #include <Importer.hpp>
 #include <map>

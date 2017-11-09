@@ -25,12 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_BasicMeshManager.h"
-#include "S3DE_Graphics.h"
-#include "S3DE_Light.h"
-#include "S3DE_Mesh.h"
-#include "S3DE_MeshException.h"
-#include "S3DE_Shader.h"
+#include "../tools/BasicMeshManager.h"
+#include "../window/Graphics.h"
+#include "Light.h"
+#include "Mesh.h"
+#include "MeshException.h"
+#include "Shader.h"
 
 #include <chrono>
 #include <vector>

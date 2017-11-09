@@ -25,32 +25,52 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "S3DE_Window.h"
-// GLEW for all platform
+#include "Shader.h"
 #include <GL/glew.h>
-
-#include "S3DE_DebugGL.h"
-#include <iostream>
-#include <memory>
-#include <stdlib.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace S3DE
 {
-class CGraphics : public Window
+class ShadowMapFBO
 {
 public:
-    CGraphics( int width = 320, int height = 240, bool fullscreen = false,
-               const std::string &title = "default", int bpp = 32, int aa = 2, int major = 4,
-               int minor = 4 );
-    virtual ~CGraphics();
-    virtual void SwapWindow();
-    virtual void ClearColor( float r, float g, float b, float a );
-    virtual void Clear(); // next step is to encapsulate glClear flag
+    ShadowMapFBO();
+    ~ShadowMapFBO();
+    /** \brief initialize a shadow map with the given size
+    *   \param width    width of the FBO
+    *   \param height   height of the FBO
+    */
+    void Init( unsigned int width, unsigned int height ); // can launch an exception
+    /** \brief bind the Shadow map FBO to the current state in writing mode*/
+    void BindForWriting();
+    /** \brief bind the shadow map for reading
+    *   \param  TexrureUnit the type of the texture to be attached
+    */
+    void BindForReading( GLenum TextureUnit );
 
-protected:
-    SDL_GLContext m_glContext;
-    // OpenGL specifics
-    int m_bpp;
-    int m_aa;
+private:
+    GLuint m_fbo;       //< identifier for the fbo
+    GLuint m_shadowMap; //< identifier for the shadow map
 };
+class ShadowMapShader : public Shader
+{
+public:
+    ShadowMapShader();
+    /** \brief  Init the shader for uniform location*/
+    void Init();
+    /** \brief Set the world view projection matrix to use
+    * \param wvp the world view projection matrix
+    */
+    void SetWVP( glm::mat4 const& wvp );
+    /** \brief  Set the texture unit to use
+    *   \param  TextureUnit the texture unit to use
+    */
+    void SetTextureUnit( unsigned int TextureUnit );
+
+private:
+    GLuint m_wvpLocation;
+    GLuint m_textureLocation;
+};
+
 } // end of S3DE namespace
