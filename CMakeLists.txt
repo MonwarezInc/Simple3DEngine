@@ -62,11 +62,11 @@ if (test)
   COMMENT "Pre-coverage report"
   )
   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/out-coverage/index.html
-  COMMAND lcov --capture --no-external --directory ${CMAKE_CURRENT_SOURCE_DIR} --output-file ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
-  COMMAND lcov --add-tracefile ${CMAKE_CURRENT_BINARY_DIR}/coverage-base.info --add-tracefile ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
+  COMMAND lcov --capture --no-external --directory ${CMAKE_CURRENT_SOURCE_DIR} --output-file ${CMAKE_CURRENT_BINARY_DIR}/coverage-test.info
+  COMMAND lcov --add-tracefile ${CMAKE_CURRENT_BINARY_DIR}/coverage-base.info --add-tracefile ${CMAKE_CURRENT_BINARY_DIR}/coverage-test.info
   --output-file ${CMAKE_CURRENT_BINARY_DIR}/coverage.info
-  COMMAND lcov --remove ${CMAKE_CURRENT_BINARY_DIR}/coverage.info '/usr/local/include/*' -o ${CMAKE_CURRENT_BINARY_DIR}/filtered.info
-  COMMAND genhtml ${CMAKE_CURRENT_BINARY_DIR}/coverage.info --ignore-errors source ${CMAKE_CURRENT_BINARY_DIR}/filtered.info
+  COMMAND lcov --extract ${CMAKE_CURRENT_BINARY_DIR}/coverage.info '*/src/*' -o ${CMAKE_CURRENT_BINARY_DIR}/filtered.info
+  COMMAND genhtml --ignore-errors source ${CMAKE_CURRENT_BINARY_DIR}/filtered.info
   --prefix ${CMAKE_CURRENT_SOURCE_DIR} --keep-descriptions --frames --show-details --legend
   --output-directory ${CMAKE_CURRENT_BINARY_DIR}/out-coverage
   DEPENDS Simple3DEngine test-Parser
