@@ -50,7 +50,7 @@ public:
     /// \param geometrySource   the filename of the geometry shader
     Shader( std::string const &vertexSource, std::string const &fragmentSource,
             std::string const &geometrySource );
-    ~Shader();
+    virtual ~Shader();
     /// \brief Assignation operator
     /// \param shaderToCopy the shader to copy
     Shader &operator=( Shader const &shaderToCopy );
