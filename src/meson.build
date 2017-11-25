@@ -67,4 +67,4 @@ simple3dengineSrc =[
   source_engine,source_misc,source_tools,source_window
 ]
 
-simple3dengine = library('Simple3DEngine' , simple3dengineSrc, dependencies: [sdl2dep,sdl2imagedep,assimpdep,glewdep])
+simple3dengine_lib = library('Simple3DEngine' , simple3dengineSrc, dependencies: [sdl2dep,sdl2imagedep,assimpdep,glewdep])
