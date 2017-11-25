@@ -11,3 +11,5 @@ docs/
 *~
 .*~
 
+subprojects/googletest-release-*
+subprojects/packagecache

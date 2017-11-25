@@ -5,11 +5,11 @@ stages:
     - test
     - documentation
 
-build:clang-3.9:
+build:clang-5.0:
     stage: build
     script:
        - ./tools/ci/dependency.sh
-       - ./tools/ci/clang39.sh
+       - ./tools/ci/clang50.sh
     artifacts:
       untracked: true
     image: debian:unstable
@@ -23,10 +23,10 @@ build:gcc-7:
       untracked: true
     image: debian:unstable
 
-test:clang-3.9:
+test:clang-5.0:
     stage: test
     dependencies:
-      - build:clang-3.9
+      - build:clang-5.0
     script:
        - ./tools/ci/dependency.sh
        - ./tools/ci/simpleTest.sh
