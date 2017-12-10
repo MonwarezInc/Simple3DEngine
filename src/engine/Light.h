@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // GLEW for all platform
 #include <GL/glew.h>
+#include <array>
 #include <vector>
 
 namespace S3DE
@@ -70,7 +71,8 @@ class Light : public Shader
 public:
     static const unsigned int MAX_POINT_LIGHTS = 6;
     static const unsigned int MAX_SPOT_LIGHTS  = 2;
-    Light()                                    = default;
+
+    Light() = default;
     Light( std::string const &vertexSource, std::string const &fragmentSource,
            std::string const &geometrySource );
     Light( Light const & );
@@ -98,6 +100,8 @@ protected:
     GLuint m_matSpecularPowerLocation{0};
     struct PointLightLocation
     {
+        PointLightLocation() = default;
+
         GLuint Color{0};
         GLuint AmbientIntensity{0};
         GLuint DiffuseIntensity{0};
@@ -108,12 +112,16 @@ protected:
             GLuint Linear{0};
             GLuint Exp{0};
         } Atten;
-    } m_pointLightsLocation[ MAX_POINT_LIGHTS ];
+    };
+    std::array<PointLightLocation, MAX_POINT_LIGHTS> m_pointLightsLocation;
     struct SpotLightLocation : public PointLightLocation
     {
+        SpotLightLocation() = default;
         GLuint Direction{0};
         GLuint Cutoff{0};
-    } m_spotLightsLocation[ MAX_SPOT_LIGHTS ];
+    };
+    std::array<SpotLightLocation, MAX_SPOT_LIGHTS> m_spotLightsLocation;
+
     GLuint m_numPointLightsLocation{0};
     GLuint m_numSpotLightsLocation{0};
 };
