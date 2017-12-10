@@ -245,15 +245,6 @@ Mesh::MeshEntry::~MeshEntry()
     if ( 0 != BONES )
         glDeleteVertexArrays( 1, &BONES );
 }
-Mesh::MeshEntry::MeshEntry()
-{
-    VB            = 0;
-    IB            = 0;
-    VAO           = 0;
-    BONES         = 0;
-    NumIndices    = 0;
-    MaterialIndex = INVALID_MATERIAL;
-}
 void Mesh::MeshEntry::Init( std::vector<Vertex> const& vertices,
                             std::vector<unsigned int> const& indices,
                             std::vector<VertexBoneData> const& bones )

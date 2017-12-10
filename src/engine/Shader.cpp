@@ -42,15 +42,10 @@ Shader::Shader()
 
 
 Shader::Shader( Shader const &shaderToCopy )
+    : m_vertexSource{shaderToCopy.m_vertexSource}
+    , m_fragmentSource{shaderToCopy.m_fragmentSource}
+    , m_geometrySource{shaderToCopy.m_geometrySource}
 {
-    // Copy sources files
-
-    m_vertexSource   = shaderToCopy.m_vertexSource;
-    m_fragmentSource = shaderToCopy.m_fragmentSource;
-    m_geometrySource = shaderToCopy.m_geometrySource;
-
-    // Load the new shader
-
     this->Load();
 }
 

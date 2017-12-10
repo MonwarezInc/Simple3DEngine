@@ -28,10 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdio>
 #include <sstream>
 using namespace S3DE;
-Light::Light()
-    : Shader()
-{
-}
 Light::Light( Light const &shaderToCopy )
     : Shader( shaderToCopy )
 {

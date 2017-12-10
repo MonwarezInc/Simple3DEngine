@@ -145,20 +145,20 @@ private:
     void CheckFactor( float Factor, std::string const& file, int line );
     struct MeshEntry
     {
-        MeshEntry();
+        MeshEntry() = default;
         ~MeshEntry();
 
         void Init( std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices,
                    std::vector<VertexBoneData> const& bones );
-        GLuint VAO;
-        GLuint VB;
-        GLuint IB;
-        GLuint BONES;
-        unsigned int NumIndices;
-        unsigned int MaterialIndex;
-        unsigned int BaseVertex;
-        unsigned int BaseIndex;
-        int skinned;
+        GLuint VAO{0};
+        GLuint VB{0};
+        GLuint IB{0};
+        GLuint BONES{INVALID_MATERIAL};
+        unsigned int NumIndices{0};
+        unsigned int MaterialIndex{0};
+        unsigned int BaseVertex{0};
+        unsigned int BaseIndex{0};
+        int skinned{0};
     };
     std::string m_filename;
     std::vector<MeshEntry> m_Entries;

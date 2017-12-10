@@ -39,30 +39,30 @@ namespace S3DE
 struct DirectionalLight
 {
     glm::vec3 Color;
-    GLfloat AmbientIntensity;
+    GLfloat AmbientIntensity{0};
     glm::vec3 Direction;
-    GLfloat DiffuseIntensity;
+    GLfloat DiffuseIntensity{0};
 };
 struct BaseLight
 {
     glm::vec3 Color;
-    GLfloat AmbientIntensity;
-    GLfloat DiffuseIntensity;
+    GLfloat AmbientIntensity{0};
+    GLfloat DiffuseIntensity{0};
 };
 struct PointLight : public BaseLight
 {
     glm::vec3 Position;
     struct
     {
-        GLfloat Constant;
-        GLfloat Linear;
-        GLfloat Exp;
+        GLfloat Constant{0};
+        GLfloat Linear{0};
+        GLfloat Exp{0};
     } Attenuation;
 };
 struct SpotLight : public PointLight
 {
     glm::vec3 Direction;
-    float Cutoff;
+    float Cutoff{0};
 };
 
 class Light : public Shader
@@ -70,7 +70,7 @@ class Light : public Shader
 public:
     static const unsigned int MAX_POINT_LIGHTS = 6;
     static const unsigned int MAX_SPOT_LIGHTS  = 2;
-    Light();
+    Light()                                    = default;
     Light( std::string const &vertexSource, std::string const &fragmentSource,
            std::string const &geometrySource );
     Light( Light const & );
@@ -86,35 +86,35 @@ public:
 
 protected:
     glm::vec3 m_eyeWorldPos;
-    GLfloat m_specularIntensity;
-    GLfloat m_specularPower;
+    GLfloat m_specularIntensity{0};
+    GLfloat m_specularPower{0};
     // Location
-    GLuint m_dirLightColorLocation;
-    GLuint m_dirLightAmbientIntensityLocation;
-    GLuint m_dirLightDirectionLocation;
-    GLuint m_dirLightDiffuseIntensityLocation;
-    GLuint m_eyeWorldPosLocation;
-    GLuint m_matSpecularIntensityLocation;
-    GLuint m_matSpecularPowerLocation;
+    GLuint m_dirLightColorLocation{0};
+    GLuint m_dirLightAmbientIntensityLocation{0};
+    GLuint m_dirLightDirectionLocation{0};
+    GLuint m_dirLightDiffuseIntensityLocation{0};
+    GLuint m_eyeWorldPosLocation{0};
+    GLuint m_matSpecularIntensityLocation{0};
+    GLuint m_matSpecularPowerLocation{0};
     struct PointLightLocation
     {
-        GLuint Color;
-        GLuint AmbientIntensity;
-        GLuint DiffuseIntensity;
+        GLuint Color{0};
+        GLuint AmbientIntensity{0};
+        GLuint DiffuseIntensity{0};
         GLuint Position;
         struct
         {
-            GLuint Constant;
-            GLuint Linear;
-            GLuint Exp;
+            GLuint Constant{0};
+            GLuint Linear{0};
+            GLuint Exp{0};
         } Atten;
     } m_pointLightsLocation[ MAX_POINT_LIGHTS ];
     struct SpotLightLocation : public PointLightLocation
     {
-        GLuint Direction;
-        GLuint Cutoff;
+        GLuint Direction{0};
+        GLuint Cutoff{0};
     } m_spotLightsLocation[ MAX_SPOT_LIGHTS ];
-    GLuint m_numPointLightsLocation;
-    GLuint m_numSpotLightsLocation;
+    GLuint m_numPointLightsLocation{0};
+    GLuint m_numSpotLightsLocation{0};
 };
 } // end of S3DE namespace
