@@ -104,8 +104,10 @@ void CEngine::SetNodePosRot( std::string const &entity, glm::vec3 const &pos,
     if ( it != m_entToID.end() )
     {
         m_vObjectNode[ it->second ].position = pos;
-        for ( unsigned int i                       = 0; i < 3; ++i )
+        for ( unsigned int i = 0; i < 3; ++i )
+        {
             m_vObjectNode[ it->second ].pitch[ i ] = pitch[ i ];
+        }
     }
     // else we do nothing improve performance xD
 }
