@@ -40,7 +40,7 @@ namespace S3DE
 class Texture
 {
 public:
-    Texture( const std::string &filename = "" );
+    explicit Texture( const std::string &filename = "" );
     // for FBO
     Texture( int largeur, int hauteur, GLenum format, GLenum formatInterne, bool textureVide );
     Texture( const Texture &toCopy );

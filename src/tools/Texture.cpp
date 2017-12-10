@@ -45,14 +45,12 @@ Texture::Texture( const string &filename )
 #endif
 }
 Texture::Texture( const Texture &toCopy )
+    : m_filename{toCopy.m_filename}
+    , m_largeur{toCopy.m_largeur}
+    , m_format{toCopy.m_format}
+    , m_formatInterne{toCopy.m_format}
+    , m_textureVide{toCopy.m_textureVide}
 {
-    m_filename = toCopy.m_filename;
-
-    m_largeur       = toCopy.m_largeur;
-    m_hauteur       = toCopy.m_hauteur;
-    m_format        = toCopy.m_format;
-    m_formatInterne = toCopy.m_formatInterne;
-    m_textureVide   = toCopy.m_textureVide;
     if ( m_textureVide && glIsTexture( toCopy.m_id ) == GL_TRUE )
         this->LoadEmptyTexture();
     else if ( GL_TRUE == glIsTexture( toCopy.m_id ) )
