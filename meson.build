@@ -14,3 +14,8 @@ subdir('src')
 simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,include_directories:simple3dengine_inc)
 
 subdir('tests/Parser')
+
+# cppcheck section
+cppcheck_target = run_target('cppcheck',command : ['tools/cppcheck.sh',
+                                simple3dengineSrc]
+                            )
