@@ -16,6 +16,7 @@ simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,include_dir
 subdir('tests/Parser')
 
 # cppcheck section
-cppcheck_target = run_target('cppcheck',command : ['tools/cppcheck.sh',
-                                simple3dengineSrc]
-                            )
+cppcheck_exe = find_program('cppcheck',required:false)
+cppcheck_html = find_program('cppcheck-htmlreport',required:false)
+
+cppcheck_target = run_target('cppcheck',command : ['tools/cppcheck.sh'])
