@@ -28,11 +28,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "../tools/Texture.h"
 #include "Shader.h"
 
-#include <Importer.hpp>
+#include <assimp/Importer.hpp>
+#include <assimp/mesh.h>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
 #include <map>
-#include <mesh.h>
-#include <postprocess.h>
-#include <scene.h>
 #include <vector>
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
