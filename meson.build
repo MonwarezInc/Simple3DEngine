@@ -13,7 +13,18 @@ subdir('src')
 
 simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,include_directories:simple3dengine_inc)
 
-subdir('tests/Parser')
+# test section
+
+test_list = ['Parser']
+
+foreach tst : test_list
+  exe = executable('@0@Test'.format(tst),
+                   ['tests/@0@/main.cpp'.format(tst),
+                    'tests/@0@/@0@_test.h'.format(tst),
+                    'tests/@0@/@0@_test.cpp'.format(tst)],
+                  dependencies : [gtest_dep,simple3dengine_dep])
+  test('@0@ Test'.format(tst), exe)
+endforeach
 
 
 # cppcheck section
