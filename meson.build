@@ -6,7 +6,7 @@ assimp_dep = dependency('assimp',required:true)
 glew_dep = dependency('glew',required:true)
 glm_dep = dependency('glm',required:true)
 
-gtest_dep = dependency('',required:false,fallback:['gtest','gtest_mainless_dep'])
+gtest_dep = dependency('gtest', required:false,fallback:['gtest','gtest_mainless_dep'])
 
 simple3dengine_inc = include_directories('src')
 subdir('src')
