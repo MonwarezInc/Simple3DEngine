@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>10</x>
+      <y>30</y>
+      <w>480</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>template= Container,WindowType
+WindowManager
+--
+-windows_ : Container&lt;WindowHandle,WindowType&gt;
+--
+#NewWindow(Args&amp;&amp; ...)
+: WindowHandle
+#begin() : ContainerIt
+#end() : ContainerIt
+--
+Responsibilities
+-- Manage the lifetime of windows
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>960</w>
+      <h>570</h>
+    </coordinates>
+    <panel_attributes>S3DE
+layer=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>10</x>
+      <y>240</y>
+      <w>370</w>
+      <h>310</h>
+    </coordinates>
+    <panel_attributes>SDL2GLWindow
+--
+-width_: int
+-height_: int
+-title_: string
+-major_: int
+-minor_: int
+-fullscreen_: bool
+-window_: WindowPtr
+-context_: SDL_GLContext
+--
+SDL2GLWindow(width: int, height: int, title: string,
+             major: int, minor: int,
+             fullscreen: bool)
+
+#SwapWindow()
+
+--
+Responsibilities
+-- Manage a window
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>600</x>
+      <y>100</y>
+      <w>240</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>WindowHandle
+--
+-id_: string
+--
+WindowHandle(name : string)
+#operator&lt;()
+#operator==()
+--
+Responsibilities
+-- Identify an unique window
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
