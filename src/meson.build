@@ -30,7 +30,12 @@ include_tools = files([
 ])
 include_window = files([
   'window/Graphics.h',
-  'window/Window.h'
+  'window/Window.h',
+  'window/WindowHandle.h',
+  'window/WindowManager.h'
+])
+include_window_sdl2 = files([
+'window/sdl2/SDL2GLWindow.h'
 ])
 source_engine  = files([
   'engine/Camera.cpp',
@@ -60,12 +65,17 @@ source_tools = files([
 ])
 source_window = files([
   'window/Graphics.cpp',
-  'window/Window.cpp'
+  'window/Window.cpp',
+  'window/WindowHandle.cpp'
+])
+source_window_sdl2 = files([
+ 'window/sdl2/SDL2GLWindow.cpp'
 ])
 
 simple3dengineSrc =[
-  include_engine,include_misc,include_tools,include_window,
-  source_engine,source_misc,source_tools,source_window
+  include_engine, include_misc, include_tools, include_window,
+  include_window_sdl2, source_engine, source_misc, source_tools,
+  source_window, source_window_sdl2
 ]
 
 simple3dengine_lib = library('Simple3DEngine' , simple3dengineSrc, dependencies: [sdl2_dep,sdl2image_dep,assimp_dep,glew_dep,glm_dep])

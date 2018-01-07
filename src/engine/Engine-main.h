@@ -31,9 +31,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Mesh.h"
 #include "MeshException.h"
 #include "Shader.h"
+#include "window/WindowManager.h"
+#include "window/sdl2/SDL2GLWindow.h"
 
 #include <chrono>
+#include <functional>
 #include <vector>
+
 namespace S3DE
 {
 struct EngineShader
@@ -46,14 +50,14 @@ struct EngineShader
 };
 struct EngineWindow
 {
-    uint32_t width;      ///< width of the window */
-    uint32_t height;     ///< height of the window */
+    int width;           ///< width of the window */
+    int height;          ///< height of the window */
     bool fullscreen;     ///< boolean for fullscreen state*/
     std::string title;   ///< title of the window*/
-    uint32_t bpp;        ///< bit per pixel parameter*/
-    uint32_t aa;         ///< antialiasing parameter*/
-    uint32_t major;      ///< OpenGL major version*/
-    uint32_t minor;      ///< OpenGL minor version*/
+    int bpp;             ///< bit per pixel parameter*/
+    int aa;              ///< antialiasing parameter*/
+    int major;           ///< OpenGL major version*/
+    int minor;           ///< OpenGL minor version*/
     EngineShader shader; ///< @see EngineShader*/
 };
 /// \brief  Main class for the Simple 3D Engine
@@ -68,9 +72,10 @@ public:
     virtual ~CEngine();
 
     /** \brief Create a window with the specified OpenGL version (Limited to one window for now)
-    *   @param  engineWindow    Structure that contain all information needed to create the window
-    */
-    void CreateWindow( const EngineWindow &engineWindow );
+     *   @param  engineWindow    Structure that contain all information needed to create the window
+     *   @return an handle to the window
+     */
+    WindowHandle CreateWindow( const EngineWindow &engineWindow );
     ///	\brief 	Delete the specifided window (Not Implemented)
     ///	@param[in]  indice  Id of the window
     void DeleteWindow( GLuint indice );
@@ -110,7 +115,7 @@ public:
     void Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed );
 
 protected:
-    std::unique_ptr<S3DE::CGraphics> m_pGraphics;
+    WindowManager<std::map<WindowHandle, SDL2GLWindow>, SDL2GLWindow> window_;
     BasicMeshManager m_meshManager;
     std::map<std::string, size_t> m_entToID;
     glm::mat4 m_modelview;

@@ -34,14 +34,20 @@ CEngine::~CEngine()
     // for the list of object, we didn't manage the object memory , so just delete the list , and
     // not the content
 }
-void CEngine::CreateWindow( EngineWindow const &engine )
+WindowHandle CEngine::CreateWindow( EngineWindow const &engine )
 {
-    if ( !m_pGraphics )
-        m_pGraphics = std::make_unique<CGraphics>( engine.width, engine.height, engine.fullscreen,
-                                                   engine.title, engine.bpp, engine.aa,
-                                                   engine.major, engine.minor );
+    // if ( !m_pGraphics )
+    //     m_pGraphics = std::make_unique<CGraphics>( engine.width, engine.height,
+    //     engine.fullscreen,
+    //                                                engine.title, engine.bpp, engine.aa,
+    //                                                engine.major, engine.minor );
+
+
+    WindowHandle window = window_.NewWindow( engine.width, engine.height, engine.title,
+                                             engine.major, engine.minor, engine.fullscreen );
     // load shader
     m_pShader.SetFile( engine.shader.lightV, engine.shader.lightF, engine.shader.lightG );
+    return window;
 }
 void CEngine::DeleteWindow( GLuint indice )
 {
@@ -138,7 +144,7 @@ void CEngine::SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near, GL
 }
 void CEngine::ClearColor( float r, float g, float b, float a )
 {
-    m_pGraphics->ClearColor( r, g, b, a );
+    glClearColor( r, g, b, a );
 }
 void CEngine::Init()
 {
@@ -198,7 +204,10 @@ void CEngine::Draw( std::chrono::duration<float, std::chrono::seconds::period> e
         }
     }
     m_pShader.Disable();
-    m_pGraphics->SwapWindow();
+    for ( auto &window : window_ )
+    {
+        window.second.SwapWindow();
+    }
 }
 void CEngine::ObjectNode::DoTransformation( glm::mat4 &mdv ) const
 {
