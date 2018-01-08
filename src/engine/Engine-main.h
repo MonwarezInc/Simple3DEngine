@@ -26,7 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 #include "../tools/BasicMeshManager.h"
-#include "../window/Graphics.h"
 #include "Light.h"
 #include "Mesh.h"
 #include "MeshException.h"
@@ -54,8 +53,6 @@ struct EngineWindow
     int height;          ///< height of the window */
     bool fullscreen;     ///< boolean for fullscreen state*/
     std::string title;   ///< title of the window*/
-    int bpp;             ///< bit per pixel parameter*/
-    int aa;              ///< antialiasing parameter*/
     int major;           ///< OpenGL major version*/
     int minor;           ///< OpenGL minor version*/
     EngineShader shader; ///< @see EngineShader*/

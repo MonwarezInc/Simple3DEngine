@@ -29,8 +29,6 @@ include_tools = files([
   'tools/Texture.h'
 ])
 include_window = files([
-  'window/Graphics.h',
-  'window/Window.h',
   'window/WindowHandle.h',
   'window/WindowManager.h'
 ])
@@ -64,8 +62,6 @@ source_tools = files([
   'tools/Texture.cpp'
 ])
 source_window = files([
-  'window/Graphics.cpp',
-  'window/Window.cpp',
   'window/WindowHandle.cpp'
 ])
 source_window_sdl2 = files([

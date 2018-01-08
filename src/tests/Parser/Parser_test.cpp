@@ -37,20 +37,13 @@ void ParserTest::TestBody()
 
 TEST_P( ParserTest, Simple )
 {
-    float x{0};
-    float y{0};
-    float z{0};
-
-    unsigned long u{0};
-    unsigned long v{0};
-
-    S3DE::Parser::Find3uple( parameter.parseTuple, x, y, z );
+    auto[ x, y, z ] = S3DE::Parser::Find3uple<float>( parameter.parseTuple );
 
     EXPECT_FLOAT_EQ( x, parameter.floatValue[ 0 ] );
     EXPECT_FLOAT_EQ( y, parameter.floatValue[ 1 ] );
     EXPECT_FLOAT_EQ( z, parameter.floatValue[ 2 ] );
 
-    S3DE::Parser::FindCouple( parameter.parseCouple, u, v );
+    auto[ u, v ] = S3DE::Parser::FindCouple<unsigned long>( parameter.parseCouple );
 
     EXPECT_EQ( u, parameter.integerValue[ 0 ] );
     EXPECT_EQ( v, parameter.integerValue[ 1 ] );

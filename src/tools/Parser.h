@@ -26,16 +26,75 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 #include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
 
 namespace S3DE
 {
 namespace Parser
 {
-    void Find3uple( std::string str, float &x, float &y, float &z, std::string const &sep = "," );
-    void FindCouple( std::string str, unsigned long &a, unsigned long &b,
-                     std::string const &sep = "," );
-    size_t ExtractMatch( std::string const &in, std::string &out, std::string const &start = "(",
-                         std::string const &end = ")" );
+    template <class T, class Enable>
+    std::tuple<T, T, T> Find3uple( std::string str, std::string const &sep = "," );
+
+    template <class T, class Enable>
+    std::pair<T, T> FindCouple( std::string str, std::string const &sep = "," );
+
+    std::pair<size_t, std::string> ExtractMatch( std::string const &in,
+                                                 std::string const &start = "(",
+                                                 std::string const &end   = ")" );
+
+
+    template <class T,
+              class Enable = typename std::enable_if<std::is_floating_point<T>::value>::type>
+    std::tuple<T, T, T> Find3uple( std::string buf, std::string const &sep )
+    {
+        T x;
+        T y;
+        T z;
+
+        auto i1 = buf.find( sep );
+        if ( ( i1 == std::string::npos ) || ( i1 == 0 ) )
+            throw std::string( "Error could not get the first parameter of 3-uple" );
+        auto substr1 = buf.substr( 0, i1 );
+        buf          = buf.substr( i1 + 1 );
+        x            = std::stof( substr1 );
+        i1           = buf.find( sep );
+        if ( ( i1 == std::string::npos ) || ( i1 == 0 ) )
+            throw std::string( "Error could not get the second parameter of 3-uple" );
+        substr1 = buf.substr( 0, i1 );
+        y       = std::stof( substr1 );
+        buf     = buf.substr( i1 + 1 );
+        if ( buf.length() == 0 )
+            throw std::string( "Error could not get the third parameter of 3-uple" );
+
+        z = std::stof( buf );
+        return {x, y, z};
+    }
+
+    template <class T, class Enable = typename std::enable_if<std::is_integral<T>::value>::type>
+    std::pair<T, T> FindCouple( std::string buf, std::string const &sep )
+    {
+        auto i1 = buf.find( sep );
+        if ( ( i1 == std::string::npos ) || ( i1 == 0 ) )
+            throw std::string( "Error could not get the first parameter of couple" );
+        auto substr1 = buf.substr( 0, i1 );
+        buf          = buf.substr( i1 + 1 );
+        if ( buf.length() == 0 )
+            throw std::string( "Error could not get the second parameter of couple" );
+
+
+        if
+            constexpr( std::is_signed<T>::value )
+            {
+                return {std::stol( substr1 ), std::stol( buf )};
+            }
+        else
+        {
+            return {std::stoul( substr1 ), std::stoul( buf )};
+        }
+    }
+
 
 } // end of Parser namespace
 } // end of S3DE namespace

@@ -58,45 +58,44 @@ void Loader::LoadConfig()
     this->ClearState( CONFIG_MASK );
     if ( input.is_open() )
     {
-        float x, y, z, u, v, w, a, b, c;
         std::string buf;
         std::getline( input, buf );
         auto i1 = buf.find( "camera position" );
         if ( i1 == std::string::npos )
             throw string( "Error configuration file at first line" );
 
-        std::string substr1;
-        auto i2 = Parser::ExtractMatch( buf, substr1 );
-        Parser::Find3uple( substr1, x, y, z );
+        auto[ i2, substr1 ] = Parser::ExtractMatch( buf );
+        auto[ x, y, z ] = Parser::Find3uple<float>( substr1 );
         buf = buf.substr( i2 + 1 );
 
         i1 = buf.find( "target" );
         if ( i1 == std::string::npos )
             throw string( "Error configuration file at first line" );
         buf = buf.substr( i1 );
-        i2  = Parser::ExtractMatch( buf, substr1 );
-        Parser::Find3uple( substr1, u, v, w );
+        std::tie( i2, substr1 ) = Parser::ExtractMatch( buf );
+
+        auto[ u, v, w ] = Parser::Find3uple<float>( substr1 );
 
         buf = buf.substr( i2 + 1 );
         i1  = buf.find( "up" );
         if ( i1 == std::string::npos )
             throw string( "Error configuration file at first line" );
-        Parser::ExtractMatch( buf, substr1 );
-        Parser::Find3uple( substr1, a, b, c );
+        substr1 = Parser::ExtractMatch( buf ).second;
+        auto[ a, b, c ] = Parser::Find3uple<float>( substr1 );
 
         std::getline( input, buf );
         i1 = buf.find( "resolution" );
         if ( i1 == std::string::npos )
             throw string( "Error configuration file at first line" );
-        Parser::ExtractMatch( buf, substr1 );
-        unsigned long width, height;
-        Parser::FindCouple( substr1, width, height );
+        substr1 = Parser::ExtractMatch( buf ).second;
+        auto[ width, height ] = Parser::FindCouple<int>( substr1 );
 
         std::getline( input, buf );
         i1 = buf.find( "fullscreen" );
         if ( i1 == std::string::npos )
             throw string( "Error configuration file at first line" );
-        Parser::ExtractMatch( buf, substr1 );
+
+        substr1         = Parser::ExtractMatch( buf ).second;
         auto fullscreen = std::stoul( substr1 );
 
         // Now we can store the config
@@ -129,8 +128,7 @@ void Loader::LoadMesh()
                 auto i1 = buf.find( " " );
                 if ( ( i1 == std::string::npos ) || ( i1 == 0 ) )
                     throw error;
-                auto substr = buf.substr( 0, i1 );
-                auto name   = substr;
+                auto name = buf.substr( 0, i1 );
 
                 buf = buf.substr( i1 + 1 );
                 i1  = buf.find( " " );
@@ -142,26 +140,27 @@ void Loader::LoadMesh()
                 i1 = buf.find( "position" );
                 if ( i1 == std::string::npos )
                     throw error;
-                buf     = buf.substr( i1 );
-                auto i2 = Parser::ExtractMatch( buf, substr );
-                float x, y, z, u, v, w, f;
-                Parser::Find3uple( substr, x, y, z );
+                buf = buf.substr( i1 );
+                auto[ i2, substr ] = Parser::ExtractMatch( buf );
+
+                auto[ x, y, z ] = Parser::Find3uple<float>( substr );
                 buf = buf.substr( i2 + 1 );
 
                 i1 = buf.find( "rotate" );
                 if ( i1 == std::string::npos )
                     throw error;
                 buf = buf.substr( i1 );
-                i2  = Parser::ExtractMatch( buf, substr );
-                Parser::Find3uple( substr, u, v, w );
+                std::tie( i2, substr ) = Parser::ExtractMatch( buf );
+                auto[ u, v, w ] = Parser::Find3uple<float>( substr );
                 buf = buf.substr( i2 + 1 );
 
                 i1 = buf.find( "scale" );
                 if ( i1 == std::string::npos )
                     throw error;
                 buf = buf.substr( i1 );
-                Parser::ExtractMatch( buf, substr );
-                f = std::stof( substr );
+
+                substr  = Parser::ExtractMatch( buf ).second;
+                float f = std::stof( substr );
 
                 m_pMesh.push_back( MeshData() );
                 m_pMesh.back().filename   = name;
@@ -201,51 +200,51 @@ void Loader::LoadLight()
                 if ( i1 == std::string::npos )
                     throw error;
                 buf = buf.substr( i1 );
-                std::string substr;
-                auto i2 = Parser::ExtractMatch( buf, substr );
-                float r, g, b, a, d, c, l, e;
-                Parser::Find3uple( substr, r, g, b );
+                auto[ i2, substr ] = Parser::ExtractMatch( buf );
+
+                auto[ r, g, b ] = Parser::Find3uple<float>( substr );
                 buf = buf.substr( i2 + 1 );
 
                 i1 = buf.find( "ambiant" );
                 if ( i1 == std::string::npos )
                     throw error;
                 buf = buf.substr( i1 );
-                i2  = Parser::ExtractMatch( buf, substr );
-                a   = std::stof( substr );
-                buf = buf.substr( i2 + 1 );
+                std::tie( i2, substr ) = Parser::ExtractMatch( buf );
+                float a = std::stof( substr );
+                buf     = buf.substr( i2 + 1 );
 
                 i1 = buf.find( "diffuse" );
                 if ( i1 == std::string::npos )
                     throw error;
                 buf = buf.substr( i1 );
-                i2  = Parser::ExtractMatch( buf, substr );
-                d   = std::stof( substr );
-                buf = buf.substr( i2 + 1 );
+                std::tie( i2, substr ) = Parser::ExtractMatch( buf );
+                float d = std::stof( substr );
+                buf     = buf.substr( i2 + 1 );
 
                 i1 = buf.find( "linear" );
                 if ( i1 == std::string::npos )
                     throw error;
                 buf = buf.substr( i1 );
-                i2  = Parser::ExtractMatch( buf, substr );
-                l   = std::stof( substr );
-                buf = buf.substr( i2 + 1 );
+                std::tie( i2, substr ) = Parser::ExtractMatch( buf );
+
+                float l = std::stof( substr );
+                buf     = buf.substr( i2 + 1 );
 
                 i1 = buf.find( "constant" );
                 if ( i1 == std::string::npos )
                     throw error;
                 buf = buf.substr( i1 );
-                i2  = Parser::ExtractMatch( buf, substr );
-                c   = std::stof( substr );
-                buf = buf.substr( i2 + 1 );
+                std::tie( i2, substr ) = Parser::ExtractMatch( buf );
+                float c = std::stof( substr );
+                buf     = buf.substr( i2 + 1 );
 
                 i1 = buf.find( "exp" );
                 if ( i1 == std::string::npos )
                     throw error;
                 buf = buf.substr( i1 );
-                i2  = Parser::ExtractMatch( buf, substr );
-                e   = std::stof( substr );
-                buf = buf.substr( i2 + 1 );
+                std::tie( i2, substr ) = Parser::ExtractMatch( buf );
+                float e = std::stof( substr );
+                buf     = buf.substr( i2 + 1 );
 
                 // Set the data in m_vLight
                 m_vLight.push_back( LightData() );
@@ -268,19 +267,18 @@ void Loader::LoadLight()
             {
                 if ( controltype == "linear" )
                 {
-                    float time, x, y, z;
                     buf = buf.substr( k1 );
-                    std::string substr;
-                    auto k2 = Parser::ExtractMatch( buf, substr );
-                    Parser::Find3uple( substr, x, y, z );
+
+                    auto[ k2, substr ] = Parser::ExtractMatch( buf );
+                    auto[ x, y, z ] = Parser::Find3uple<float>( substr );
                     buf = buf.substr( k2 + 1 );
 
                     k1 = buf.find( "timemill" );
                     if ( k1 == std::string::npos )
                         throw error;
-                    buf = buf.substr( k1 );
-                    Parser::ExtractMatch( buf, substr );
-                    time = stof( substr );
+                    buf        = buf.substr( k1 );
+                    substr     = Parser::ExtractMatch( buf ).second;
+                    float time = stof( substr );
                     m_vLight.back().vControlPoint.push_back( ControlPoint() );
                     m_vLight.back().vControlPoint.back().position = glm::vec3( x, y, z );
                     m_vLight.back().vControlPoint.back().time     = time;

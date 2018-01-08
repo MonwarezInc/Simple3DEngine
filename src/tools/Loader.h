@@ -38,8 +38,8 @@ struct ConfigData
     glm::vec3 target;
     glm::vec3 up;
 
-    unsigned int width;
-    unsigned int height;
+    int width;
+    int height;
     bool fullscreen;
 };
 // MeshData is for one mesh
