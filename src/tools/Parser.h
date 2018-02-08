@@ -34,20 +34,15 @@ namespace S3DE
 {
 namespace Parser
 {
-    template <class T, class Enable>
-    std::tuple<T, T, T> Find3uple( std::string str, std::string const &sep = "," );
-
-    template <class T, class Enable>
-    std::pair<T, T> FindCouple( std::string str, std::string const &sep = "," );
-
     std::pair<size_t, std::string> ExtractMatch( std::string const &in,
                                                  std::string const &start = "(",
                                                  std::string const &end   = ")" );
 
 
-    template <class T,
-              class Enable = typename std::enable_if<std::is_floating_point<T>::value>::type>
-    std::tuple<T, T, T> Find3uple( std::string buf, std::string const &sep )
+    template <class T>
+    std::tuple<T, T, T>
+    Find3uple( std::string buf, std::string const &sep                           = ",",
+               typename std::enable_if_t<std::is_floating_point<T>::value, bool> = false )
     {
         T x;
         T y;
@@ -72,8 +67,10 @@ namespace Parser
         return {x, y, z};
     }
 
-    template <class T, class Enable = typename std::enable_if<std::is_integral<T>::value>::type>
-    std::pair<T, T> FindCouple( std::string buf, std::string const &sep )
+    template <class T>
+    std::pair<T, T>
+    FindCouple( std::string buf, std::string const &sep                     = ",",
+                typename std::enable_if_t<std::is_integral<T>::value, bool> = false )
     {
         auto i1 = buf.find( sep );
         if ( ( i1 == std::string::npos ) || ( i1 == 0 ) )
