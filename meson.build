@@ -6,7 +6,8 @@ assimp_dep = dependency('assimp',required:true)
 glew_dep = dependency('glew',required:true)
 glm_dep = dependency('glm',required:true)
 
-gtest_dep = dependency('gtest', required:false,fallback:['gtest','gtest_mainless_dep'])
+gtest_dep = dependency('gtest', required:false,fallback:['gtest','gtest_dep'])
+gmock_dep = dependency('gmock', required:false,fallback:['gtest','gmock_dep'])
 
 simple3dengine_inc = include_directories('src')
 subdir('src')
@@ -22,7 +23,7 @@ foreach tst : test_list
                    ['src/tests/@0@/main.cpp'.format(tst),
                     'src/tests/@0@/@0@_test.h'.format(tst),
                     'src/tests/@0@/@0@_test.cpp'.format(tst)],
-                  dependencies : [gtest_dep,simple3dengine_dep])
+                  dependencies : [gtest_dep,gmock_dep,simple3dengine_dep])
   test('@0@ Test'.format(tst), exe)
 endforeach
 
