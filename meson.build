@@ -6,8 +6,11 @@ assimp_dep = dependency('assimp',required:true)
 glew_dep = dependency('glew',required:true)
 glm_dep = dependency('glm',required:true)
 
-gtest_dep = dependency('gtest', required:false,fallback:['gtest','gtest_dep'])
-gmock_dep = dependency('gmock', required:false,fallback:['gtest','gmock_dep'])
+test_option = get_option('test')
+if (test_option)
+  gtest_dep = dependency('gtest', required:false,fallback:['gtest','gtest_dep'])
+  gmock_dep = dependency('gmock', required:false,fallback:['gtest','gmock_dep'])
+endif
 
 simple3dengine_inc = include_directories('src')
 subdir('src')
@@ -15,18 +18,18 @@ subdir('src')
 simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,include_directories:simple3dengine_inc)
 
 # test section
+if (test_option)
+  test_list = ['Parser']
 
-test_list = ['Parser']
-
-foreach tst : test_list
-  exe = executable('@0@Test'.format(tst),
-                   ['src/tests/@0@/main.cpp'.format(tst),
-                    'src/tests/@0@/@0@_test.h'.format(tst),
-                    'src/tests/@0@/@0@_test.cpp'.format(tst)],
-                  dependencies : [gtest_dep,gmock_dep,simple3dengine_dep])
-  test('@0@ Test'.format(tst), exe)
-endforeach
-
+  foreach tst : test_list
+    exe = executable('@0@Test'.format(tst),
+                     ['src/tests/@0@/main.cpp'.format(tst),
+                      'src/tests/@0@/@0@_test.h'.format(tst),
+                      'src/tests/@0@/@0@_test.cpp'.format(tst)],
+                     dependencies : [gtest_dep,gmock_dep,simple3dengine_dep])
+    test('@0@ Test'.format(tst), exe)
+  endforeach
+endif
 
 # cppcheck section
 cppcheck_exe = find_program('cppcheck',required:false)
