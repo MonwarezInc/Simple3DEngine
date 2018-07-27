@@ -39,8 +39,9 @@ class CurveInterpolate
 {
 public:
     CurveInterpolate() {}
-    virtual glm::vec3 GetInterpolated( T totaltime ) = 0;
+    virtual glm::vec3 GetInterpolated( T totaltime )      = 0;
     virtual void AddPoint( glm::vec3 const& pos, T time ) = 0;
+    virtual ~CurveInterpolate()                           = default;
 };
 template <class T>
 class LinearInterpolate : public CurveInterpolate<T>
@@ -96,9 +97,11 @@ public:
             return m_vposition3D.back();
     }
 
+    virtual ~LinearInterpolate() = default;
+
 protected:
     std::vector<glm::vec3> m_vposition3D;
     std::vector<T> m_time;
     bool m_looped;
 };
-} // end of S3DE namespace
+} // namespace S3DE
