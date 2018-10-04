@@ -134,7 +134,7 @@ void CEngine<GLWindow>::SetNodePosRot( std::string const &entity, glm::vec3 cons
     // else we do nothing improve performance xD
 }
 template <typename GLWindow>
-void CEngine::SetNodeScale( std::string const &entity, float scale )
+void CEngine<GLWindow>::SetNodeScale( std::string const &entity, float scale )
 {
     auto it = m_entToID.find( entity );
     if ( it != m_entToID.end() )
@@ -142,15 +142,15 @@ void CEngine::SetNodeScale( std::string const &entity, float scale )
     // same things like SetObjectPosRot
 }
 template <typename GLWindow>
-void CEngine::SetNodeAnimation( std::string const &entity, std::string const &animation )
+void CEngine<GLWindow>::SetNodeAnimation( std::string const &entity, std::string const &animation )
 {
     auto it = m_entToID.find( entity );
     if ( it != m_entToID.end() )
         m_vObjectNode[ it->second ].animation = animation;
 }
 template <typename GLWindow>
-void CEngine::SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center,
-                                 glm::vec3 const &vert )
+void CEngine<GLWindow>::SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center,
+                                           glm::vec3 const &vert )
 {
     m_modelview      = glm::lookAt( pos, center, vert );
     m_CameraPosition = pos;
@@ -158,7 +158,8 @@ void CEngine::SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center,
     m_CameraVertical = vert;
 }
 template <typename GLWindow>
-void CEngine::SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far )
+void CEngine<GLWindow>::SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near,
+                                           GLdouble far )
 {
     m_projection = glm::perspective( fov, ratio, near, far );
 }
