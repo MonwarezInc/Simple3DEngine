@@ -24,17 +24,23 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#pragma once
 #include "Engine-main.h"
-using namespace S3DE;
-CEngine::CEngine()
+
+namespace S3DE
+{
+template <typename GLWindow>
+CEngine<GLWindow>::CEngine()
 {
 }
-CEngine::~CEngine()
+template <typename GLWindow>
+CEngine<GLWindow>::~CEngine()
 {
     // for the list of object, we didn't manage the object memory , so just delete the list , and
     // not the content
 }
-WindowHandle CEngine::CreateWindow( EngineWindow const &engine )
+template <typename GLWindow>
+WindowHandle CEngine<GLWindow>::CreateWindow( EngineWindow const &engine )
 {
     // if ( !m_pGraphics )
     //     m_pGraphics = std::make_unique<CGraphics>( engine.width, engine.height,
@@ -49,35 +55,40 @@ WindowHandle CEngine::CreateWindow( EngineWindow const &engine )
     m_pShader.SetFile( engine.shader.lightV, engine.shader.lightF, engine.shader.lightG );
     return window;
 }
-void CEngine::DeleteWindow( GLuint indice )
+template <typename GLWindow>
+void CEngine<GLWindow>::DeleteWindow( GLuint indice )
 {
     // not implemented  yet
 }
-void CEngine::SetActive( GLuint indice )
+template <typename GLWindow>
+void CEngine<GLWindow>::SetActive( GLuint indice )
 {
     // not implemented yet
 }
-void CEngine::AddMesh( std::vector<MeshPair> const &meshPair )
+template <typename GLWindow>
+void CEngine<GLWindow>::AddMesh( std::vector<MeshPair> const &meshPair )
 {
     m_meshManager.Load( meshPair );
     for ( auto &v : meshPair )
         this->AddMeshNode( v.entity );
 }
-void CEngine::AddMeshNode( std::string const &entity, bool isVisible )
+template <typename GLWindow>
+void CEngine<GLWindow>::AddMeshNode( std::string const &entity, bool isVisible )
 {
     ObjectNode objectNode;
     objectNode.entity   = entity;
     objectNode.position = glm::vec3( 0.0, 0.0, 0.0 );
     objectNode.scale    = 1.0;
-    for ( unsigned int i      = 0; i < 3; ++i )
+    for ( unsigned int i = 0; i < 3; ++i )
         objectNode.pitch[ i ] = 0.0;
-    objectNode.animation      = "idle"; // idle by default
-    objectNode.id             = m_vObjectNode.size();
-    objectNode.isVisible      = isVisible;
+    objectNode.animation = "idle"; // idle by default
+    objectNode.id        = m_vObjectNode.size();
+    objectNode.isVisible = isVisible;
     m_vObjectNode.push_back( objectNode );
     m_entToID[ entity ] = objectNode.id;
 }
-void CEngine::DelMeshNode( std::string const &entity )
+template <typename GLWindow>
+void CEngine<GLWindow>::DelMeshNode( std::string const &entity )
 {
     // If succeed does not launch an exception
     // it's not manage the memory of the mesh itself
@@ -87,24 +98,29 @@ void CEngine::DelMeshNode( std::string const &entity )
     m_vObjectNode[ it->second ].isVisible = false; // Set to false so that we didn't show it
     m_vObjectNode[ it->second ].entity    = "";
 }
-void CEngine::AttachLight( std::vector<PointLight> const &pointlight )
+template <typename GLWindow>
+void CEngine<GLWindow>::AttachLight( std::vector<PointLight> const &pointlight )
 {
     m_PointLight = pointlight;
 }
-void CEngine::AttachLight( std::vector<SpotLight> const &spotlight )
+template <typename GLWindow>
+void CEngine<GLWindow>::AttachLight( std::vector<SpotLight> const &spotlight )
 {
     m_SpotLight = spotlight;
 }
-void CEngine::AttachLight( DirectionalLight const &dlight )
+template <typename GLWindow>
+void CEngine<GLWindow>::AttachLight( DirectionalLight const &dlight )
 {
     m_Directional = dlight;
 }
-void CEngine::DeleteObject( GLuint id )
+template <typename GLWindow>
+void CEngine<GLWindow>::DeleteObject( GLuint id )
 {
     // not implemented yet
 }
-void CEngine::SetNodePosRot( std::string const &entity, glm::vec3 const &pos,
-                             glm::vec3 const &pitch )
+template <typename GLWindow>
+void CEngine<GLWindow>::SetNodePosRot( std::string const &entity, glm::vec3 const &pos,
+                                       glm::vec3 const &pitch )
 {
     auto it = m_entToID.find( entity );
     if ( it != m_entToID.end() )
@@ -117,6 +133,7 @@ void CEngine::SetNodePosRot( std::string const &entity, glm::vec3 const &pos,
     }
     // else we do nothing improve performance xD
 }
+template <typename GLWindow>
 void CEngine::SetNodeScale( std::string const &entity, float scale )
 {
     auto it = m_entToID.find( entity );
@@ -124,12 +141,14 @@ void CEngine::SetNodeScale( std::string const &entity, float scale )
         m_vObjectNode[ it->second ].scale = scale;
     // same things like SetObjectPosRot
 }
+template <typename GLWindow>
 void CEngine::SetNodeAnimation( std::string const &entity, std::string const &animation )
 {
     auto it = m_entToID.find( entity );
     if ( it != m_entToID.end() )
         m_vObjectNode[ it->second ].animation = animation;
 }
+template <typename GLWindow>
 void CEngine::SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center,
                                  glm::vec3 const &vert )
 {
@@ -138,21 +157,25 @@ void CEngine::SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center,
     m_CameraCenter   = center;
     m_CameraVertical = vert;
 }
+template <typename GLWindow>
 void CEngine::SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far )
 {
     m_projection = glm::perspective( fov, ratio, near, far );
 }
-void CEngine::ClearColor( float r, float g, float b, float a )
+template <typename GLWindow>
+void CEngine<GLWindow>::ClearColor( float r, float g, float b, float a )
 {
     glClearColor( r, g, b, a );
 }
-void CEngine::Init()
+template <typename GLWindow>
+void CEngine<GLWindow>::Init()
 {
     glEnable( GL_DEPTH_TEST );
     glEnable( GL_CULL_FACE );
     glCullFace( GL_BACK );
 }
-void CEngine::Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed )
+template <typename GLWindow>
+void CEngine<GLWindow>::Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed )
 {
     m_pShader.Enable();
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -209,7 +232,8 @@ void CEngine::Draw( std::chrono::duration<float, std::chrono::seconds::period> e
         window.second.SwapWindow();
     }
 }
-void CEngine::ObjectNode::DoTransformation( glm::mat4 &mdv ) const
+template <typename GLWindow>
+void CEngine<GLWindow>::ObjectNode::DoTransformation( glm::mat4 &mdv ) const
 {
     // Translate to position
     mdv = glm::translate( mdv, position );
@@ -220,3 +244,4 @@ void CEngine::ObjectNode::DoTransformation( glm::mat4 &mdv ) const
     // resize
     mdv = glm::scale( mdv, glm::vec3( scale, scale, scale ) );
 }
+} // namespace S3DE

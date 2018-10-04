@@ -62,6 +62,7 @@ struct EngineWindow
 /// This class is an interface with the engine. Almost all  the command for interacting with the
 /// engine are here.
 /// \author Payet Thibault
+template <typename GLWindow>
 class CEngine
 {
 public:
@@ -112,7 +113,7 @@ public:
     void Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed );
 
 protected:
-    WindowManager<std::map<WindowHandle, SDL2GLWindow>, SDL2GLWindow> window_;
+    WindowManager<std::map<WindowHandle, GLWindow>, GLWindow> window_;
     BasicMeshManager m_meshManager;
     std::map<std::string, size_t> m_entToID;
     glm::mat4 m_modelview;
@@ -143,4 +144,8 @@ protected:
     glm::vec3 m_CameraCenter;
     glm::vec3 m_CameraVertical;
 };
-} // end of S3DE namespace
+
+
+} // namespace S3DE
+
+#include "Engine-main-internals.hpp"

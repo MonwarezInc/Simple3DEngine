@@ -2,6 +2,7 @@ include_engine = files([
   'Camera.h',
   'CEntity.h',
   'Engine-main.h',
+  'Engine-main-internals.hpp',
   'FrameBuffer.h',
   'GBuffer.h',
   'IResourceManager.hpp',
@@ -18,7 +19,6 @@ include_engine = files([
 source_engine  = files([
   'Camera.cpp',
   'CEntity.cpp',
-  'Engine-main.cpp',
   'FrameBuffer.cpp',
   'GBuffer.cpp',
   'Light.cpp',
