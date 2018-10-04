@@ -31,7 +31,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MeshException.h"
 #include "Shader.h"
 #include "window/WindowManager.h"
-#include "window/sdl2/SDL2GLWindow.h"
 
 #include <chrono>
 #include <functional>
