@@ -26,29 +26,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 
-#include "../misc/Input.h"
-
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <chrono>
 #include <map>
 #include <string>
 namespace S3DE
 {
-using KeyStates = std::map<SDL_Scancode, bool>;
-using KeyConf   = std::map<std::string, SDL_Scancode>;
+template <typename KeyCodeT>
+using KeyStates = std::map<KeyCodeT, bool>;
+template <typename KeyCodeT>
+using KeyConf = std::map<std::string, KeyCodeT>;
+
+
+template <typename KeyCodeT>
+struct CameraKey
+{
+    KeyCodeT forward;
+    KeyCodeT backward;
+    KeyCodeT left;
+    KeyCodeT right;
+};
+
+template <typename InputT, typename KeyCodeT>
 class Camera
 {
 public:
-    Camera();
+    explicit Camera( CameraKey<KeyCodeT> const &cameraKey );
     /// \brief    Construct the camera with some settings
     ///
     /// \param[in]    position  Set the initial position of the camera
     /// \param[in]    target    Set the target of the camera
     /// \param[in]    up        Set the up axis of the world
-    Camera( glm::vec3 position, glm::vec3 target, glm::vec3 up );
+    Camera( CameraKey<KeyCodeT> const &cameraKey, glm::vec3 position, glm::vec3 target,
+            glm::vec3 up );
     /// \brief    Set the relative mouse motion
     /// \param    xRel    Set the x-axis relative motion
     /// \param    yRel    Set the y-axis relative motion
@@ -60,11 +73,11 @@ public:
     ///
     /// \param    event    the event for getting mouse move
     /// \param    elapsed  the current elapsed time
-    void Move( CInput const &event,
+    void Move( InputT const &event,
                std::chrono::duration<float, std::chrono::milliseconds::period> elapsed );
     /// \brief    Update the camera KeyStates
     /// \param    event    The event to check
-    void KeyBoardEvent( CInput const &event );
+    void KeyBoardEvent( InputT const &event );
     /// \brief    Set the view matrix in modelview
     /// \param[out]    modelview    The view matrix get by the camera
     void LookAt( glm::mat4 &modelview );
@@ -97,7 +110,7 @@ public:
     virtual ~Camera() = default;
 
 protected:
-    void CommonConstructor();
+    void CommonConstructor( CameraKey<KeyCodeT> const &cameraKey );
     float m_phi;
     float m_theta;
     glm::vec3 m_orientation;
@@ -112,8 +125,10 @@ protected:
     float m_speed;
 
 
-    KeyConf m_keyconf;
-    KeyStates m_keystat;
+    KeyConf<KeyCodeT> m_keyconf;
+    KeyStates<KeyCodeT> m_keystat;
 };
 
-} // end of S3DE namespace
+} // namespace S3DE
+
+#include "Camera-internals.hpp"

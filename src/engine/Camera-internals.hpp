@@ -24,14 +24,21 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#pragma once
+
 #include "Camera.h"
+
 #include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
-using namespace S3DE;
-using glm::vec3;
-using glm::mat4;
-Camera::Camera()
+
+namespace S3DE
+{
+template <typename InputT, typename KeyCodeT>
+Camera<InputT, KeyCodeT>::Camera( CameraKey<KeyCodeT> const &cameraKey )
     : m_phi( 0.0 )
     , m_theta( 0.0 )
     , m_orientation()
@@ -42,9 +49,11 @@ Camera::Camera()
     , m_sensitive( 0.5 )
     , m_speed( 10 )
 {
-    this->CommonConstructor();
+    this->CommonConstructor( cameraKey );
 }
-Camera::Camera( vec3 position, vec3 target, vec3 up )
+template <typename InputT, typename KeyCodeT>
+Camera<InputT, KeyCodeT>::Camera( CameraKey<KeyCodeT> const &cameraKey, glm::vec3 position,
+                                  glm::vec3 target, glm::vec3 up )
     : m_phi( 0.0 )
     , m_theta( 0.0 )
     , m_orientation()
@@ -55,25 +64,33 @@ Camera::Camera( vec3 position, vec3 target, vec3 up )
     , m_sensitive( 0.5 )
     , m_speed( 0.1 )
 {
-    this->CommonConstructor();
+    this->CommonConstructor( cameraKey );
 }
-void Camera::CommonConstructor()
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::CommonConstructor( CameraKey<KeyCodeT> const &cameraKey )
 {
     this->SetTarget( m_target );
 
     // Keyboard configuation
     // Key init
-    m_keyconf[ "forward" ]  = SDL_SCANCODE_W;
-    m_keyconf[ "backward" ] = SDL_SCANCODE_S;
-    m_keyconf[ "left" ]     = SDL_SCANCODE_A;
-    m_keyconf[ "right" ]    = SDL_SCANCODE_D;
+    // m_keyconf[ "forward" ]  = SDL_SCANCODE_W;
+    // m_keyconf[ "backward" ] = SDL_SCANCODE_S;
+    // m_keyconf[ "left" ]     = SDL_SCANCODE_A;
+    // m_keyconf[ "right" ]    = SDL_SCANCODE_D;
+
+    m_keyconf[ "forward" ]  = cameraKey.forward;
+    m_keyconf[ "backward" ] = cameraKey.backward;
+    m_keyconf[ "left" ]     = cameraKey.left;
+    m_keyconf[ "right" ]    = cameraKey.right;
+
     // Keystates init
     m_keystat[ m_keyconf[ "forward" ] ]  = false;
     m_keystat[ m_keyconf[ "backward" ] ] = false;
     m_keystat[ m_keyconf[ "left" ] ]     = false;
     m_keystat[ m_keyconf[ "right" ] ]    = false;
 }
-void Camera::Orient( int xRel, int yRel )
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::Orient( int xRel, int yRel )
 {
     m_phi += -yRel * m_sensitive;
     m_theta += -xRel * m_sensitive;
@@ -86,7 +103,7 @@ void Camera::Orient( int xRel, int yRel )
     if ( m_phi > 89.0 )
         m_phi = 89.0;
     else if ( m_phi < -89.0 )
-        m_phi      = -89.0;
+        m_phi = -89.0;
     float phiRad   = m_phi * M_PI / 180.0;
     float thetaRad = m_theta * M_PI / 180.0;
 
@@ -114,13 +131,15 @@ void Camera::Orient( int xRel, int yRel )
 
     m_target = m_position + m_orientation;
 }
-void Camera::KeyBoardEvent( CInput const &event )
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::KeyBoardEvent( InputT const &event )
 {
     for ( auto &key : m_keystat )
         key.second = event.GetTouche( key.first );
 }
-void Camera::Move( CInput const &event,
-                   std::chrono::duration<float, std::chrono::milliseconds::period> elapsed )
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::Move(
+    InputT const &event, std::chrono::duration<float, std::chrono::milliseconds::period> elapsed )
 {
     auto time = elapsed.count();
 
@@ -151,7 +170,8 @@ void Camera::Move( CInput const &event,
         this->Orient( event.GetXRel(), event.GetYRel() );
     }
 }
-void Camera::SetTarget( vec3 const &target )
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::SetTarget( glm::vec3 const &target )
 {
     m_orientation = target - m_position;
     m_orientation = normalize( m_orientation );
@@ -184,27 +204,35 @@ void Camera::SetTarget( vec3 const &target )
     m_phi *= 180.0 / M_PI;
     m_theta *= 180.0 / M_PI;
 }
-void Camera::SetPosition( vec3 const &position )
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::SetPosition( glm::vec3 const &position )
 {
     m_position = position;
 }
-void Camera::LookAt( mat4 &modelview )
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::LookAt( glm::mat4 &modelview )
 {
     modelview = glm::lookAt( m_position, m_target, m_up );
 }
-float Camera::GetSensitive() const
+template <typename InputT, typename KeyCodeT>
+float Camera<InputT, KeyCodeT>::GetSensitive() const
 {
     return m_sensitive;
 }
-float Camera::GetSpeed() const
+template <typename InputT, typename KeyCodeT>
+float Camera<InputT, KeyCodeT>::GetSpeed() const
 {
     return m_speed;
 }
-void Camera::SetSensitive( float sensitive )
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::SetSensitive( float sensitive )
 {
     m_sensitive = std::fabs( sensitive );
 }
-void Camera::SetSpeed( float speed )
+template <typename InputT, typename KeyCodeT>
+void Camera<InputT, KeyCodeT>::SetSpeed( float speed )
 {
     m_speed = std::fabs( speed );
 }
+
+} // namespace S3DE
