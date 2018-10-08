@@ -16,3 +16,5 @@ source_tools = files([
   'Parser.cpp',
   'Texture.cpp'
 ])
+
+install_headers(include_tools, subdir: 'S3DE/tools')

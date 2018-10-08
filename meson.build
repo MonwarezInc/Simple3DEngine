@@ -1,4 +1,5 @@
-project('Simple3DEngine','cpp', default_options : ['cpp_std=c++1z'])
+project('Simple3DEngine','cpp', default_options : ['cpp_std=c++1z'],
+       version: '0.0.0')
 
 sdl2_dep = dependency('sdl2',required:true)
 sdl2image_dep = dependency('SDL2_image',required:true)
@@ -17,6 +18,7 @@ subdir('src')
 
 simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,include_directories:simple3dengine_inc)
 
+
 # test section
 if (test_option)
   test_list = ['Parser']
@@ -30,6 +32,17 @@ if (test_option)
     test('@0@ Test'.format(tst), exe)
   endforeach
 endif
+
+# pkg config section
+
+pkg = import('pkgconfig')
+pkg.generate(description:'Simple3DEngine is a 3D engine for c++ project',
+             filebase: 'Simple3DEngine',
+             libraries: [simple3dengine_lib],
+             name: 'Simple3DEngine',
+             subdirs:'S3DE',
+             version: meson.project_version()
+            )
 
 # cppcheck section
 cppcheck_exe = find_program('cppcheck',required:false)

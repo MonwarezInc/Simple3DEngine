@@ -30,3 +30,6 @@ source_engine  = files([
   'ShadowMap.cpp',
   'SkyboxShader.cpp'
 ])
+
+
+install_headers(include_engine, subdir: 'S3DE/engine')
