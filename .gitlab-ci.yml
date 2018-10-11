@@ -5,16 +5,16 @@ stages:
     - test
     - documentation
 
-build:clang-5.0:
+build:clang:
     stage: build
     script:
        - ./tools/ci/dependency.sh
-       - ./tools/ci/clang50.sh
+       - ./tools/ci/clang.sh
     artifacts:
       untracked: true
     image: debian:unstable
 
-build:gcc-7:
+build:gcc:
     stage: build
     script:
        - ./tools/ci/dependency.sh
@@ -23,20 +23,20 @@ build:gcc-7:
       untracked: true
     image: debian:unstable
 
-test:clang-5.0:
+test:clang:
     stage: test
     dependencies:
-      - build:clang-5.0
+      - build:clang
     script:
        - ./tools/ci/dependency.sh
        - ./tools/ci/simpleTest.sh
     image: debian:unstable
 
 
-test:gcc-7:
+test:gcc:
     stage: test
     dependencies:
-      - build:gcc-7
+      - build:gcc
     script:
        - ./tools/ci/dependency.sh
        - ./tools/ci/test.sh
@@ -52,3 +52,4 @@ documentation:
      artifacts:
        paths:
         - docs/html
+     when: always
