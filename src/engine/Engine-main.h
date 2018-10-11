@@ -72,43 +72,86 @@ public:
      *   @param  engineWindow    Structure that contain all information needed to create the window
      *   @return an handle to the window
      */
-    WindowHandle CreateWindow( const EngineWindow &engineWindow );
+    [[deprecated( "Creation of window will be done elsewhere" )]] WindowHandle
+    CreateWindow( const EngineWindow &engineWindow );
+
     ///	\brief 	Delete the specifided window (Not Implemented)
     ///	@param[in]  indice  Id of the window
-    void DeleteWindow( GLuint indice );
+    [[deprecated( "Window deletion will not be managed by the engine" )]] void
+    DeleteWindow( GLuint indice );
+
+
     ///	\brief 	Set the active window (Not Implemented)
     ///	@param[in]  indice Id of the window
-    void SetActive( GLuint indice );
+    [[deprecated( "Window management has no place in engine" )]] void SetActive( GLuint indice );
+
+
     ///	\brief  Add a bunch of mesh
     ///	\param  meshPair    A vector of entity,filename pair
-    void AddMesh( std::vector<MeshPair> const &meshPair );
-    void DelMeshNode( std::string const &entity );
+    [[deprecated( "The engine is not a node graph, so it shouldn't deal with that part" )]] void
+    AddMesh( std::vector<MeshPair> const &meshPair );
+
+
+    [[deprecated( "Node graph management is not the role of an engine" )]] void
+    DelMeshNode( std::string const &entity );
+
+
     ///	\brief  Set/Update the light information
     ///	\param[in]  pointlight  A vector of PointLight data
-    void AttachLight( std::vector<PointLight> const &pointlight );
+    [[deprecated( "Those are scene graph functionality" )]] void
+    AttachLight( std::vector<PointLight> const &pointlight );
+
+
+
+
     ///	\brief Set/update the spot light information
     ///	\param	spotlight   a vector of SpotLight data
-    void AttachLight( std::vector<SpotLight> const &spotlight );
+    [[deprecated( "Those are scene graph functionality" )]] void
+    AttachLight( std::vector<SpotLight> const &spotlight );
+
+
+
     ///	\brief Set/update the Directional light information
     ///	\param  dlight  a DirectionalLight
-    void AttachLight( DirectionalLight const &dlight );
+    [[deprecated( "Those are scene graph functionality" )]] void
+    AttachLight( DirectionalLight const &dlight );
     ///	\brief Delete an object from the scene (Not Implemented)
     ///	\param[in]  id jId of the object
-    void DeleteObject( GLuint id );
+
+
+    [[deprecated( "Those are scene graph functionality" )]] void DeleteObject( GLuint id );
+
+
     ///	\brief  Set the position and rotation of an object of the scene
     ///	\param[in]  entity  The name of the entity
     ///	\param[in]  pos The new position
     ///	\param[in]  pitch   The pitch rotation X,Y,Z
-    void SetNodePosRot( std::string const &entity, glm::vec3 const &pos, glm::vec3 const &pitch );
-    void SetNodeScale( std::string const &entity, float scale );
-    void SetNodeAnimation( std::string const &entity, std::string const &animation );
 
-    void SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center, glm::vec3 const &vert );
-    void SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far );
+    [[deprecated( "Those are scene graph functionality" )]] void
+    SetNodePosRot( std::string const &entity, glm::vec3 const &pos, glm::vec3 const &pitch );
+
+
+    [[deprecated( "Those are scene graph functionality" )]] void
+    SetNodeScale( std::string const &entity, float scale );
+
+
+    [[deprecated( "Those are scene graph functionality" )]] void
+    SetNodeAnimation( std::string const &entity, std::string const &animation );
+
+    [[deprecated( "Those are scene graph functionality" )]] void
+    SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center, glm::vec3 const &vert );
+
+    [[deprecated( "Those are scene graph functionality" )]] void
+    SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near, GLdouble far );
+
 
     void ClearColor( float r, float g, float b, float a );
+
+
+    // TODO : This has to be done on the constructor
     void Init(); // next step is to have flags
 
+    // TODO : either we attach the scene graph or we give it when drawing
     void Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed );
 
 protected:
