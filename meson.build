@@ -21,14 +21,15 @@ simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,include_dir
 
 # test section
 if (test_option)
-  test_list = ['Parser']
+  test_list = ['Parser', 'Engine']
 
   foreach tst : test_list
     exe = executable('@0@Test'.format(tst),
                      ['src/tests/@0@/main.cpp'.format(tst),
                       'src/tests/@0@/@0@_test.h'.format(tst),
                       'src/tests/@0@/@0@_test.cpp'.format(tst)],
-                     dependencies : [gtest_dep,gmock_dep,simple3dengine_dep])
+                     dependencies : [gtest_dep,gmock_dep,simple3dengine_dep,
+                                    sdl2_dep, sdl2image_dep, assimp_dep, glew_dep, glm_dep])
     test('@0@ Test'.format(tst), exe)
   endforeach
 endif

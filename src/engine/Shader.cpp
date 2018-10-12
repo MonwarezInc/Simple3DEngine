@@ -66,7 +66,10 @@ Shader::~Shader()
 {
     // Delete shader
 
-    glDeleteProgram( m_programID );
+    if ( isLoaded_ )
+    {
+        glDeleteProgram( m_programID );
+    }
 }
 
 
@@ -178,6 +181,8 @@ void Shader::Load()
         glDeleteShader( m_geometryID );
         glDeleteShader( m_fragmentID );
     }
+
+    isLoaded_ = true;
 }
 
 void Shader::Enable()

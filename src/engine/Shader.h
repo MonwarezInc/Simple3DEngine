@@ -81,5 +81,7 @@ private:
     std::string m_vertexSource;
     std::string m_fragmentSource;
     std::string m_geometrySource;
+
+    bool isLoaded_{false};
 };
-} // end of S3DE namespace
+} // namespace S3DE

@@ -56,17 +56,20 @@ struct EngineWindow
     int minor;           ///< OpenGL minor version*/
     EngineShader shader; ///< @see EngineShader*/
 };
+
+
+
 /// \brief  Main class for the Simple 3D Engine
 ///
 /// This class is an interface with the engine. Almost all  the command for interacting with the
 /// engine are here.
 /// \author Payet Thibault
-template <typename GLWindow>
-class CEngine
+template <typename GLWindow, typename SceneManager>
+class Engine
 {
 public:
-    CEngine();
-    virtual ~CEngine();
+    explicit Engine( SceneManager &sceneManagerView );
+
 
     /** \brief Create a window with the specified OpenGL version (Limited to one window for now)
      *   @param  engineWindow    Structure that contain all information needed to create the window
@@ -154,7 +157,13 @@ public:
     // TODO : either we attach the scene graph or we give it when drawing
     void Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed );
 
-protected:
+private:
+    // New content
+
+    SceneManager &sceneManager_;
+
+
+    // TODO : Deprecated content
     WindowManager<std::map<WindowHandle, GLWindow>, GLWindow> window_;
     BasicMeshManager m_meshManager;
     std::map<std::string, size_t> m_entToID;

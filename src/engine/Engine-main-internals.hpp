@@ -29,24 +29,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace S3DE
 {
-template <typename GLWindow>
-CEngine<GLWindow>::CEngine()
+template <typename GLWindow, typename SceneManager>
+Engine<GLWindow, SceneManager>::Engine( SceneManager &sceneManagerView )
+    : sceneManager_{sceneManagerView}
 {
 }
-template <typename GLWindow>
-CEngine<GLWindow>::~CEngine()
-{
-    // for the list of object, we didn't manage the object memory , so just delete the list , and
-    // not the content
-}
-template <typename GLWindow>
-WindowHandle CEngine<GLWindow>::CreateWindow( EngineWindow const &engine )
+
+
+template <typename GLWindow, typename SceneManager>
+WindowHandle Engine<GLWindow, SceneManager>::CreateWindow( EngineWindow const &engine )
 {
     // if ( !m_pGraphics )
     //     m_pGraphics = std::make_unique<CGraphics>( engine.width, engine.height,
     //     engine.fullscreen,
     //                                                engine.title, engine.bpp, engine.aa,
-    //                                                engine.major, engine.minor );
+    //                                                engine.major, engine.mior );
 
 
     WindowHandle window = window_.NewWindow( engine.width, engine.height, engine.title,
@@ -55,25 +52,25 @@ WindowHandle CEngine<GLWindow>::CreateWindow( EngineWindow const &engine )
     m_pShader.SetFile( engine.shader.lightV, engine.shader.lightF, engine.shader.lightG );
     return window;
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::DeleteWindow( GLuint indice )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::DeleteWindow( GLuint indice )
 {
     // not implemented  yet
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::SetActive( GLuint indice )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::SetActive( GLuint indice )
 {
     // not implemented yet
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::AddMesh( std::vector<MeshPair> const &meshPair )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::AddMesh( std::vector<MeshPair> const &meshPair )
 {
     m_meshManager.Load( meshPair );
     for ( auto &v : meshPair )
         this->AddMeshNode( v.entity );
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::AddMeshNode( std::string const &entity, bool isVisible )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::AddMeshNode( std::string const &entity, bool isVisible )
 {
     ObjectNode objectNode;
     objectNode.entity   = entity;
@@ -87,8 +84,8 @@ void CEngine<GLWindow>::AddMeshNode( std::string const &entity, bool isVisible )
     m_vObjectNode.push_back( objectNode );
     m_entToID[ entity ] = objectNode.id;
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::DelMeshNode( std::string const &entity )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::DelMeshNode( std::string const &entity )
 {
     // If succeed does not launch an exception
     // it's not manage the memory of the mesh itself
@@ -98,29 +95,29 @@ void CEngine<GLWindow>::DelMeshNode( std::string const &entity )
     m_vObjectNode[ it->second ].isVisible = false; // Set to false so that we didn't show it
     m_vObjectNode[ it->second ].entity    = "";
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::AttachLight( std::vector<PointLight> const &pointlight )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::AttachLight( std::vector<PointLight> const &pointlight )
 {
     m_PointLight = pointlight;
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::AttachLight( std::vector<SpotLight> const &spotlight )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::AttachLight( std::vector<SpotLight> const &spotlight )
 {
     m_SpotLight = spotlight;
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::AttachLight( DirectionalLight const &dlight )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::AttachLight( DirectionalLight const &dlight )
 {
     m_Directional = dlight;
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::DeleteObject( GLuint id )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::DeleteObject( GLuint id )
 {
     // not implemented yet
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::SetNodePosRot( std::string const &entity, glm::vec3 const &pos,
-                                       glm::vec3 const &pitch )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::SetNodePosRot( std::string const &entity, glm::vec3 const &pos,
+                                                    glm::vec3 const &pitch )
 {
     auto it = m_entToID.find( entity );
     if ( it != m_entToID.end() )
@@ -133,50 +130,53 @@ void CEngine<GLWindow>::SetNodePosRot( std::string const &entity, glm::vec3 cons
     }
     // else we do nothing improve performance xD
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::SetNodeScale( std::string const &entity, float scale )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::SetNodeScale( std::string const &entity, float scale )
 {
     auto it = m_entToID.find( entity );
     if ( it != m_entToID.end() )
         m_vObjectNode[ it->second ].scale = scale;
     // same things like SetObjectPosRot
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::SetNodeAnimation( std::string const &entity, std::string const &animation )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::SetNodeAnimation( std::string const &entity,
+                                                       std::string const &animation )
 {
     auto it = m_entToID.find( entity );
     if ( it != m_entToID.end() )
         m_vObjectNode[ it->second ].animation = animation;
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::SetCameraLocation( glm::vec3 const &pos, glm::vec3 const &center,
-                                           glm::vec3 const &vert )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::SetCameraLocation( glm::vec3 const &pos,
+                                                        glm::vec3 const &center,
+                                                        glm::vec3 const &vert )
 {
     m_modelview      = glm::lookAt( pos, center, vert );
     m_CameraPosition = pos;
     m_CameraCenter   = center;
     m_CameraVertical = vert;
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near,
-                                           GLdouble far )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::SetCameraSettings( GLdouble fov, GLdouble ratio, GLdouble near,
+                                                        GLdouble far )
 {
     m_projection = glm::perspective( fov, ratio, near, far );
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::ClearColor( float r, float g, float b, float a )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::ClearColor( float r, float g, float b, float a )
 {
     glClearColor( r, g, b, a );
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::Init()
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::Init()
 {
     glEnable( GL_DEPTH_TEST );
     glEnable( GL_CULL_FACE );
     glCullFace( GL_BACK );
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed )
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::Draw(
+    std::chrono::duration<float, std::chrono::seconds::period> elapsed )
 {
     m_pShader.Enable();
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -233,8 +233,8 @@ void CEngine<GLWindow>::Draw( std::chrono::duration<float, std::chrono::seconds:
         window.second.SwapWindow();
     }
 }
-template <typename GLWindow>
-void CEngine<GLWindow>::ObjectNode::DoTransformation( glm::mat4 &mdv ) const
+template <typename GLWindow, typename SceneManager>
+void Engine<GLWindow, SceneManager>::ObjectNode::DoTransformation( glm::mat4 &mdv ) const
 {
     // Translate to position
     mdv = glm::translate( mdv, position );
