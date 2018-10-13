@@ -31,8 +31,8 @@ test:clang:
        - ./tools/ci/dependency.sh
        - ./tools/ci/simpleTest.sh
     artifacts:
-        reports:
-            junit: report.xml
+      reports:
+        junit: build/report.xml
     image: debian:unstable
 
 
@@ -47,7 +47,7 @@ test:gcc:
       paths:
         - build/out-coverage
       reports:
-        junit: report.xml
+        junit: build/report.xml
     image: debian:unstable
 
 documentation:
