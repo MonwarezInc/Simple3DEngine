@@ -1,4 +1,7 @@
 #!/bin/sh
+GTEST_OUTPUT="xml:report.xml"
+export GTEST_OUTPUT
+
 cd build
 # pre coverage
 lcov --capture --initial --directory .. --output-file coverage-base.info
