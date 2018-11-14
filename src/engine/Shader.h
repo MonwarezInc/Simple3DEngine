@@ -60,6 +60,26 @@ public:
     /// \param geometrySource   the filename of the geometry shader
     virtual void SetFile( std::string const &vertexSource, std::string const &fragmentSource,
                           std::string const &geometrySource );
+
+    /** \brief Set the vertex shader
+     * \param vertexSource the filename of the vertex shader, may be empty meaning that it is not
+     * needed
+     */
+    virtual void setVertexShader( std::string const &vertexSource );
+    /** \brief Set the fragment shader
+     * \param fragmentSource the filename of the fragment shader, may be empty meaning that it is
+     * not needed
+     */
+    virtual void setFragmentShader( std::string const &fragmentSource );
+    /** \brief Set the geometry shader
+     * \param geometrySource the filename of the geometry shader, may be empty meaning that it is
+     * not needed
+     */
+    virtual void setGeometrySource( std::string const &geometrySource );
+
+    virtual void Load();
+
+
     /// \brief  Just call glUseProgram(shaderID)
     virtual void Enable();
     /// \brief  Just call glUseProgram(0)
@@ -70,7 +90,6 @@ public:
     virtual GLuint GetUniformLocation( std::string const &name ) const;
 
 private:
-    virtual void Load();
     bool BuildShader( GLuint &shader, GLenum type, std::string const &source );
 
     GLuint m_vertexID;
@@ -81,6 +100,10 @@ private:
     std::string m_vertexSource;
     std::string m_fragmentSource;
     std::string m_geometrySource;
+
+    bool m_vertexIsNeeded{false};
+    bool m_fragmentIsNeeded{false};
+    bool m_geometryIsNeeded{false};
 
     bool isLoaded_{false};
 };
