@@ -6,6 +6,7 @@ sdl2image_dep = dependency('SDL2_image',required:true)
 assimp_dep = dependency('assimp',required:true)
 glew_dep = dependency('glew',required:true)
 glm_dep = dependency('glm',required:true)
+bullet_dep = dependency('bullet', required:true)
 
 test_option = get_option('test')
 if (test_option)
@@ -16,13 +17,14 @@ endif
 simple3dengine_inc = include_directories('src')
 subdir('src')
 
-simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,
-                                        include_directories:simple3dengine_inc,
+simple3dengine_dep = declare_dependency(link_with: simple3dengine_lib,
+                                        include_directories: simple3dengine_inc,
                                         dependencies: [sdl2_dep,
                                                        sdl2image_dep,
                                                        assimp_dep,
                                                        glew_dep,
-                                                       glm_dep])
+                                                       glm_dep,
+                                                       bullet_dep])
 
 
 # test section

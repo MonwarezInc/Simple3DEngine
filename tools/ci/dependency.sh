@@ -26,3 +26,4 @@ apt-get install -qq -y gnupg1
  apt-get install -qq -y clang
  apt-get install -qq -y meson
  apt-get install -qq -y googletest
+ apt-get install -qq -y libbullet-dev

@@ -11,7 +11,12 @@ simple3dengineSrc =[
 
 simple3dengine_lib = library('Simple3DEngine' ,
                              simple3dengineSrc,
-                             dependencies: [sdl2_dep,sdl2image_dep,assimp_dep,glew_dep,glm_dep],
+                             dependencies: [sdl2_dep,
+                                            sdl2image_dep,
+                                            assimp_dep,
+                                            glew_dep,
+                                            glm_dep,
+                                            bullet_dep,],
 
                              cpp_args: ['-DS3DE_USE_DSA=1'],
                              install: true)
