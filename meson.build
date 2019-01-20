@@ -16,7 +16,13 @@ endif
 simple3dengine_inc = include_directories('src')
 subdir('src')
 
-simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,include_directories:simple3dengine_inc)
+simple3dengine_dep = declare_dependency(link_with:simple3dengine_lib,
+                                        include_directories:simple3dengine_inc,
+                                        dependencies: [sdl2_dep,
+                                                       sdl2image_dep,
+                                                       assimp_dep,
+                                                       glew_dep,
+                                                       glm_dep])
 
 
 # test section
