@@ -9,12 +9,16 @@ include_engine = files([
   'IResourceManager.hpp',
   'Light.h',
   'Mesh.h',
+  'MeshAssimpImpl.h',
+  'MeshImpl.h',
+  'MeshImplFactory.h',
   'MeshException.h',
   'MeshManager.h',
   'SceneGraph.h',
   'Shader.h',
   'ShadowMap.h',
-  'SkyboxShader.h'
+  'SkyboxShader.h',
+  'Vertex.h'
   ])
 
 source_engine  = files([
@@ -23,6 +27,8 @@ source_engine  = files([
   'GBuffer.cpp',
   'Light.cpp',
   'Mesh.cpp',
+  'MeshAssimpImpl.cpp',
+  'MeshImplFactory.cpp',
   'MeshException.cpp',
   'MeshManager.cpp',
   'SceneGraph.cpp',

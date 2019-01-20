@@ -65,5 +65,6 @@ protected:
     std::vector<RcField> m_rcfield; ///< A vector of the rcfield
     std::vector<size_t> m_count;    ///< A vector of counter of ressource
     Mesh2DArr m_pmesh;              ///< A 2D vector of unique_ptr Mesh
+    MeshImplType meshType_{MeshImplType::assimp};
 };
-} // end of S3DE namespace
+} // namespace S3DE

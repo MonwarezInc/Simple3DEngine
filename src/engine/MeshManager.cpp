@@ -35,17 +35,15 @@ MeshManager::MeshManager()
     m_rcfield.push_back( rc );
     m_count.push_back( 0 );
 }
-MeshManager::~MeshManager()
-{
-}
+MeshManager::~MeshManager() {}
 RcField MeshManager::Load( std::string const &filename )
 {
     /*	So what happend: 	m_count: (0 1 2 1 3 5 2 1 3)
-    *						m_rcfield: (NULL_RC rc1 rc2 rc3 ...)
-    *						m_pmesh: (p1 p2 p3 ...)
-    *
-    *	The link ?: m_count[i] refer to the count of m_pmesh[i-1] if i > 0
-    */
+     *						m_rcfield: (NULL_RC rc1 rc2 rc3 ...)
+     *						m_pmesh: (p1 p2 p3 ...)
+     *
+     *	The link ?: m_count[i] refer to the count of m_pmesh[i-1] if i > 0
+     */
     RcField rc = {filename, NULL_RC};
     if ( filename == "" )
         throw std::string( "Can't load a Mesh with empty name" );
@@ -74,8 +72,8 @@ RcField MeshManager::Load( std::string const &filename )
         if ( foundempty )
         {
             m_pmesh[ emptyind - 1 ].emplace_back();
-            m_pmesh[ emptyind - 1 ].back() = std::make_unique<Mesh>();
-            m_pmesh[ emptyind - 1 ].back()->LoadFromFile( filename );
+            m_pmesh[ emptyind - 1 ].back() = std::make_unique<Mesh>( meshType_ );
+            m_pmesh[ emptyind - 1 ].back()->loadFromFile( filename );
 
             m_count[ emptyind ]   = 1;
             rc.id                 = emptyind;
@@ -85,8 +83,8 @@ RcField MeshManager::Load( std::string const &filename )
         {
             m_pmesh.emplace_back();
             m_pmesh.back().emplace_back();
-            m_pmesh.back().back() = std::make_unique<Mesh>();
-            m_pmesh.back().back()->LoadFromFile( filename );
+            m_pmesh.back().back() = std::make_unique<Mesh>( meshType_ );
+            m_pmesh.back().back()->loadFromFile( filename );
 
             m_count.push_back( 1 );
             rc.id = m_count.size() - 1;
@@ -125,6 +123,6 @@ void MeshManager::Draw( RcField const &rc,
                         Shader const &shader, std::string const &animation )
 {
     if ( ( rc.id < m_count.size() ) && ( rc.id > 0 ) )
-        m_pmesh[ rc.id - 1 ][ 0 ]->Draw( elapsed_time, shader, animation );
+        m_pmesh[ rc.id - 1 ][ 0 ]->draw( elapsed_time, shader, animation );
     // Else silently discard the draw
 }

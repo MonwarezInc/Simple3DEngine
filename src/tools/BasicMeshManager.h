@@ -56,5 +56,6 @@ protected:
     std::vector<Mesh> m_vMesh;
     entityNameMap m_entityToName;
     nameIDMap m_nameToID;
+    MeshImplType meshType_{MeshImplType::assimp};
 };
-}
+} // namespace S3DE
