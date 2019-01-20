@@ -118,31 +118,31 @@ private:
         }
         void AddBoneData( unsigned int boneID, float weight );
     };
-    void Clear();
-    bool InitFromScene( const aiScene* pScene );
-    void InitMesh( unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex,
-                   unsigned int BaseIndex );
-    bool InitMaterials( const aiScene* pScene );
-    void LoadBones( unsigned int index, const aiMesh*, std::vector<VertexBoneData>& bones );
-    void BoneTransform( float TimeInSec, std::vector<glm::mat4>& Transforms,
-                        unsigned int idAnimation );
-    void ReadNodeHiearchy( float AnimationTime, const aiNode* pNode,
-                           glm::mat4 const& ParentTransform, unsigned int idAnimation );
+    void clear_();
+    bool initFromScene_( const aiScene* pScene );
+    void initMesh_( unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex,
+                    unsigned int BaseIndex );
+    bool initMaterials_( const aiScene* pScene );
+    void loadBones_( unsigned int index, const aiMesh*, std::vector<VertexBoneData>& bones );
+    void boneTransform_( float TimeInSec, std::vector<glm::mat4>& Transforms,
+                         unsigned int idAnimation );
+    void readNodeHierarchy_( float AnimationTime, const aiNode* pNode,
+                             glm::mat4 const& ParentTransform, unsigned int idAnimation );
 
-    void CalcInterpolatedScaling( aiVector3D& Out, float AnimationTime,
-                                  const aiNodeAnim* pNodeAnim );
-    void CalcInterpolatedRotation( aiQuaternion& Out, float AnimationTime,
+    void calcInterpolatedScaling_( aiVector3D& Out, float AnimationTime,
                                    const aiNodeAnim* pNodeAnim );
-    void CalcInterpolatedPosition( aiVector3D& Out, float AnimationTime,
-                                   const aiNodeAnim* pNodeAnim );
+    void calcInterpolatedRotation_( aiQuaternion& Out, float AnimationTime,
+                                    const aiNodeAnim* pNodeAnim );
+    void calcInterpolatedPosition_( aiVector3D& Out, float AnimationTime,
+                                    const aiNodeAnim* pNodeAnim );
 
-    const aiNodeAnim* FindNodeAnim( const aiAnimation* pAnimation, std::string const& NodeName );
-    unsigned int FindScaling( float AnimationTime, const aiNodeAnim* pNodeAnim );
-    unsigned int FindRotation( float AnimationTime, const aiNodeAnim* pNodeAnim );
-    unsigned int FindPosition( float AnimationTime, const aiNodeAnim* pNodeAnim );
+    const aiNodeAnim* findNodeAnim_( const aiAnimation* pAnimation, std::string const& NodeName );
+    unsigned int findScaling_( float AnimationTime, const aiNodeAnim* pNodeAnim );
+    unsigned int findRotation_( float AnimationTime, const aiNodeAnim* pNodeAnim );
+    unsigned int findPosition_( float AnimationTime, const aiNodeAnim* pNodeAnim );
 
-    unsigned int GetAnimationIndex( std::string const& animation );
-    void CheckFactor( float Factor, std::string const& file, int line );
+    unsigned int getAnimationIndex_( std::string const& animation );
+    void checkFactor_( float Factor, std::string const& file, int line );
     struct MeshEntry
     {
         MeshEntry() = default;
@@ -160,15 +160,15 @@ private:
         unsigned int BaseIndex{0};
         int skinned{0};
     };
-    std::string m_filename;
-    std::vector<MeshEntry> m_Entries;
-    std::vector<Texture> m_Textures;
-    const aiScene* m_pScene;
-    Assimp::Importer m_Importer;
-    glm::mat4 m_GlobalInverseTransform;
-    std::map<std::string, unsigned int> m_BoneMapping;
-    unsigned int m_NumBones;
-    std::vector<BoneInfo> m_BoneInfo;
-    std::string m_animation;
+    std::string filename_;
+    std::vector<MeshEntry> entries_;
+    std::vector<Texture> textures_;
+    const aiScene* pScene_;
+    Assimp::Importer importer_;
+    glm::mat4 globalInverseTransform_;
+    std::map<std::string, unsigned int> boneMapping_;
+    unsigned int numBones_;
+    std::vector<BoneInfo> boneInfos_;
+    std::string animationName_;
 };
-} // end of S3DE namespace
+} // namespace S3DE

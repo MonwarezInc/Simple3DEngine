@@ -41,37 +41,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace S3DE;
 Mesh::Mesh()
 {
-    m_pScene   = nullptr;
-    m_NumBones = 0;
+    pScene_   = nullptr;
+    numBones_ = 0;
 }
 Mesh::Mesh( Mesh const& mesh )
 {
-    m_pScene   = nullptr;
-    m_NumBones = 0;
-    this->LoadFromFile( mesh.m_filename );
+    pScene_   = nullptr;
+    numBones_ = 0;
+    this->LoadFromFile( mesh.filename_ );
 }
 Mesh::~Mesh()
 {
-    this->Clear();
+    this->clear_();
 }
 void Mesh::LoadFromFile( std::string const& filename )
 {
-    m_filename = filename;
+    filename_ = filename;
     // release the previously loaded mesh (if exists)
-    this->Clear();
+    this->clear_();
 
     Assimp::Importer importer;
-    m_pScene = m_Importer.ReadFile( filename.c_str(),
-                                    aiProcess_Triangulate | aiProcess_GenSmoothNormals
-                                        | aiProcess_FlipUVs | aiProcess_LimitBoneWeights
-                                        | aiProcess_SplitByBoneCount | aiProcess_SplitLargeMeshes );
-    if ( m_pScene != nullptr )
+    pScene_ = importer_.ReadFile( filename.c_str(),
+                                  aiProcess_Triangulate | aiProcess_GenSmoothNormals
+                                      | aiProcess_FlipUVs | aiProcess_LimitBoneWeights
+                                      | aiProcess_SplitByBoneCount | aiProcess_SplitLargeMeshes );
+    if ( pScene_ != nullptr )
     {
-        m_GlobalInverseTransform = aiMatrixToMat4( m_pScene->mRootNode->mTransformation );
-        m_GlobalInverseTransform = glm::inverse( m_GlobalInverseTransform );
+        globalInverseTransform_ = aiMatrixToMat4( pScene_->mRootNode->mTransformation );
+        globalInverseTransform_ = glm::inverse( globalInverseTransform_ );
 
         // can launch an except
-        if ( !this->InitFromScene( m_pScene ) )
+        if ( !this->initFromScene_( pScene_ ) )
         {
             std::stringstream out;
             out << "error init from scene at: " << __FILE__ << "( " << __LINE__ << ")";
@@ -79,21 +79,21 @@ void Mesh::LoadFromFile( std::string const& filename )
         }
     }
     else
-        throw std::string( "Error parsing" + filename + " : " + m_Importer.GetErrorString() );
+        throw std::string( "Error parsing" + filename + " : " + importer_.GetErrorString() );
 }
-bool Mesh::InitFromScene( const aiScene* pScene )
+bool Mesh::initFromScene_( const aiScene* pScene )
 {
-    m_Entries.resize( pScene->mNumMeshes );
-    m_Textures.resize( pScene->mNumMaterials );
+    entries_.resize( pScene->mNumMeshes );
+    textures_.resize( pScene->mNumMaterials );
 
     // Initialize the meshes in the scene one by one
-    for ( unsigned int i = 0; i < m_Entries.size(); ++i )
+    for ( unsigned int i = 0; i < entries_.size(); ++i )
     {
         auto paiMesh = pScene->mMeshes[ i ];
-        this->InitMesh( i, paiMesh, 0, 0 ); // 0 because it's one VAO by meshEntrie
+        this->initMesh_( i, paiMesh, 0, 0 ); // 0 because it's one VAO by meshEntrie
     }
 
-    return InitMaterials( pScene );
+    return initMaterials_( pScene );
 }
 void Mesh::Draw( std::chrono::duration<float, std::chrono::seconds::period> elapsed_time,
                  const Shader& shader, std::string const& animation )
@@ -101,7 +101,7 @@ void Mesh::Draw( std::chrono::duration<float, std::chrono::seconds::period> elap
     std::vector<glm::mat4> transforms;
     // this->BoneTransform((static_cast<float>(elapsed_time))/1000.0f, transforms,
     // GetAnimationIndex(animation));
-    this->BoneTransform( elapsed_time.count(), transforms, GetAnimationIndex( animation ) );
+    this->boneTransform_( elapsed_time.count(), transforms, getAnimationIndex_( animation ) );
     for ( unsigned int i = 0; i < transforms.size(); ++i )
     {
         // we have to send unform matrix
@@ -111,36 +111,36 @@ void Mesh::Draw( std::chrono::duration<float, std::chrono::seconds::period> elap
         glUniformMatrix4fv( location, 1, GL_FALSE,
                             (const GLfloat*)glm::value_ptr( transforms[ i ] ) );
     }
-    for ( auto& entries : m_Entries )
+    for ( auto& entries : entries_ )
     {
         glBindVertexArray( entries.VAO );
         auto materialIndex = entries.MaterialIndex;
         glUniform1i( shader.GetUniformLocation( "skinned" ), entries.skinned );
-        if ( materialIndex < m_Textures.size() )
+        if ( materialIndex < textures_.size() )
         {
-            glBindTexture( GL_TEXTURE_2D, m_Textures[ materialIndex ].GetID() );
+            glBindTexture( GL_TEXTURE_2D, textures_[ materialIndex ].GetID() );
         }
         glDrawElements( GL_TRIANGLES, entries.NumIndices, GL_UNSIGNED_INT, 0 );
     }
     glBindVertexArray( 0 ); // OpenGL state machine
 }
-void Mesh::Clear()
+void Mesh::clear_()
 {
-    m_pScene   = nullptr;
-    m_NumBones = 0;
-    m_Entries.clear();
-    m_Textures.clear();
+    pScene_   = nullptr;
+    numBones_ = 0;
+    entries_.clear();
+    textures_.clear();
 }
-void Mesh::InitMesh( unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex,
-                     unsigned int BaseIndex )
+void Mesh::initMesh_( unsigned int index, const aiMesh* paiMesh, unsigned int BaseVertex,
+                      unsigned int BaseIndex )
 {
-    m_Entries[ index ].MaterialIndex = paiMesh->mMaterialIndex;
-    m_Entries[ index ].NumIndices    = paiMesh->mNumFaces * 3;
-    m_Entries[ index ].BaseVertex    = BaseVertex;
-    m_Entries[ index ].BaseIndex     = BaseIndex;
+    entries_[ index ].MaterialIndex = paiMesh->mMaterialIndex;
+    entries_[ index ].NumIndices    = paiMesh->mNumFaces * 3;
+    entries_[ index ].BaseVertex    = BaseVertex;
+    entries_[ index ].BaseIndex     = BaseIndex;
 
     // if skinned
-    m_Entries[ index ].skinned = ( paiMesh->mNumBones > 0 ) ? 1 : 0;
+    entries_[ index ].skinned = ( paiMesh->mNumBones > 0 ) ? 1 : 0;
 
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -179,22 +179,22 @@ void Mesh::InitMesh( unsigned int index, const aiMesh* paiMesh, unsigned int Bas
         indices.push_back( face.mIndices[ 2 ] );
     }
 
-    this->LoadBones( index, paiMesh, bones );
+    this->loadBones_( index, paiMesh, bones );
 
-    m_Entries[ index ].Init( vertices, indices, bones );
+    entries_[ index ].Init( vertices, indices, bones );
 }
 
-bool Mesh::InitMaterials( const aiScene* pScene )
+bool Mesh::initMaterials_( const aiScene* pScene )
 {
     // extract the directory part from the filename
-    std::string::size_type slashIndex = m_filename.find_last_of( "/" );
+    std::string::size_type slashIndex = filename_.find_last_of( "/" );
     std::string dir;
     if ( slashIndex == std::string::npos )
         dir = ".";
     else if ( slashIndex == 0 )
         dir = "/";
     else
-        dir = m_filename.substr( 0, slashIndex );
+        dir = filename_.substr( 0, slashIndex );
 
     bool ret = true;
 
@@ -213,9 +213,9 @@ bool Mesh::InitMaterials( const aiScene* pScene )
             {
                 std::string fullPath = dir + "/" + path.data;
 
-                m_Textures[ i ].SetFilename( fullPath );
+                textures_[ i ].SetFilename( fullPath );
 
-                if ( !m_Textures[ i ].Load() )
+                if ( !textures_[ i ].Load() )
                 {
                     // maybe use except mechanism ?
                     std::cerr << "Error loading texture " << fullPath << '\n';
@@ -227,8 +227,8 @@ bool Mesh::InitMaterials( const aiScene* pScene )
         // load a white texture in case the model didn't have it's own texture
         else
         {
-            m_Textures[ i ].SetFilename( "./white.png" );
-            ret = m_Textures[ i ].Load();
+            textures_[ i ].SetFilename( "./white.png" );
+            ret = textures_[ i ].Load();
         }
     }
 
@@ -291,7 +291,7 @@ void Mesh::MeshEntry::Init( std::vector<Vertex> const& vertices,
     glEnableVertexAttribArray( BONE_WEIGHT_LOCATION );
     glBindVertexArray( 0 );
 }
-void Mesh::LoadBones( unsigned int index, const aiMesh* pMesh, std::vector<VertexBoneData>& bones )
+void Mesh::loadBones_( unsigned int index, const aiMesh* pMesh, std::vector<VertexBoneData>& bones )
 {
     assert( pMesh != nullptr );
     for ( unsigned int i = 0; i < pMesh->mNumBones; ++i )
@@ -301,35 +301,35 @@ void Mesh::LoadBones( unsigned int index, const aiMesh* pMesh, std::vector<Verte
         unsigned int BoneIndex = 0;
         std::string BoneName( pMesh->mBones[ i ]->mName.data );
 
-        if ( m_BoneMapping.find( BoneName ) == m_BoneMapping.end() )
+        if ( boneMapping_.find( BoneName ) == boneMapping_.end() )
         {
-            BoneIndex = m_NumBones;
-            ++m_NumBones;
+            BoneIndex = numBones_;
+            ++numBones_;
             BoneInfo bi;
-            m_BoneInfo.push_back( bi );
+            boneInfos_.push_back( bi );
         }
         else
         {
-            BoneIndex = m_BoneMapping[ BoneName ];
+            BoneIndex = boneMapping_[ BoneName ];
         }
-        m_BoneMapping[ BoneName ] = BoneIndex;
+        boneMapping_[ BoneName ] = BoneIndex;
         // We need to check if BoneIndex is < m_BoneInfo.size()
         // Which can occur some times
-        if ( BoneIndex >= m_BoneInfo.size() )
+        if ( BoneIndex >= boneInfos_.size() )
         {
             std::stringstream out;
             out << "Error BoneIndex is: " << BoneIndex << " but m_BoneInfo have "
-                << m_BoneInfo.size() << " elements";
+                << boneInfos_.size() << " elements";
             out << "\n"
                 << "Error in " << __FILE__ << "(" << __LINE__ << ")";
             throw out.str();
         }
-        m_BoneInfo[ BoneIndex ].BoneOffset = aiMatrixToMat4( pMesh->mBones[ i ]->mOffsetMatrix );
+        boneInfos_[ BoneIndex ].BoneOffset = aiMatrixToMat4( pMesh->mBones[ i ]->mOffsetMatrix );
 
         for ( unsigned int j = 0; j < pMesh->mBones[ i ]->mNumWeights; ++j )
         {
             unsigned int VertexID
-                = m_Entries[ index ].BaseVertex + pMesh->mBones[ i ]->mWeights[ j ].mVertexId;
+                = entries_[ index ].BaseVertex + pMesh->mBones[ i ]->mWeights[ j ].mVertexId;
             float Weight = pMesh->mBones[ i ]->mWeights[ j ].mWeight;
             if ( VertexID < bones.size() )
                 bones[ VertexID ].AddBoneData( BoneIndex, Weight );
@@ -362,57 +362,57 @@ void Mesh::VertexBoneData::AddBoneData( unsigned int BoneID, float Weight )
     out << "Error we have more than " << NUM_BONES_PER_VERTEX << " Bones";
     throw out.str();
 }
-void Mesh::BoneTransform( float TimeInSec, std::vector<glm::mat4>& Transforms,
-                          unsigned int idAnimation )
+void Mesh::boneTransform_( float TimeInSec, std::vector<glm::mat4>& Transforms,
+                           unsigned int idAnimation )
 {
-    if ( m_pScene->HasAnimations() )
+    if ( pScene_->HasAnimations() )
     {
-        if ( m_pScene->mAnimations[ idAnimation ] != nullptr )
+        if ( pScene_->mAnimations[ idAnimation ] != nullptr )
         {
             glm::mat4 Identity = glm::mat4();
 
-            auto TicksPerSec = m_pScene->mAnimations[ idAnimation ]->mTicksPerSecond;
+            auto TicksPerSec = pScene_->mAnimations[ idAnimation ]->mTicksPerSecond;
 
             auto TimeInTicks = TimeInSec * TicksPerSec;
             auto AnimationTime
-                = fmod( TimeInTicks, m_pScene->mAnimations[ idAnimation ]->mDuration );
+                = fmod( TimeInTicks, pScene_->mAnimations[ idAnimation ]->mDuration );
 
-            this->ReadNodeHiearchy( AnimationTime, m_pScene->mRootNode, Identity, idAnimation );
+            this->readNodeHierarchy_( AnimationTime, pScene_->mRootNode, Identity, idAnimation );
 
-            Transforms.resize( m_NumBones );
-            for ( unsigned int i = 0; i < m_NumBones; ++i )
+            Transforms.resize( numBones_ );
+            for ( unsigned int i = 0; i < numBones_; ++i )
             {
-                Transforms[ i ] = m_BoneInfo[ i ].FinalTransformation;
+                Transforms[ i ] = boneInfos_[ i ].FinalTransformation;
             }
         }
     }
 }
-void Mesh::ReadNodeHiearchy( float AnimationTime, const aiNode* pNode,
-                             glm::mat4 const& ParentTransform, unsigned int idAnimation )
+void Mesh::readNodeHierarchy_( float AnimationTime, const aiNode* pNode,
+                               glm::mat4 const& ParentTransform, unsigned int idAnimation )
 {
     std::string NodeName( pNode->mName.data );
 
-    auto pAnimation = m_pScene->mAnimations[ idAnimation ];
+    auto pAnimation = pScene_->mAnimations[ idAnimation ];
     glm::mat4 NodeTransformation;
     NodeTransformation = aiMatrixToMat4( pNode->mTransformation );
 
-    auto pNodeAnim = this->FindNodeAnim( pAnimation, NodeName );
+    auto pNodeAnim = this->findNodeAnim_( pAnimation, NodeName );
 
     if ( pNodeAnim != nullptr )
     {
         // Interpolate Scaling
         aiVector3D scaling;
-        this->CalcInterpolatedScaling( scaling, AnimationTime, pNodeAnim );
+        this->calcInterpolatedScaling_( scaling, AnimationTime, pNodeAnim );
         glm::mat4 scalingM;
         scalingM = glm::scale( scalingM, glm::vec3( scaling.x, scaling.y, scaling.z ) );
         // Interpolate rotation
         aiQuaternion rotationQ;
-        this->CalcInterpolatedRotation( rotationQ, AnimationTime, pNodeAnim );
+        this->calcInterpolatedRotation_( rotationQ, AnimationTime, pNodeAnim );
         glm::mat4 rotationM;
         rotationM = aiMatrixToMat4( rotationQ.GetMatrix() );
         // Interpolate translation
         aiVector3D translation;
-        this->CalcInterpolatedPosition( translation, AnimationTime, pNodeAnim );
+        this->calcInterpolatedPosition_( translation, AnimationTime, pNodeAnim );
         glm::mat4 translationM;
         translationM = glm::translate( translationM,
                                        glm::vec3( translation.x, translation.y, translation.z ) );
@@ -422,21 +422,21 @@ void Mesh::ReadNodeHiearchy( float AnimationTime, const aiNode* pNode,
     }
     glm::mat4 GlobalTransformation = ParentTransform * NodeTransformation;
 
-    if ( m_BoneMapping.find( NodeName ) != m_BoneMapping.end() )
+    if ( boneMapping_.find( NodeName ) != boneMapping_.end() )
     {
-        unsigned int BoneIndex = m_BoneMapping[ NodeName ];
-        m_BoneInfo[ BoneIndex ].FinalTransformation
-            = m_GlobalInverseTransform * GlobalTransformation * m_BoneInfo[ BoneIndex ].BoneOffset;
+        unsigned int BoneIndex = boneMapping_[ NodeName ];
+        boneInfos_[ BoneIndex ].FinalTransformation
+            = globalInverseTransform_ * GlobalTransformation * boneInfos_[ BoneIndex ].BoneOffset;
     }
 
     for ( unsigned int i = 0; i < pNode->mNumChildren; ++i )
     {
-        this->ReadNodeHiearchy( AnimationTime, pNode->mChildren[ i ], GlobalTransformation,
-                                idAnimation );
+        this->readNodeHierarchy_( AnimationTime, pNode->mChildren[ i ], GlobalTransformation,
+                                  idAnimation );
     }
 }
 
-unsigned int Mesh::FindScaling( float AnimationTime, const aiNodeAnim* pNodeAnim )
+unsigned int Mesh::findScaling_( float AnimationTime, const aiNodeAnim* pNodeAnim )
 {
     assert( pNodeAnim->mNumScalingKeys > 0 );
     for ( unsigned int i = 0; i < pNodeAnim->mNumScalingKeys - 1; ++i )
@@ -451,7 +451,7 @@ unsigned int Mesh::FindScaling( float AnimationTime, const aiNodeAnim* pNodeAnim
 
     return 0;
 }
-unsigned int Mesh::FindRotation( float AnimationTime, const aiNodeAnim* pNodeAnim )
+unsigned int Mesh::findRotation_( float AnimationTime, const aiNodeAnim* pNodeAnim )
 {
     assert( pNodeAnim->mNumRotationKeys > 0 );
     for ( unsigned int i = 0; i < pNodeAnim->mNumRotationKeys - 1; ++i )
@@ -463,7 +463,7 @@ unsigned int Mesh::FindRotation( float AnimationTime, const aiNodeAnim* pNodeAni
     assert( 0 );
     return 0;
 }
-unsigned int Mesh::FindPosition( float AnimationTime, const aiNodeAnim* pNodeAnim )
+unsigned int Mesh::findPosition_( float AnimationTime, const aiNodeAnim* pNodeAnim )
 {
     assert( pNodeAnim->mNumPositionKeys > 0 );
     for ( unsigned int i = 0; i < pNodeAnim->mNumPositionKeys - 1; ++i )
@@ -474,8 +474,8 @@ unsigned int Mesh::FindPosition( float AnimationTime, const aiNodeAnim* pNodeAni
     assert( 0 );
     return 0;
 }
-void Mesh::CalcInterpolatedScaling( aiVector3D& Out, float AnimationTime,
-                                    const aiNodeAnim* pNodeAnim )
+void Mesh::calcInterpolatedScaling_( aiVector3D& Out, float AnimationTime,
+                                     const aiNodeAnim* pNodeAnim )
 {
     if ( pNodeAnim->mNumScalingKeys == 1 )
     {
@@ -483,25 +483,25 @@ void Mesh::CalcInterpolatedScaling( aiVector3D& Out, float AnimationTime,
         return;
     }
 
-    auto ScalingIndex     = this->FindScaling( AnimationTime, pNodeAnim );
+    auto ScalingIndex     = this->findScaling_( AnimationTime, pNodeAnim );
     auto NextScalingIndex = ScalingIndex + 1;
 
     assert( NextScalingIndex < pNodeAnim->mNumScalingKeys );
 
     auto DeltaTime = static_cast<float>( pNodeAnim->mScalingKeys[ NextScalingIndex ].mTime
                                          - pNodeAnim->mScalingKeys[ ScalingIndex ].mTime );
-    auto Factor = AnimationTime
+    auto Factor    = AnimationTime
                   - static_cast<float>( pNodeAnim->mScalingKeys[ ScalingIndex ].mTime / DeltaTime );
 
-    this->CheckFactor( Factor, __FILE__, __LINE__ );
+    this->checkFactor_( Factor, __FILE__, __LINE__ );
 
     const auto& Start = pNodeAnim->mScalingKeys[ ScalingIndex ].mValue;
     const auto& End   = pNodeAnim->mScalingKeys[ NextScalingIndex ].mValue;
     auto Delta        = End - Start;
     Out               = Start + Factor * Delta;
 }
-void Mesh::CalcInterpolatedRotation( aiQuaternion& Out, float AnimationTime,
-                                     const aiNodeAnim* pNodeAnim )
+void Mesh::calcInterpolatedRotation_( aiQuaternion& Out, float AnimationTime,
+                                      const aiNodeAnim* pNodeAnim )
 {
     if ( pNodeAnim->mNumRotationKeys == 1 )
     {
@@ -509,25 +509,26 @@ void Mesh::CalcInterpolatedRotation( aiQuaternion& Out, float AnimationTime,
         return;
     }
 
-    auto RotationIndex     = this->FindRotation( AnimationTime, pNodeAnim );
+    auto RotationIndex     = this->findRotation_( AnimationTime, pNodeAnim );
     auto NextRotationIndex = RotationIndex + 1;
 
     assert( NextRotationIndex < pNodeAnim->mNumRotationKeys );
 
     auto DeltaTime = static_cast<float>( pNodeAnim->mRotationKeys[ NextRotationIndex ].mTime
                                          - pNodeAnim->mRotationKeys[ RotationIndex ].mTime );
-    auto Factor = AnimationTime - static_cast<float>(
-                                      pNodeAnim->mRotationKeys[ RotationIndex ].mTime / DeltaTime );
+    auto Factor
+        = AnimationTime
+          - static_cast<float>( pNodeAnim->mRotationKeys[ RotationIndex ].mTime / DeltaTime );
 
-    this->CheckFactor( Factor, __FILE__, __LINE__ );
+    this->checkFactor_( Factor, __FILE__, __LINE__ );
 
     const auto& Start = pNodeAnim->mRotationKeys[ RotationIndex ].mValue;
     const auto& End   = pNodeAnim->mRotationKeys[ NextRotationIndex ].mValue;
     aiQuaternion::Interpolate( Out, Start, End, Factor );
     Out.Normalize();
 }
-void Mesh::CalcInterpolatedPosition( aiVector3D& Out, float AnimationTime,
-                                     const aiNodeAnim* pNodeAnim )
+void Mesh::calcInterpolatedPosition_( aiVector3D& Out, float AnimationTime,
+                                      const aiNodeAnim* pNodeAnim )
 {
     if ( pNodeAnim->mNumPositionKeys == 1 )
     {
@@ -535,24 +536,25 @@ void Mesh::CalcInterpolatedPosition( aiVector3D& Out, float AnimationTime,
         return;
     }
 
-    auto PositionIndex     = this->FindPosition( AnimationTime, pNodeAnim );
+    auto PositionIndex     = this->findPosition_( AnimationTime, pNodeAnim );
     auto NextPositionIndex = PositionIndex + 1;
 
     assert( NextPositionIndex < pNodeAnim->mNumPositionKeys );
 
     auto DeltaTime = static_cast<float>( pNodeAnim->mPositionKeys[ NextPositionIndex ].mTime
                                          - pNodeAnim->mPositionKeys[ PositionIndex ].mTime );
-    auto Factor = AnimationTime - static_cast<float>(
-                                      pNodeAnim->mPositionKeys[ PositionIndex ].mTime / DeltaTime );
+    auto Factor
+        = AnimationTime
+          - static_cast<float>( pNodeAnim->mPositionKeys[ PositionIndex ].mTime / DeltaTime );
 
-    this->CheckFactor( Factor, __FILE__, __LINE__ );
+    this->checkFactor_( Factor, __FILE__, __LINE__ );
 
     const auto& Start = pNodeAnim->mPositionKeys[ PositionIndex ].mValue;
     const auto& End   = pNodeAnim->mPositionKeys[ NextPositionIndex ].mValue;
     aiVector3D Delta  = End - Start;
     Out               = Start + Factor * Delta;
 }
-const aiNodeAnim* Mesh::FindNodeAnim( const aiAnimation* pAnimation, std::string const& NodeName )
+const aiNodeAnim* Mesh::findNodeAnim_( const aiAnimation* pAnimation, std::string const& NodeName )
 {
     for ( unsigned int i = 0; i < pAnimation->mNumChannels; ++i )
     {
@@ -566,23 +568,23 @@ const aiNodeAnim* Mesh::FindNodeAnim( const aiAnimation* pAnimation, std::string
 
     return nullptr;
 }
-unsigned int Mesh::GetAnimationIndex( std::string const& animation )
+unsigned int Mesh::getAnimationIndex_( std::string const& animation )
 {
     unsigned int idAnimation = 0;
     // Some default case when there is no animation or when m_pScene is nullptr
-    if ( m_pScene == nullptr )
+    if ( pScene_ == nullptr )
         return idAnimation;
-    if ( !m_pScene->HasAnimations() )
+    if ( !pScene_->HasAnimations() )
         return idAnimation;
     //  Arbitrary set the different value for animation
     if ( animation == "walk" )
         idAnimation = 1;
     // Then check if the idAnimation is in a good range
-    if ( idAnimation >= m_pScene->mNumAnimations )
+    if ( idAnimation >= pScene_->mNumAnimations )
     {
         std::cerr << "Error in idAnimation range\n";
         std::stringstream out;
-        out << "Error in idAnimation range, there is only: " << m_pScene->mNumAnimations;
+        out << "Error in idAnimation range, there is only: " << pScene_->mNumAnimations;
         out << " but the following id animation has request " << idAnimation << '\n';
         throw out.str();
     }
@@ -630,7 +632,7 @@ inline glm::mat4 S3DE::aiMatrixToMat4( aiMatrix3x3 const& src )
     dest[ 3 ][ 3 ] = 1;
     return dest;
 }
-void Mesh::CheckFactor( float Factor, std::string const& file, int line )
+void Mesh::checkFactor_( float Factor, std::string const& file, int line )
 {
     if ( Factor < 0.0f || Factor > 1.0f )
     {
