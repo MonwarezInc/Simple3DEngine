@@ -1,60 +1,40 @@
 variables:
-    GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_STRATEGY: recursive
 stages:
-    - build
-    - test
-    - documentation
+  - build
+  - documentation
 
 build:clang:
-    stage: build
-    script:
-       - ./tools/ci/dependency.sh
-       - ./tools/ci/clang.sh
-    artifacts:
-      untracked: true
-    image: debian:unstable
+  stage: build
+  script:
+    - ./tools/ci/dependency.sh
+    - ./tools/ci/clang.sh
+    - ./tools/ci/simpleTest.sh
+  artifacts:
+    reports:
+      junit: build/report.xml
+  image: debian:unstable
 
 build:gcc:
-    stage: build
-    script:
-       - ./tools/ci/dependency.sh
-       - ./tools/ci/gcc.sh
-    artifacts:
-      untracked: true
-    image: debian:unstable
-
-test:clang:
-    stage: test
-    dependencies:
-      - build:clang
-    script:
-       - ./tools/ci/dependency.sh
-       - ./tools/ci/simpleTest.sh
-    artifacts:
-      reports:
-        junit: build/report.xml
-    image: debian:unstable
-
-
-test:gcc:
-    stage: test
-    dependencies:
-      - build:gcc
-    script:
-       - ./tools/ci/dependency.sh
-       - ./tools/ci/test.sh
-    artifacts:
-      paths:
-        - build/out-coverage
-      reports:
-        junit: build/report.xml
-    image: debian:unstable
+  stage: build
+  script:
+    - ./tools/ci/dependency.sh
+    - ./tools/ci/gcc.sh
+    - ./tools/ci/test.sh
+  artifacts:
+    paths:
+      - build/out-coverage
+    reports:
+      junit: build/report.xml
+  image: debian:unstable
 
 documentation:
-     stage: documentation
-     script:
-       - ./tools/ci/doxygen.sh
-     artifacts:
-       paths:
-        - docs/html
-     when: always
+  stage: documentation
+  script:
+    - ./tools/ci/dependency.sh
+    - ./tools/ci/doxygen.sh
+  artifacts:
+    paths:
+      - build/docs/html
+  when: always
+  image: debian:unstable

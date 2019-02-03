@@ -4,4 +4,7 @@ apt-get update -qq
 apt-get install -qq -y doxygen
 apt-get install -qq -y graphviz
 
-doxygen Doxyfile
+meson -Dtest=true -Ddocumentation=true build
+
+cd build
+ninja docs
