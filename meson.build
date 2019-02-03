@@ -42,6 +42,36 @@ if (test_option)
   endforeach
 endif
 
+documentation_option = get_option('documentation')
+# doxygen support
+if (documentation_option)
+  doxygen = find_program('doxygen' , required: true)
+  doxyfile_conf = configuration_data()
+  doxyfile_conf.set('PACKAGE_NAME', meson.project_name())
+  doxyfile_conf.set('PACKAGE_VERSION', meson.project_version())
+  doxyfile_conf.set('top_srcdir', meson.source_root())
+  doxyfile_conf.set('top_builddir', meson.build_root())
+
+  dot = find_program('dot', required: false)
+
+  if dot.found()
+      doxyfile_conf.set('HAVE_DOT', 'YES')
+  else
+      doxyfile_conf.set('HAVE_DOT', 'NO')
+  endif
+
+  doxyfile = configure_file(input: 'Doxyfile.in',
+                            output: 'Doxyfile',
+                            configuration: doxyfile_conf,
+                            install: false)
+
+  doxygen_target = custom_target('doxygen',
+                                 input: [doxyfile],
+                                 output: ['docs'],
+                                 command: [ doxygen, doxyfile ],
+                                 install: false)
+endif
+
 # pkg config section
 
 pkg = import('pkgconfig')

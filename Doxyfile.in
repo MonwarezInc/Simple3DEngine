@@ -1,0 +1,13 @@
+PROJECT_NAME        = @PACKAGE_NAME@
+PROJECT_NUMBER      = @PACKAGE_VERSION@
+OUTPUT_DIRECTORY    = @top_builddir@/docs
+INPUT               = @top_srcdir@/src @top_srcdir@/doc-gen
+TAB_SIZE            = 4
+
+RECURSIVE           = YES
+EXTRACT_ALL         = YES
+
+HAVE_DOT            = @HAVE_DOT@
+
+GENERATE_HTML       =   YES
+GENERATE_XML        =   YES
