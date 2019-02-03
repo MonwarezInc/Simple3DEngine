@@ -26,6 +26,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 #include "Engine-main.h"
+#include "Light.h"
+#include "Mesh.h"
+#include "MeshException.h"
+#include "Shader.h"
+#include "window/WindowHandle.h"
 
 namespace S3DE
 {
