@@ -7,18 +7,16 @@ stages:
 build:clang:
   stage: build
   script:
-    - ./tools/ci/dependency.sh
     - ./tools/ci/clang.sh
     - ./tools/ci/simpleTest.sh
   artifacts:
     reports:
       junit: build/report.xml
-  image: debian:unstable
+  image: monwarez/simple3dengine:latest
 
 build:gcc:
   stage: build
   script:
-    - ./tools/ci/dependency.sh
     - ./tools/ci/gcc.sh
     - ./tools/ci/test.sh
   artifacts:
@@ -26,15 +24,14 @@ build:gcc:
       - build/out-coverage
     reports:
       junit: build/report.xml
-  image: debian:unstable
+  image: monwarez/simple3dengine:latest
 
 documentation:
   stage: documentation
   script:
-    - ./tools/ci/dependency.sh
     - ./tools/ci/doxygen.sh
   artifacts:
     paths:
       - build/docs/html
   when: always
-  image: debian:unstable
+  image: monwarez/simple3dengine:latest
