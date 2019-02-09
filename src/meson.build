@@ -16,7 +16,8 @@ simple3dengine_lib = library('Simple3DEngine' ,
                                             assimp_dep,
                                             glew_dep,
                                             glm_dep,
-                                            bullet_dep,],
+                                            bullet_dep,
+                                            range_v3_dep,],
 
                              cpp_args: ['-DS3DE_USE_DSA=1'],
                              install: true)

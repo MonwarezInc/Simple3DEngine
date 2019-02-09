@@ -8,6 +8,8 @@ glew_dep = dependency('glew',required:true)
 glm_dep = dependency('glm',required:true)
 bullet_dep = dependency('bullet', required:true)
 
+range_v3_dep = dependency('range-v3', required:true, fallback:['range-v3', 'range_dep'])
+
 test_option = get_option('test')
 if (test_option)
   gtest_dep = dependency('gtest', required:false,fallback:['gtest','gtest_dep'])
@@ -24,7 +26,8 @@ simple3dengine_dep = declare_dependency(link_with: simple3dengine_lib,
                                                        assimp_dep,
                                                        glew_dep,
                                                        glm_dep,
-                                                       bullet_dep])
+                                                       bullet_dep,
+                                                       range_v3_dep])
 
 
 # test section
