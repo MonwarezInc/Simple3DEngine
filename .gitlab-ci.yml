@@ -21,7 +21,7 @@ build:gcc:
     - ./tools/ci/test.sh
   artifacts:
     paths:
-      - build/out-coverage
+      - build/meson-logs/coveragereport
     reports:
       junit: build/report.xml
   image: monwarez/simple3dengine:latest
