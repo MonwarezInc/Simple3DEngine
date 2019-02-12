@@ -2,6 +2,7 @@ Simple3DEngine
 =============
 Build status:
 ![Build Status](https://gitlab.com/MonwarezInc/Simple3DEngine/badges/master/build.svg)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMonwarezInc%2FSimple3DEngine.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FMonwarezInc%2FSimple3DEngine?ref=badge_shield)
 
 Simple3DEngine turned to OpenGL 3.2 (core profile) and 150 for shader <br/>
 List of shader extension used:<br/>
@@ -40,3 +41,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT<br/>
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.<br/>
 
 For Assimp Loader , I use a code in tutorial22, tutorial38 from <http://ogldev.atspace.co.uk/index.html>
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FMonwarezInc%2FSimple3DEngine.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FMonwarezInc%2FSimple3DEngine?ref=badge_large)
