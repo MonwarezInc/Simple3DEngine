@@ -22,5 +22,24 @@ simple3dengine_lib = library('Simple3DEngine' ,
                                             bullet_dep,
                                             range_v3_dep,],
 
-                             cpp_args: ['-DS3DE_USE_DSA=1'],
+                             cpp_args: [simple3dengine_cpp_args],
                              install: true)
+
+simple3dengine_inc = include_directories('.')
+
+simple3dengine_dep = declare_dependency(link_with: simple3dengine_lib,
+                                        include_directories: simple3dengine_inc,
+                                        dependencies: [simple3dengine_sdl2_utils_dep,
+                                                       sdl2_dep,
+                                                       sdl2image_dep,
+                                                       assimp_dep,
+                                                       glew_dep,
+                                                       glm_dep,
+                                                       bullet_dep,
+                                                       range_v3_dep])
+
+
+
+if (test_option)
+  subdir('tests')
+endif

@@ -16,35 +16,11 @@ if (test_option)
   gmock_dep = dependency('gmock', required:false,fallback:['gtest','gmock_dep'])
 endif
 
-simple3dengine_inc = include_directories('src')
+simple3dengine_cpp_args = '-DS3DE_USE_DSA=1'
+
 subdir('src')
 
-simple3dengine_dep = declare_dependency(link_with: simple3dengine_lib,
-                                        include_directories: simple3dengine_inc,
-                                        dependencies: [simple3dengine_sdl2_utils_dep,
-                                                       sdl2_dep,
-                                                       sdl2image_dep,
-                                                       assimp_dep,
-                                                       glew_dep,
-                                                       glm_dep,
-                                                       bullet_dep,
-                                                       range_v3_dep])
 
-
-# test section
-if (test_option)
-  test_list = ['Parser', 'Engine']
-
-  foreach tst : test_list
-    exe = executable('@0@Test'.format(tst),
-                     ['src/tests/@0@/main.cpp'.format(tst),
-                      'src/tests/@0@/@0@_test.h'.format(tst),
-                      'src/tests/@0@/@0@_test.cpp'.format(tst)],
-                     dependencies : [gtest_dep,gmock_dep,simple3dengine_dep,
-                                    sdl2_dep, sdl2image_dep, assimp_dep, glew_dep, glm_dep])
-    test('@0@ Test'.format(tst), exe)
-  endforeach
-endif
 
 documentation_option = get_option('documentation')
 # doxygen support
