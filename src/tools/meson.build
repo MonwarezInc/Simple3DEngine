@@ -5,7 +5,6 @@ include_tools = files([
   'Interpolate.hpp',
   'Loader.h',
   'Parser.h',
-  'SDL_Tools.h',
   'Texture.h'
 ])
 source_tools = files([

@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-#include "../../tools/SDL_Tools.h"
+#include "SDL_Tools.h"
 
 
 namespace S3DE
@@ -61,4 +61,4 @@ private:
     WindowPtr window_;
     SDL_GLContext context_;
 };
-}
+} // namespace S3DE

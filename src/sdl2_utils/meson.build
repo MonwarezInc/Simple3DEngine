@@ -1,4 +1,5 @@
 simple3dengine_sdl2_utils_headers = files([
+                                           'SDL_Tools.h',
                                          ])
 
 simple3dengine_sdl2_utils_sources = files([

@@ -12,7 +12,7 @@ simple3dengineSrc =[
 ]
 
 simple3dengine_lib = library('Simple3DEngine' ,
-                             simple3dengineSrc,
+                             sources: [simple3dengineSrc],
                              dependencies: [simple3dengine_sdl2_utils_dep,
                                             sdl2_dep,
                                             sdl2image_dep,

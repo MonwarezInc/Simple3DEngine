@@ -21,7 +21,8 @@ subdir('src')
 
 simple3dengine_dep = declare_dependency(link_with: simple3dengine_lib,
                                         include_directories: simple3dengine_inc,
-                                        dependencies: [sdl2_dep,
+                                        dependencies: [simple3dengine_sdl2_utils_dep,
+                                                       sdl2_dep,
                                                        sdl2image_dep,
                                                        assimp_dep,
                                                        glew_dep,
