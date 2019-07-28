@@ -48,17 +48,17 @@ MeshAssimpImpl::MeshAssimpImpl( MeshAssimpImpl const& mesh )
 {
     pScene_   = nullptr;
     numBones_ = 0;
-    this->loadFromFile( mesh.filename_ );
+    loadFromFile( mesh.filename_ );
 }
 MeshAssimpImpl::~MeshAssimpImpl()
 {
-    this->clear_();
+    clear_();
 }
 void MeshAssimpImpl::loadFromFile( std::string const& filename )
 {
     filename_ = filename;
     // release the previously loaded mesh (if exists)
-    this->clear_();
+    clear_();
 
     Assimp::Importer importer;
     pScene_ = importer_.ReadFile( filename.c_str(),
@@ -71,7 +71,7 @@ void MeshAssimpImpl::loadFromFile( std::string const& filename )
         globalInverseTransform_ = glm::inverse( globalInverseTransform_ );
 
         // can launch an except
-        if ( !this->initFromScene_( pScene_ ) )
+        if ( !initFromScene_( pScene_ ) )
         {
             std::stringstream out;
             out << "error init from scene at: " << __FILE__ << "( " << __LINE__ << ")";
@@ -90,7 +90,7 @@ bool MeshAssimpImpl::initFromScene_( const aiScene* pScene )
     for ( unsigned int i = 0; i < entries_.size(); ++i )
     {
         auto paiMesh = pScene->mMeshes[ i ];
-        this->initMesh_( i, paiMesh, 0, 0 ); // 0 because it's one VAO by meshEntrie
+        initMesh_( i, paiMesh, 0, 0 ); // 0 because it's one VAO by meshEntrie
     }
 
     return initMaterials_( pScene );
@@ -99,9 +99,9 @@ void MeshAssimpImpl::draw( std::chrono::duration<float, std::chrono::seconds::pe
                            const Shader& shader, std::string const& animation )
 {
     std::vector<glm::mat4> transforms;
-    // this->BoneTransform((static_cast<float>(elapsed_time))/1000.0f, transforms,
+    // BoneTransform((static_cast<float>(elapsed_time))/1000.0f, transforms,
     // GetAnimationIndex(animation));
-    this->boneTransform_( elapsed_time.count(), transforms, getAnimationIndex_( animation ) );
+    boneTransform_( elapsed_time.count(), transforms, getAnimationIndex_( animation ) );
     for ( unsigned int i = 0; i < transforms.size(); ++i )
     {
         // we have to send unform matrix
@@ -179,7 +179,7 @@ void MeshAssimpImpl::initMesh_( unsigned int index, const aiMesh* paiMesh, unsig
         indices.push_back( face.mIndices[ 2 ] );
     }
 
-    this->loadBones_( index, paiMesh, bones );
+    loadBones_( index, paiMesh, bones );
 
     entries_[ index ].Init( vertices, indices, bones );
 }
@@ -378,7 +378,7 @@ void MeshAssimpImpl::boneTransform_( float TimeInSec, std::vector<glm::mat4>& Tr
             auto AnimationTime
                 = fmod( TimeInTicks, pScene_->mAnimations[ idAnimation ]->mDuration );
 
-            this->readNodeHierarchy_( AnimationTime, pScene_->mRootNode, Identity, idAnimation );
+            readNodeHierarchy_( AnimationTime, pScene_->mRootNode, Identity, idAnimation );
 
             Transforms.resize( numBones_ );
             for ( unsigned int i = 0; i < numBones_; ++i )
@@ -398,23 +398,23 @@ void MeshAssimpImpl::readNodeHierarchy_( float AnimationTime, const aiNode* pNod
     glm::mat4 NodeTransformation;
     NodeTransformation = aiMatrixToMat4( pNode->mTransformation );
 
-    auto pNodeAnim = this->findNodeAnim_( pAnimation, NodeName );
+    auto pNodeAnim = findNodeAnim_( pAnimation, NodeName );
 
     if ( pNodeAnim != nullptr )
     {
         // Interpolate Scaling
         aiVector3D scaling;
-        this->calcInterpolatedScaling_( scaling, AnimationTime, pNodeAnim );
+        calcInterpolatedScaling_( scaling, AnimationTime, pNodeAnim );
         glm::mat4 scalingM;
         scalingM = glm::scale( scalingM, glm::vec3( scaling.x, scaling.y, scaling.z ) );
         // Interpolate rotation
         aiQuaternion rotationQ;
-        this->calcInterpolatedRotation_( rotationQ, AnimationTime, pNodeAnim );
+        calcInterpolatedRotation_( rotationQ, AnimationTime, pNodeAnim );
         glm::mat4 rotationM;
         rotationM = aiMatrixToMat4( rotationQ.GetMatrix() );
         // Interpolate translation
         aiVector3D translation;
-        this->calcInterpolatedPosition_( translation, AnimationTime, pNodeAnim );
+        calcInterpolatedPosition_( translation, AnimationTime, pNodeAnim );
         glm::mat4 translationM;
         translationM = glm::translate( translationM,
                                        glm::vec3( translation.x, translation.y, translation.z ) );
@@ -433,8 +433,8 @@ void MeshAssimpImpl::readNodeHierarchy_( float AnimationTime, const aiNode* pNod
 
     for ( unsigned int i = 0; i < pNode->mNumChildren; ++i )
     {
-        this->readNodeHierarchy_( AnimationTime, pNode->mChildren[ i ], GlobalTransformation,
-                                  idAnimation );
+        readNodeHierarchy_( AnimationTime, pNode->mChildren[ i ], GlobalTransformation,
+                            idAnimation );
     }
 }
 
@@ -485,7 +485,7 @@ void MeshAssimpImpl::calcInterpolatedScaling_( aiVector3D& Out, float AnimationT
         return;
     }
 
-    auto ScalingIndex     = this->findScaling_( AnimationTime, pNodeAnim );
+    auto ScalingIndex     = findScaling_( AnimationTime, pNodeAnim );
     auto NextScalingIndex = ScalingIndex + 1;
 
     assert( NextScalingIndex < pNodeAnim->mNumScalingKeys );
@@ -495,7 +495,7 @@ void MeshAssimpImpl::calcInterpolatedScaling_( aiVector3D& Out, float AnimationT
     auto Factor    = AnimationTime
                   - static_cast<float>( pNodeAnim->mScalingKeys[ ScalingIndex ].mTime / DeltaTime );
 
-    this->checkFactor_( Factor, __FILE__, __LINE__ );
+    throwIfNotBetween0And1_( Factor, __FILE__, __LINE__ );
 
     const auto& Start = pNodeAnim->mScalingKeys[ ScalingIndex ].mValue;
     const auto& End   = pNodeAnim->mScalingKeys[ NextScalingIndex ].mValue;
@@ -511,7 +511,7 @@ void MeshAssimpImpl::calcInterpolatedRotation_( aiQuaternion& Out, float Animati
         return;
     }
 
-    auto RotationIndex     = this->findRotation_( AnimationTime, pNodeAnim );
+    auto RotationIndex     = findRotation_( AnimationTime, pNodeAnim );
     auto NextRotationIndex = RotationIndex + 1;
 
     assert( NextRotationIndex < pNodeAnim->mNumRotationKeys );
@@ -522,7 +522,7 @@ void MeshAssimpImpl::calcInterpolatedRotation_( aiQuaternion& Out, float Animati
         = AnimationTime
           - static_cast<float>( pNodeAnim->mRotationKeys[ RotationIndex ].mTime / DeltaTime );
 
-    this->checkFactor_( Factor, __FILE__, __LINE__ );
+    throwIfNotBetween0And1_( Factor, __FILE__, __LINE__ );
 
     const auto& Start = pNodeAnim->mRotationKeys[ RotationIndex ].mValue;
     const auto& End   = pNodeAnim->mRotationKeys[ NextRotationIndex ].mValue;
@@ -538,7 +538,7 @@ void MeshAssimpImpl::calcInterpolatedPosition_( aiVector3D& Out, float Animation
         return;
     }
 
-    auto PositionIndex     = this->findPosition_( AnimationTime, pNodeAnim );
+    auto PositionIndex     = findPosition_( AnimationTime, pNodeAnim );
     auto NextPositionIndex = PositionIndex + 1;
 
     assert( NextPositionIndex < pNodeAnim->mNumPositionKeys );
@@ -549,7 +549,7 @@ void MeshAssimpImpl::calcInterpolatedPosition_( aiVector3D& Out, float Animation
         = AnimationTime
           - static_cast<float>( pNodeAnim->mPositionKeys[ PositionIndex ].mTime / DeltaTime );
 
-    this->checkFactor_( Factor, __FILE__, __LINE__ );
+    throwIfNotBetween0And1_( Factor, __FILE__, __LINE__ );
 
     const auto& Start = pNodeAnim->mPositionKeys[ PositionIndex ].mValue;
     const auto& End   = pNodeAnim->mPositionKeys[ NextPositionIndex ].mValue;
@@ -635,7 +635,7 @@ inline glm::mat4 S3DE::aiMatrixToMat4( aiMatrix3x3 const& src )
     dest[ 3 ][ 3 ] = 1;
     return dest;
 }
-void MeshAssimpImpl::checkFactor_( float Factor, std::string const& file, int line )
+void MeshAssimpImpl::throwIfNotBetween0And1_( float Factor, std::string const& file, int line )
 {
     if ( Factor < 0.0f || Factor > 1.0f )
     {
