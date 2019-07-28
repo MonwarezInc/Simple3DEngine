@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../tools/Texture.h"
 #include "MeshImpl.h"
+#include "Texture.h"
 #include "Vertex.h"
 
 #include <map>
@@ -98,7 +98,7 @@ private:
     unsigned int findPosition_( float AnimationTime, const aiNodeAnim* pNodeAnim );
 
     unsigned int getAnimationIndex_( std::string const& animation );
-    void checkFactor_( float Factor, std::string const& file, int line );
+    void throwIfNotBetween0And1_( float Factor, std::string const& file, int line );
     struct MeshEntry
     {
         MeshEntry() = default;

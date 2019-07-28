@@ -30,7 +30,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Mesh.h"
 #include "MeshException.h"
 #include "Shader.h"
-#include "window/WindowHandle.h"
+#include "WindowHandle.h"
 
 namespace S3DE
 {

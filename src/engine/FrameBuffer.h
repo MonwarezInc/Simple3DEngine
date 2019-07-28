@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
 // GLEW for all platform
-#include "../tools/Texture.h"
+#include "Texture.h"
 #include <GL/glew.h>
 #include <vector>
 // for exception - use string for beginning
@@ -58,4 +58,4 @@ protected:
 
 private:
 };
-} // end of S3DE namespace
+} // namespace S3DE
