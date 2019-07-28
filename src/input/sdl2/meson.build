@@ -1,7 +1,9 @@
 simple3dengine_input_sdl2_headers = files([
+                                           'Input.h'
                                           ])
 
 simple3dengine_input_sdl2_sources = files([
+                                           'Input.cpp'
                                           ])
 
 simple3dengine_input_sdl2_include = include_directories('.')

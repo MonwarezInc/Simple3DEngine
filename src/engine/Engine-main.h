@@ -25,12 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #pragma once
-#include "../tools/BasicMeshManager.h"
+#include "BasicMeshManager.h"
 #include "Light.h"
 #include "Mesh.h"
 #include "MeshException.h"
 #include "Shader.h"
-#include "window/WindowManager.h"
+#include "WindowManager.h"
 
 #include <chrono>
 #include <functional>

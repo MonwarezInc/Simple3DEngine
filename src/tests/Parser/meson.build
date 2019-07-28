@@ -11,6 +11,6 @@ parserTest = executable('test-Parser',
                                   parser_headers],
                         dependencies: [gtest_dep,
                                        gmock_dep,
-                                       simple3dengine_dep])
+                                       simple3dengine_tools_dep])
 
 test('test-Parser', parserTest)
