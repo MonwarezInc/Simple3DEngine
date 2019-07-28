@@ -1,14 +1,16 @@
+subdir('sdl2_utils')
+
+subdir('input')
+
 subdir('engine')
 subdir('misc')
 subdir('tools')
 subdir('window')
 
-subdir('sdl2_utils')
-
 simple3dengineSrc =[
   include_engine, include_misc, include_tools, include_window,
-  include_window_sdl2, source_engine, source_misc, source_tools,
-  source_window, source_window_sdl2
+  source_engine, source_misc, source_tools,
+  source_window
 ]
 
 simple3dengine_lib = library('Simple3DEngine' ,

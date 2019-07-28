@@ -11,6 +11,7 @@ engineTest = executable('test-Engine',
                                   engine_headers],
                         dependencies: [gtest_dep,
                                        gmock_dep,
-                                       simple3dengine_dep])
+                                       simple3dengine_dep,
+                                       simple3dengine_window_sdl2_dep,])
 
 test('test-Engine', engineTest)

@@ -26,8 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "Engine_test.h"
 
+#include "SDL2GLWindow.h"
 #include "engine/Engine-main.h"
-#include "window/sdl2/SDL2GLWindow.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
